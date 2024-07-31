@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "310722748852",
+    "project_id": "africanstraw-e03e1",
+    "storage_bucket": "africanstraw-e03e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310722748852:android:aa18e44d2a76eef11392e1",
+        "android_client_info": {
+          "package_name": "com.africanstraw.africanstraw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9CDxcGAe_0FHRgLQMCSzTe8yD0kuW_xY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
