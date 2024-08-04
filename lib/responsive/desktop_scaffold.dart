@@ -150,6 +150,27 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                           children: [
                             Row(
                               children: [
+                                // const Expanded(
+                                //     flex: 2,
+                                //     child: SizedBox(
+                                //       //color: Colors.lightBlue[50],
+                                //       height: 50,
+                                //       child: Expanded(
+                                //         child: Column(
+                                //           children: [
+                                //             Expanded(
+                                //               child: Row(
+                                //                 //mainAxisAlignment: MainAxisAlignment.center,
+                                //                 crossAxisAlignment: CrossAxisAlignment.center,
+                                //                 children: [
+                                //                   Expanded(child: Text("RAIN INN MALL", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),))
+                                //                 ],
+                                //               ),
+                                //             )
+                                //           ],
+                                //         ),
+                                //       ),
+                                //     )),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   flex: 4,
@@ -233,7 +254,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                FittedBox(
+                                                Expanded(
                                                   child: Row(
                                                     children: [
                                                       Icon(Icons.menu, color: Colors.white,),
@@ -632,7 +653,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                     child: CircularProgressIndicator(),
                                                   ),
                                                 ),
-                                                errorWidget: (context, url, error) =>Icon(Icons.error,color: Colors.red,),
+                                                errorWidget: (context, url, error) =>const Icon(Icons.error,color: Colors.red,),
+
                                               ),
                                               progress: false,
                                               consWidth: itemWidth,
@@ -640,18 +662,34 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                           ),
                                         )
                                         // items[index]
-
                                       ],
                                     ),
                                   );
                                 },);
-
+                                // Wrap(
+                                // runSpacing: 5,
+                                // spacing: 5,
+                                // children: items
+                                // );
 
                               },
                             )
 
+                          //featuredGridview(shoenum: shoenum, widgth: 300, height: 200, name: 16, price: 16, favHeight: 30, favWidth: 100, favSize: 25, cartHeight: 30, cartWidth: 100, cartSize: 25, querySnapshot: querysnapshot,),
                         ),
 
+                        // StreamBuilder<QuerySnapshot>(
+                        //   stream: null,
+                        //   builder: (context, snapshot) {
+                        //     return Container(height:500,child: featuredGridview(shoenum: shoenum, widgth: 250, height: 150, name: 14, price: 14, favHeight: 30, favWidth: 80, favSize: 20, cartHeight: 30, cartWidth: 80, cartSize: 20, querySnapshot: Ecom.querysnapshot,));
+                        //   }
+                        // ),
+
+                        // Column(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //   ],
+                        // ),
                         const SizedBox(height: 20),
                         Divider(
                           thickness: 10,

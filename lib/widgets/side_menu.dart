@@ -155,7 +155,7 @@ class _SideDrawerState extends State<SideDrawer> {
                           ListTile(
                             title: InkWell(
                                 onTap: (){
-                                  Navigator.pushNamed(context, Routes.about);
+                                  Navigator.pushNamed(context, Routes.customerDirection);
                                 },
                                 child: const Text("CUSTOMER DIRECTION")
                             ),
@@ -163,15 +163,20 @@ class _SideDrawerState extends State<SideDrawer> {
                           ListTile(
                             title: InkWell(
                                 onTap: (){
-                                  Navigator.pushNamed(context, Routes.about);
+                                  Navigator.pushNamed(context, Routes.ourTeam);
                                 },
                                 child: const Text("OUR TEAM")
                             ),
                           ),
                         ],
                       ),
-                      const ListTile(
-                        title: MenuType(isSelected: false, coffeeType: 'WHOLESALE'),
+                      ListTile(
+                        title: InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, Routes.wholesale);
+                          },
+                            child: const MenuType(isSelected: false, coffeeType: 'WHOLESALE')
+                        ),
                       ),
                       const ListTile(
                         title: MenuType(isSelected: false, coffeeType: 'BLOG'),

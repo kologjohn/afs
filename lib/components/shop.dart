@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../controller/dbfields.dart';
 import '../widgets/featured_product.dart';
 import '../widgets/featuredgridview.dart';
+import '../widgets/main_menu.dart';
 import '../widgets/menu_type.dart';
 import '../widgets/route.dart';
 import '../widgets/social_media_icons.dart';
@@ -72,37 +73,9 @@ class _ShopPageState extends State<ShopPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      const Row(
                         children: [
-                          InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, Routes.dashboard);
-                            },
-                            child: const MenuType(
-                              isSelected: true,
-                              coffeeType: "HOME",
-                            ),
-                          ),
-                          const SizedBox(width: 40),
-                          const MenuType(
-                              isSelected: false,
-                              coffeeType: "SHOP"
-                          ),
-                          const SizedBox(width: 40),
-                          const MenuType(
-                              isSelected: false,
-                              coffeeType: "ABOUT US"
-                          ),
-                          const SizedBox(width: 40),
-                          const MenuType(
-                              isSelected: false,
-                              coffeeType: "BLOG"
-                          ),
-                          const SizedBox(width: 40),
-                          const MenuType(
-                              isSelected: false,
-                              coffeeType: "CONTACT"
-                          ),
+                          MainMenu()
                         ],
                       ),
                       const SizedBox(width: 120),
@@ -320,7 +293,7 @@ class _ShopPageState extends State<ShopPage> {
                                       SizedBox(
                                         height: 1200,
                                         child: StreamBuilder<QuerySnapshot>(
-                                         stream: Dbfields.db.collection("items").orderBy(ItemReg.category).snapshots(),
+                                         stream: Dbfields.db.collection("items").orderBy(ItemReg.category).limit(50).snapshots(),
                                           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
                                            if(!snapshot.hasData){
@@ -385,9 +358,9 @@ class _ShopPageState extends State<ShopPage> {
                                                             //print("${name_txt} image are not uploaded yet");
                                                           } ,
                                                           imageUrl: url,
-                                                          height: 200,
+                                                         // height: 200,
                                                           width: 400,
-                                                          fit: BoxFit.cover,
+                                                          fit: BoxFit.contain,
                                                           placeholder: (context, url) => const Center(
                                                             child: SizedBox(
                                                               height: 50,
@@ -395,7 +368,7 @@ class _ShopPageState extends State<ShopPage> {
                                                               child: CircularProgressIndicator(),
                                                             ),
                                                           ),
-                                                          errorWidget: (context, url, error) =>Icon(Icons.error,color: Colors.red,),
+                                                          errorWidget: (context, url, error) =>const Icon(Icons.error,color: Colors.red,),
 
                                                         ),
                                                         progress: false,
@@ -418,7 +391,7 @@ class _ShopPageState extends State<ShopPage> {
                                         },
                                       )
 
-                                //featuredGridview(shoenum: shoenum, widgth: 300, height: 200, name: 16, price: 16, favHeight: 30, favWidth: 100, favSize: 25, cartHeight: 30, cartWidth: 100, cartSize: 25, querySnapshot: querysnapshot,),
+                                            //featuredGridview(shoenum: shoenum, widgth: 300, height: 200, name: 16, price: 16, favHeight: 30, favWidth: 100, favSize: 25, cartHeight: 30, cartWidth: 100, cartSize: 25, querySnapshot: querysnapshot,),
                                       )
                                     ],
                                   )
