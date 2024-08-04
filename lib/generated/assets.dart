@@ -3,8 +3,15 @@ class Assets {
   Assets._();
 
   static const String assetsChair = 'assets/chair.png';
+  static const String imagesAboutus = 'assets/images/aboutus.png';
+  static const String imagesAf1 = 'assets/images/af1.png';
+  static const String imagesAf2 = 'assets/images/af2.png';
+  static const String imagesAfricanstrawonne = 'assets/images/africanstrawonne.jpeg';
+  static const String imagesBg1 = 'assets/images/bg1.png';
+  static const String imagesBg2 = 'assets/images/bg2.jpeg';
   static const String imagesChair = 'assets/images/chair.png';
   static const String imagesDSC0242 = 'assets/images/DSC_0242.png';
+  static const String imagesDSC0259 = 'assets/images/DSC_0259.png';
   static const String imagesDSC0331 = 'assets/images/DSC_0331.png';
   static const String imagesDSC6131 = 'assets/images/DSC_6131.jpg';
   static const String imagesDSC6144 = 'assets/images/DSC_6144.jpg';
@@ -46,6 +53,7 @@ class Assets {
   static const String svgIcons8Twitter = 'assets/svg/icons8-twitter.svg';
   static const String svgLinkedin = 'assets/svg/linkedin.svg';
   static const String svgPinterest = 'assets/svg/pinterest.svg';
+  static const String svgTerms = 'assets/svg/terms.svg';
   static const String svgTwitter = 'assets/svg/twitter.svg';
   static const String svgTwitterbird = 'assets/svg/twitterbird.svg';
 

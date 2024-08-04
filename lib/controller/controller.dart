@@ -56,12 +56,7 @@ class Ecom extends ChangeNotifier{
      sharedPreferences.setBool("lockstatus", false);
      notifyListeners();
    }
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
-      'email',
-      // Add other scopes as needed.
-    ],
-  );
+
    alreadypaid(BuildContext context)async{
     final SharedPreferences  sprefs=await SharedPreferences.getInstance();
     final cart_id=sprefs.getString("cartid");

@@ -1,5 +1,7 @@
+import 'package:africanstraw/constanst.dart';
 import 'package:flutter/material.dart';
 import 'package:africanstraw/widgets/route.dart';
+
 import 'menu_type.dart';
 
 class MainMenu extends StatelessWidget {
@@ -24,7 +26,7 @@ class MainMenu extends StatelessWidget {
               coffeeType: "HOME",
             ),
           ),
-          SizedBox(width: 40),
+          const SizedBox(width: 40),
           InkWell(
             onTap: () {
               Navigator.pushNamed(context, Routes.mainShop);
@@ -38,18 +40,22 @@ class MainMenu extends StatelessWidget {
           PopupMenuButton<String>(
             onSelected: (value) {
               // Handle submenu item click
-              // if (value == 'aboutUs') {
-              //   Navigator.pushNamed(context, Routes.about);
-              // } else if (value == 'customerDirection') {
-              //   // Navigate to Customer Direction page
-              // } else if (value == 'ourTeam') {
-              //   // Navigate to Our Team page
-              // }
+              if (value == 'aboutUs') {
+                Navigator.pushNamed(context, Routes.about);
+              } else if (value == 'customerDirection') {
+                //Navigator.pushNamed(context, Routes.customerDirection);
+                // Navigate to Customer Direction page
+              } else if (value == 'ourTeam') {
+               // Navigator.pushNamed(context, Routes.ourTeam);
+                // Navigate to Our Team page
+              } else if (value =='termsAndConditions') {
+                Navigator.pushNamed(context, Routes.terms);
+              }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
+               PopupMenuItem<String>(
                 value: 'aboutUs',
-                child: Text('ABOUT US'),
+                child: Text('ABOUT ${Companydata.companyname}'),
               ),
               const PopupMenuItem<String>(
                 value: 'customerDirection',
@@ -59,6 +65,10 @@ class MainMenu extends StatelessWidget {
                 value: 'ourTeam',
                 child: Text('OUR TEAM'),
               ),
+              const PopupMenuItem<String>(
+                value: 'termsAndConditions',
+                  child: Text("Terms And Conditions")
+              )
             ],
             child: const MenuType(
               isSelected: false,
@@ -66,9 +76,14 @@ class MainMenu extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 30),
-          const MenuType(
-            isSelected: false,
-            coffeeType: "WHOLESALE",
+          InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, Routes.wholesale);
+            },
+            child: const MenuType(
+              isSelected: false,
+              coffeeType: "WHOLESALE",
+            ),
           ),
           const SizedBox(width: 30),
           const MenuType(

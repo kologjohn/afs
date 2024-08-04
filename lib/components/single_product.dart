@@ -8,6 +8,7 @@ import 'package:africanstraw/components/global.dart';
 import 'package:africanstraw/controller/controller.dart';
 import 'package:africanstraw/controller/dbfields.dart';
 import 'package:africanstraw/widgets/route.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
@@ -43,7 +44,7 @@ class _SingleProductState extends State<SingleProduct> {
               appBar: AppBar(
                 backgroundColor: Colors.lightGreen[50],
                 centerTitle: true,
-                title: Text(value.companyname, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
+                title: Text(Companydata.companyname, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
               ),
               body: StreamBuilder<QuerySnapshot>(
                   stream: value.db.collection("items").where(ItemReg.code, isEqualTo: itemamme).snapshots(),
@@ -142,7 +143,7 @@ class _SingleProductState extends State<SingleProduct> {
                                                             decoration: BoxDecoration(
                                                               image: DecorationImage(
                                                                 image: imageProvider,
-                                                                fit: BoxFit.cover,
+                                                                fit: BoxFit.contain,
                                                                 // colorFilter: ColorFilter.mode(Colors.white, BlendMode.colorDodge)
                                                               ),
                                                             ),
