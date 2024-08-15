@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +14,6 @@ import '../widgets/main_menu.dart';
 import '../widgets/menu_type.dart';
 import '../widgets/route.dart';
 import '../widgets/social_media_icons.dart';
-
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -203,11 +201,12 @@ class _ShopPageState extends State<ShopPage> {
                                           height: 700,
                                           child: Padding(
                                             padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
-                                            child: StreamBuilder<QuerySnapshot>(
-                                              stream: Dbfields.db.collection("category").snapshots(),
-                                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-                                                if (!snapshot.hasData)
-                                                {
+                                            child:FutureBuilder<QuerySnapshot>(
+                                              future: Dbfields.db.collection("category").get(),
+                                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                                  return CircularProgressIndicator();
+                                                } else if (!snapshot.hasData) {
                                                   return Text("No data");
                                                 }
 
@@ -216,42 +215,34 @@ class _ShopPageState extends State<ShopPage> {
                                                   itemCount: snapshot.data!.docs.length,
                                                   itemBuilder: (BuildContext context, int index) {
                                                     active.add(false);
-                                                    String cate=snapshot.data!.docs[index]['name'];
-                                                    return Container(child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        InkWell(
-                                                          onTap: (){
-                                                            setState(() {
-                                                              value.selected_category("");
-                                                              searchQuery=cate;
-                                                            });
-                                                            // setState(() {
-                                                            //   shoenum=Ecom().capitalizeSentence(cate);
-                                                            //   querysnapshot=Dbfields.db.collection("items").where(ItemReg.category,isEqualTo: cate).snapshots();
-                                                            //   if(active[index])
-                                                            //   {
-                                                            //     active.add(false);
-                                                            //   } else{
-                                                            //     active[index]=true;
-                                                            //   }
-                                                            //
-                                                            // });
-                                                          },
-                                                          child: MenuType(
+                                                    String cate = snapshot.data!.docs[index]['name'];
+                                                    return Container(
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                value.selected_category("");
+                                                                searchQuery = cate;
+
+                                                              });
+                                                            },
+                                                            child: MenuType(
                                                               isSelected: active[index],
-                                                              coffeeType: cate
+                                                              coffeeType: cate,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        Divider(thickness: 1,color: Colors.grey[200],),
-                                                        const SizedBox(height: 10),
-                                                      ],
-                                                    ),
+                                                          Divider(thickness: 1, color: Colors.grey[200]),
+                                                          const SizedBox(height: 10),
+                                                        ],
+                                                      ),
                                                     );
                                                   },
                                                 );
                                               },
-                                            ),
+                                            )
+                                            ,
                                           ),
                                         ),
                                         const SizedBox(width: 8),
@@ -295,7 +286,6 @@ class _ShopPageState extends State<ShopPage> {
                                         child: StreamBuilder<QuerySnapshot>(
                                          stream: Dbfields.db.collection("items").orderBy(ItemReg.category).limit(50).snapshots(),
                                           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-
                                            if(!snapshot.hasData){
                                             return const Text("Loading...");
                                           }

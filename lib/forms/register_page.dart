@@ -80,7 +80,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               controller: firstname,
                               textInputType: TextInputType.name,
                               obscure: false,
-                              labelText: 'First Name', enabled: fnameedit,
+                              labelText: 'First Name', enabled: true,
 
                             ),
                             const SizedBox(
@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               controller: lastname,
                               textInputType: TextInputType.name,
                               obscure: false,
-                              labelText: 'Last Name', enabled: lnameedit,
+                              labelText: 'Last Name', enabled: true,
                             ),
                             const SizedBox(
                               height: 15,

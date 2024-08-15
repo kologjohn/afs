@@ -55,15 +55,15 @@ class MainMenu extends StatelessWidget {
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                PopupMenuItem<String>(
                 value: 'aboutUs',
-                child: Text('ABOUT ${Companydata.companyname}'),
+                child: Text('About Us'),
               ),
               const PopupMenuItem<String>(
                 value: 'customerDirection',
-                child: Text('CUSTOMER DIRECTION'),
+                child: Text('Customer Direction'),
               ),
               const PopupMenuItem<String>(
                 value: 'ourTeam',
-                child: Text('OUR TEAM'),
+                child: Text('Our Team'),
               ),
               const PopupMenuItem<String>(
                 value: 'termsAndConditions',
@@ -78,7 +78,7 @@ class MainMenu extends StatelessWidget {
           const SizedBox(width: 30),
           InkWell(
             onTap: (){
-              Navigator.pushNamed(context, Routes.wholesale);
+              //Navigator.pushNamed(context, Routes.wholesale);
             },
             child: const MenuType(
               isSelected: false,

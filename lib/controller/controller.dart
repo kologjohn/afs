@@ -443,6 +443,7 @@ try{
 
   }
    Future<User?> signInWithGoogles({required BuildContext context}) async {
+    print("Data....");
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
    // if (googleSignInAccount != null)
@@ -468,7 +469,7 @@ try{
             user_email=loginmail!;
             user_firstname=fname;
             user_lastname=lname;
-          }
+
           final existdata=await Dbfields.db.collection("users").doc(auth.currentUser!.email).get();
           if(existdata.exists)
           {
@@ -493,7 +494,10 @@ try{
             Navigator.pushNamed(context, Routes.signup);
           }
           }
-
+        }
+        else{
+          print("NO");
+        }
       } on FirebaseAuthException catch (e) {
         loginstatus=false;
         error=e.message!;

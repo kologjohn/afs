@@ -11,7 +11,7 @@ class Global {
   static const Color primaryColor = Color(0xFF2697FF);
   static const Color secondaryColor = Color(0xFF2A2D3E);
   static const Color bgColor = Color(0xFF212332);
-  static const Color mainColor = Colors.brown;
+  static const Color mainColor =Color(0xFF2697FF);
   //static const Color mainColor = Color(0xFF468D80);
 
 
