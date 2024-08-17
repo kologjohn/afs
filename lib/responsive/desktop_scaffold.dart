@@ -10,7 +10,6 @@ import 'package:africanstraw/widgets/route.dart';
 import 'package:provider/provider.dart';
 import '../controller/controller.dart';
 import '../widgets/featured_product.dart';
-import '../widgets/featuredgridview.dart';
 import '../widgets/main_menu.dart';
 import '../widgets/menu_type.dart';
 import '../widgets/social_media_icons.dart';
@@ -25,7 +24,6 @@ class DesktopScaffold extends StatefulWidget {
 class _DesktopScaffoldState extends State<DesktopScaffold> {
   String searchQuery="";
 
-  var querysnapshot=Dbfields.db.collection("items").orderBy(ItemReg.category).limit(10).snapshots();
   String shoenum="";
   bool show=false;
   bool editShow=true;
@@ -146,6 +144,16 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                     //height: 10000,
                     child: Column(
                       children: [
+                        // if(value.nextstate=="not verified")
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: Container(
+                        //     width: 900,
+                        //     color: Colors.red,
+                        //     child: const Text("Please a verification email has been sent to your account",style: TextStyle(fontSize: 16,color: Colors.white),),
+                        //   ),
+                        // ),
+
                         Column(
                           children: [
                             Row(
@@ -403,11 +411,13 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                           ],
                                                         ),
                                                       ),
+
                                                       Expanded(
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.end,
 
                                                           children: [
+
                                                             CircleAvatar(
                                                               backgroundColor: Colors.lightBlue[50],
                                                               child: const Icon(
@@ -578,9 +588,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                         SizedBox(
                             height: 500,
                             child: StreamBuilder<QuerySnapshot>(
-                              stream: Dbfields.db.collection("items").orderBy(ItemReg.category).orderBy('date').limit(8).snapshots(),
+                              stream: Dbfields.db.collection("items").orderBy('date').limit(8).snapshots(),
                               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-
                                 if(!snapshot.hasData){
                                   return const Text("Loading...");
                                 }
@@ -645,7 +654,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                 imageUrl: url,
                                                 height: 200,
                                                 width: 400,
-                                                fit: BoxFit.cover,
+                                                fit: BoxFit.contain,
                                                 placeholder: (context, url) => const Center(
                                                   child: SizedBox(
                                                     height: 50,
@@ -1041,6 +1050,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                   padding: const EdgeInsets.only(left: 130.0, right: 130, top: 50),
                   child: Column(
                     children: [
+
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

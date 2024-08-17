@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:africanstraw/controller/controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:africanstraw/widgets/route.dart';
-import 'package:seo/html/seo_widget.dart';
 import 'firebase_options.dart';
 import 'package:seo/seo.dart';
 void main() async {

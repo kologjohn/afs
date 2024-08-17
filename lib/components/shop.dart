@@ -205,9 +205,9 @@ class _ShopPageState extends State<ShopPage> {
                                               future: Dbfields.db.collection("category").get(),
                                               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                                 if (snapshot.connectionState == ConnectionState.waiting) {
-                                                  return CircularProgressIndicator();
+                                                  return const Text("Please wait");
                                                 } else if (!snapshot.hasData) {
-                                                  return Text("No data");
+                                                  return const Text("No data");
                                                 }
 
                                                 return ListView.builder(
@@ -223,7 +223,7 @@ class _ShopPageState extends State<ShopPage> {
                                                           InkWell(
                                                             onTap: () {
                                                               setState(() {
-                                                                value.selected_category("");
+                                                                value.selected_category(cate);
                                                                 searchQuery = cate;
 
                                                               });
@@ -304,7 +304,14 @@ class _ShopPageState extends State<ShopPage> {
                                              String item = data['item']?.toString().toLowerCase() ?? '';
                                              String category = data['category']?.toString().toLowerCase() ?? '';
                                              String price = data['sellingprice']?.toString().toLowerCase() ?? '';
-                                             return item.contains(searchQuery.toLowerCase()) || category.contains(searchQuery.toLowerCase() )||price.contains(searchQuery.toLowerCase());
+                                             if(value.selectedcategory.isNotEmpty){
+                                               return category.contains(searchQuery.toLowerCase());
+                                             }
+                                             else
+                                               {
+                                                 return item.contains(searchQuery.toLowerCase()) || category.contains(searchQuery.toLowerCase() )||price.contains(searchQuery.toLowerCase());
+
+                                               }
 
                                            }).toList();
                                            // for(int i=0;i<snapshot.data!.docs.length;i++){

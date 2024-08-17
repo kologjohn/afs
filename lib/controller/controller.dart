@@ -40,12 +40,37 @@ class Ecom extends ChangeNotifier{
   bool cardstatus=false;
   String cartidnumber="";
   bool loginstatus=false;
+  String nextstate="";
+   snackbarerror(String message,BuildContext context){
+     SnackBar snackBar=SnackBar(content: Text(message,style: const TextStyle(color: Colors.white),),backgroundColor: Colors.red,);
+     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+   }
+   snackbarsucess(String message,BuildContext context){
+     SnackBar snackBar=SnackBar(content: Text(message,style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,);
+     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+   }
 
   selected_category(String selected)async{
     selectedcategory=selected;
     notifyListeners();
   }
+  setnextstate(String cstate)async{
+    final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    sharedPreferences.setString("cstate", cstate);
+  }
+  getcstate()async{
+    final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+     String? mysate=sharedPreferences.getString("cstate");
+    nextstate=mysate!;
+    notifyListeners();
+  }
 
+  resetnextstate()async{
+    final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    sharedPreferences.remove("cstate");
+    nextstate="";
+    notifyListeners();
+  }
   lockcart()async{
     String? contact=Dbfields.auth.currentUser!.phoneNumber;
     String? email=Dbfields.auth.currentUser!.email;
@@ -74,7 +99,7 @@ class Ecom extends ChangeNotifier{
      notifyListeners();
    }
 
-   alreadypaid(BuildContext context)async{
+    alreadypaid(BuildContext context)async{
     final SharedPreferences  sprefs=await SharedPreferences.getInstance();
     final cart_id=sprefs.getString("cartid");
     final alreaypaid=await db.collection("checkout").doc(cart_id).get();
@@ -139,8 +164,7 @@ return status;
       await currecy();
       double ghs=currecyval*double.parse(cardvalue);
       final alreaypaid=await db.collection("checkout").doc(cart_id).get();
-      if(alreaypaid.exists)
-        {
+      if(alreaypaid.exists) {
           openpaystack(alreaypaid['payurl']);
           payurl=alreaypaid[CheckoutFields.payurl];
           accesscode=alreaypaid[CheckoutFields.accesscode];
@@ -229,15 +253,15 @@ return status;
        return result.trim();
      }
     companyinfo()async{
-try{
-  final dbcompanyinfo=await db.collection("settings").get();
-  companyname=dbcompanyinfo.docs[0]['name'];
-  companyemail=dbcompanyinfo.docs[0]['email'];
-  companyphone=dbcompanyinfo.docs[0]['phone'];
-  companyaddress=dbcompanyinfo.docs[0]['address'];
-}on FirebaseException catch(e){
-  print(e.message);
-}
+    try{
+      final dbcompanyinfo=await db.collection("settings").get();
+      companyname=dbcompanyinfo.docs[0]['name'];
+      companyemail=dbcompanyinfo.docs[0]['email'];
+      companyphone=dbcompanyinfo.docs[0]['phone'];
+      companyaddress=dbcompanyinfo.docs[0]['address'];
+    }on FirebaseException catch(e){
+      print(e.message);
+    }
 
     notifyListeners();
   }
@@ -251,19 +275,34 @@ try{
 }
     signupwithemail(String firstname,String lastname,String username,String contact,String sex,String email,String password,BuildContext context)async{
     try{
+      // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+      // sharedPreferences.setString("fname",firstname);
+      // sharedPreferences.setString("lastname",lastname);
+      // sharedPreferences.setString("phone",contact);
+      //print(email);
       final eixistuser=await Dbfields.db.collection(Dbfields.users).doc(email).get();
       final countexiist=await Dbfields.db.collection(Dbfields.users).get();
       int userid=countexiist.docs.length+1;
-      if(eixistuser.exists)
-        {
+      String notverified="Please check your email imbox to verify your account";
+      if(eixistuser.exists) {
+          // sharedPreferences.setString("fname",eixistuser[Dbfields.firstname]);
+          // sharedPreferences.setString("lastname",eixistuser[Dbfields.lastname]);
+          // sharedPreferences.setString("phone",eixistuser[Dbfields.contact]);
           //await Dbfields.auth.createUserWithEmailAndPassword(email: email, password: password);
-          if(auth.currentUser!=null)
+          if(auth.currentUser!=null&& auth.currentUser!.emailVerified)
             {
               Navigator.pushNamed(context, Routes.dashboard);
             }
+          else if(auth.currentUser!=null && !auth.currentUser!.emailVerified)
+            {
+             snackbarerror(notverified, context);
+             await setnextstate("not verified");
+             await getcstate();
+
+            }
         }
-      else
-        {
+      else {
+          await auth.createUserWithEmailAndPassword(email: email, password: password);
           final data={
             Dbfields.firstname:firstname,
             Dbfields.lastname:lastname,
@@ -277,18 +316,42 @@ try{
           await Dbfields.db.collection(Dbfields.users).doc(email).set(data);
           if(auth.currentUser==null){
             await Dbfields.auth.createUserWithEmailAndPassword(email: email, password: password);
+            await auth.currentUser!.sendEmailVerification();
+            //auth.currentUser!.updateDisplayName("${lastname} ${firstname}");
+            auth.currentUser!.updateDisplayName("$lastname $firstname");
+            accountcreated=true;
+            error="";
+            snackbarerror(notverified, context);
+            await setnextstate("not verified");
+            await getcstate();
             Navigator.pushNamed(context, Routes.dashboard);
+
+
           }
-          if(auth.currentUser!=null && !auth.currentUser!.emailVerified)
-          {
+          else if(auth.currentUser!=null && !auth.currentUser!.emailVerified) {
             auth.currentUser!.updateDisplayName("$lastname $firstname");
             await auth.currentUser!.sendEmailVerification();
+            accountcreated=true;
+            error="";
+            snackbarerror(notverified, context);
+            await setnextstate("not verified");
+            await getcstate();
             Navigator.pushNamed(context, Routes.dashboard);
-          }
-          accountcreated=true;
-          error="";
-        }
 
+          }
+          else if(auth.currentUser!=null && auth.currentUser!.emailVerified) {
+            auth.currentUser!.updateDisplayName("$lastname $firstname");
+            await auth.currentUser!.sendEmailVerification();
+            accountcreated=true;
+            error="";
+            Navigator.pushNamed(context, Routes.dashboard);
+            await setnextstate("not verified");
+            await getcstate();
+            snackbarsucess("Account created successfully", context);
+
+
+          }
+        }
     }on FirebaseException catch (e){
       accountcreated=false;
       error=e.code!;
@@ -325,7 +388,6 @@ try{
       final SharedPreferences  sprefs=await SharedPreferences.getInstance();
       final cartId=sprefs.getString("cartid");
       bool? lock=sprefs.getBool("lockstatus");
-
       final alreaypaid=await db.collection("checkout").doc(cartId).get();
       if(alreaypaid.exists){
         bool paid=alreaypaid['status'];
@@ -344,8 +406,7 @@ try{
         }
 
       }
-      else
-        {
+      else {
          // print("new transaction");
          //  if(Dbfields.auth.currentUser==null) {
          //    success=false;
@@ -387,11 +448,10 @@ try{
             print("object");
           }
         }
-
     notifyListeners();
     return [success,error];
   }
-   Future<String> cartid(String id,String date,bool status,String method,String email)async{
+    Future<String> cartid(String id,String date,bool status,String method,String email)async{
     String cid="NO";
       if(Dbfields.auth.currentUser!.emailVerified){
         final data ={
@@ -425,7 +485,7 @@ try{
       notifyListeners();
       return cid;
   }
-   Future<void> signInWithGoogle() async {
+    Future<void> signInWithGoogle() async {
     // Create a new provider
     try {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
@@ -453,8 +513,12 @@ try{
     }
    notifyListeners();
   }
-   signout()async{
+    signout()async{
      try{
+       final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+       sharedPreferences.remove("fname");
+       sharedPreferences.remove("lastname");
+       sharedPreferences.remove("phone");
          await auth.signOut();
      }on FirebaseException catch(e){
        error=e.message!;
@@ -464,7 +528,7 @@ try{
      notifyListeners();
 
   }
-   Future<User?> signInWithGoogles({required BuildContext context}) async {
+    Future<User?> signInWithGoogles({required BuildContext context}) async {
     print("Data....");
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
@@ -537,7 +601,7 @@ try{
 notifyListeners();
     return user;
   }
-   openpaystack(String url)async{
+    openpaystack(String url)async{
      try{
        final Uri url0 = Uri.parse(url);
        launchUrl(url0,
@@ -553,7 +617,7 @@ notifyListeners();
        // print("Erro $e");
      }
    }
-   paystacks(String phone,String amount,String tid) async {
+    paystacks(String phone,String amount,String tid) async {
     try{
       final alreaypaid=await db.collection("checkout").doc(tid).get();
       print(alreaypaid['payurl']);
@@ -619,7 +683,7 @@ notifyListeners();
 
 
    }
-   currecy() async {
+    currecy() async {
      String? email = "";
      final user = FirebaseAuth.instance.currentUser;
      if (user != null) {
