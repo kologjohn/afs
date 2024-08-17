@@ -28,7 +28,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
   String _selectedCountry = 'Ghana'; // Default country
   String _selectedRegion = 'Accra'; // Default region for Ghana
 
-  Map<String, List<String>> _regionsByCountry = {
+  final Map<String, List<String>> _regionsByCountry = {
     'Ghana': ['Accra', 'Kumasi', 'Tamale', 'Cape Coast'],
     'Nigeria': ['Abuja', 'Lagos', 'Kano', 'Ibadan'],
     // Add more countries and their regions here
@@ -57,6 +57,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
             ecom.carttotal();
             ecom.cartidmethod();
             ecom.currecy();
+            print(ecom.currecyval);
           }
           double convertedamt=double.parse(ecom.cardvalue)*ecom.currecyval;
           String finalconverted=ecom.numformat.format(convertedamt);
@@ -326,7 +327,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         ),
                                                         child: ElevatedButton(
                                                           onPressed: () async{
-                                                            if (validator()) {
+                                                           // if (validator()) {
                                                               String email_txt=email.text.trim().toString();
                                                               String fname_txt=firstname.text.trim().toString();
                                                               String lname_txt=lastname.text.trim().toString();
@@ -348,9 +349,9 @@ class _CheckoutFormState extends State<CheckoutForm> {
 
                                                               pgress.dismiss();
 
-                                                            } else {
-                                                              print('Form is invalid');
-                                                            }
+                                                            // } else {
+                                                            //   print('Form is invalid');
+                                                            // }
                                                           },
                                                           style: ElevatedButton.styleFrom(
                                                             fixedSize: const Size(395, 55),

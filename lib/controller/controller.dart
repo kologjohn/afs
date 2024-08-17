@@ -47,6 +47,23 @@ class Ecom extends ChangeNotifier{
   }
 
   lockcart()async{
+    String? contact=Dbfields.auth.currentUser!.phoneNumber;
+    String? email=Dbfields.auth.currentUser!.email;
+    try{
+      final shards = await db.collection('cart').where(Dbfields.cartidnumber,isEqualTo:mycardid).get();
+      mycarttotal=0;
+      shards.docs.forEach(
+            (doc) async {
+
+              final updatedata={Dbfields.email:email};
+              final update=await db.collection("cart").doc(doc.id).update(updatedata);
+        },
+      );
+      //print(mycarttotal);
+    }catch(e){
+      print(e);
+
+    }
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     sharedPreferences.setBool("lockstatus", true);
   }
@@ -311,45 +328,50 @@ try{
 
       final alreaypaid=await db.collection("checkout").doc(cartId).get();
       if(alreaypaid.exists){
-        String url=alreaypaid[CheckoutFields.payurl];
-        if(url.isNotEmpty)
-        {
-          error="You have a pending cart to complete, you can not add to pending cart";
-          Navigator.pushNamed(context, Routes.dashboard);
-          print("pending");
+        bool paid=alreaypaid['status'];
+        if(paid){
+          String url=alreaypaid[CheckoutFields.payurl];
+          if(url.isNotEmpty)
+          {
+            error="You have a pending cart to complete, you can not add to pending cart";
+            Navigator.pushNamed(context, Routes.dashboard);
+            print("pending");
+          }
+          else
+          {
+            print("mmpending");
+          }
         }
-        else
-        {
-          print("mmpending");
-        }
+
       }
       else
         {
          // print("new transaction");
-          if(Dbfields.auth.currentUser==null) {
-            success=false;
-            cardstatus=false;
-            //print("Please u are not login");
-            error="Please you must login before you can add to cart";
-            notifyListeners();
-          }
-          else if(!Dbfields.auth.currentUser!.emailVerified){
-            success=false;
-            cardstatus=false;
-            error="Your email is not verified. Check your inbox and verify your email";
-            // print("You are not verified");
-          }
-          else
+         //  if(Dbfields.auth.currentUser==null) {
+         //    success=false;
+         //    cardstatus=false;
+         //    //print("Please u are not login");
+         //    error="Please you must login before you can add to cart";
+         //    notifyListeners();
+         //  }
+         //  else if(!Dbfields.auth.currentUser!.emailVerified){
+         //    success=false;
+         //    cardstatus=false;
+         //    error="Your email is not verified. Check your inbox and verify your email";
+         //    // print("You are not verified");
+         //  }
+          //else
           {
-            String? email=Dbfields.auth.currentUser!.email;
-            String? contact=Dbfields.auth.currentUser!.phoneNumber;
+            // String? contact=Dbfields.auth.currentUser!.phoneNumber;
+            // String? email=Dbfields.auth.currentUser!.email;
+          //  resetcart(context);
             final date=DateTime.now();
             final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
             String? mycartids=sharedPreferences.getString("cartid");
             mycardid=mycartids!;
             final data={
-              Dbfields.email:email,
-              Dbfields.contact:contact,
+              Dbfields.email:"",
+              Dbfields.contact:"",
               Dbfields.itemname:itemname,
               Dbfields.price:price,
               Dbfields.quantity:quantity,
@@ -552,7 +574,7 @@ notifyListeners();
               'Content-Type': 'application/json',
               'Authorization': 'Bearer $token',
             };
-            var request = http.Request('POST', Uri.parse('https://us-central1-heritageaskets.cloudfunctions.net/paystack'));
+            var request = http.Request('POST', Uri.parse('https://us-central1-africanstraw-e03e1.cloudfunctions.net/paystack'));
             request.body = json.encode({
               "data": {
                 "phone": phone,
@@ -607,7 +629,7 @@ notifyListeners();
          'Content-Type': 'application/json',
          'Authorization': 'Bearer $token',
        };
-       var request = http.Request('POST', Uri.parse('https://us-central1-heritageaskets.cloudfunctions.net/currency'));
+       var request = http.Request('POST', Uri.parse('https://us-central1-africanstraw-e03e1.cloudfunctions.net/currency'));
        request.body = json.encode({
          "data": {
            "email": email,

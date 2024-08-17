@@ -52,7 +52,7 @@ class _CartViewState extends State<CartView> {
                             color: Colors.white,
                             //height: 1500,
                             child: StreamBuilder<QuerySnapshot>(
-                                stream: value.db.collection("cart").where(Dbfields.email, isEqualTo: email).where(Dbfields.cartidnumber, isEqualTo: cardnumber).snapshots(),
+                                stream: value.db.collection("cart").where(Dbfields.cartidnumber, isEqualTo: cardnumber).snapshots(),
                                 builder: (context, snapshot) {
                                   items.clear();
                                   if(snapshot.hasData){
@@ -294,8 +294,14 @@ class _CartViewState extends State<CartView> {
                                                             const SizedBox(height: 50),
                                                             InkWell(
                                                               onTap: ()async{
-                                                                Navigator.pushNamed(context, Routes.checkout);
-                                                                value.lockcart();
+                                                                if(value.auth.currentUser!=null){
+                                                                  Navigator.pushNamed(context, Routes.checkout);
+                                                                  value.lockcart();
+                                                                }
+                                                                else{
+                                                                  Navigator.pushNamed(context, Routes.login);
+                                                                }
+
                                                                 // final pgress=ProgressHUD.of(context);
                                                                 // pgress!.show();
                                                                 // Future.delayed(Duration(seconds: 10),(){
