@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class TabletFeaturedProduct extends StatelessWidget {
   final String featuredImage;
   final String featuredName;
