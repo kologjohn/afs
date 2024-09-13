@@ -149,23 +149,39 @@ class _SideDrawerState extends State<SideDrawer> {
                                 onTap: (){
                                   Navigator.pushNamed(context, Routes.about);
                                 },
-                                child: const Text("ABOUT HERITAGE BASKETS")
+                                child: const Text("ABOUT AFS")
                             ),
                           ),
                           ListTile(
                             title: InkWell(
                                 onTap: (){
-                                  Navigator.pushNamed(context, Routes.customerDirection);
+                                  Navigator.pushNamed(context, Routes.shipping);
                                 },
-                                child: const Text("CUSTOMER DIRECTION")
+                                child: const Text("SHIPPING PROCESS")
                             ),
                           ),
                           ListTile(
                             title: InkWell(
                                 onTap: (){
-                                  Navigator.pushNamed(context, Routes.ourTeam);
+                                  Navigator.pushNamed(context, Routes.reshape);
                                 },
-                                child: const Text("OUR TEAM")
+                                child: const Text("RESHAPING BASKETS")
+                            ),
+                          ),
+                          ListTile(
+                            title: InkWell(
+                                onTap: (){
+                                  Navigator.pushNamed(context, Routes.terms);
+                                },
+                                child: const Text("TERMS AND CONDITIONS")
+                            ),
+                          ),
+                          ListTile(
+                            title: InkWell(
+                                onTap: (){
+                                  Navigator.pushNamed(context, Routes.returns);
+                                },
+                                child: const Text("RETURN POLICY")
                             ),
                           ),
                         ],
@@ -173,7 +189,7 @@ class _SideDrawerState extends State<SideDrawer> {
                       ListTile(
                         title: InkWell(
                           onTap: (){
-                            Navigator.pushNamed(context, Routes.wholesale);
+                            //Navigator.pushNamed(context, Routes.wholesale);
                           },
                             child: const MenuType(isSelected: false, coffeeType: 'WHOLESALE')
                         ),

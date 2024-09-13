@@ -8,6 +8,9 @@ import 'package:africanstraw/forms/signin_page.dart';
 import 'package:africanstraw/pages/about.dart';
 import 'package:africanstraw/pages/customer_direction.dart';
 import 'package:africanstraw/pages/our_team.dart';
+import 'package:africanstraw/pages/reshaping_basket.dart';
+import 'package:africanstraw/pages/return_policy.dart';
+import 'package:africanstraw/pages/shipping_process.dart';
 import 'package:africanstraw/pages/terms.dart';
 import 'package:africanstraw/pages/wholesale.dart';
 import 'package:africanstraw/responsive/desktop_scaffold.dart';
@@ -31,6 +34,9 @@ class Routes{
   static String ourTeam="ourTeam";
   static String wholesale="wholesale";
   static String terms="terms";
+  static String returns="returns";
+  static String shipping="shipping";
+  static String reshape="reshape";
 }
 
 final pages={
@@ -46,7 +52,10 @@ final pages={
   Routes.ourTeam:(context)=>const OurTeam(),
   Routes.wholesale:(context)=>const Wholesale(),
   Routes.terms:(context)=>const TermsAndConditions(),
-  Routes.mainShop:(context)=>const ResponsiveLayout(isMobile: MobileShop(), isTablet: ShopPage(), isDesktop: ShopPage(),),
-  Routes.dashboard:(context)=>const ResponsiveLayout(isMobile: MobileScaffold(), isTablet: DesktopScaffold(), isDesktop: DesktopScaffold(),
+  Routes.returns:(context)=>const ReturnPolicy(),
+  Routes.shipping:(context)=>const ShippingProcess(),
+  Routes.reshape:(context)=>const ReshapingBasket(),
+  Routes.mainShop:(context)=>const ResponsiveLayout(isMobile: ShopPage(), isTablet: ShopPage(), isDesktop: ShopPage(),),
+  Routes.dashboard:(context)=>const ResponsiveLayout(isMobile: DesktopScaffold(), isTablet: DesktopScaffold(), isDesktop: DesktopScaffold(),
   ),
 };

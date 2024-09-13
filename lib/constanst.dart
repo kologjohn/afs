@@ -25,4 +25,16 @@ class Imagesurls{
   static String heritage6="assets/images/DSC_0242.png";
   static String heritage7="assets/images/DSC_0331.png";
   static String heritage8="assets/images/DSC_0259.png";
+  static String afs1="assets/images/afs.png";
+  static String afs1afs2="assets/images/afs1.png";
+  static String afs3="assets/images/afs2.png";
+  static String afs4="assets/images/afs3.png";
+  static String afs5="assets/images/afs5.jpg";
+  static String afs6="assets/images/afs6.jpg";
+  static String afs7="assets/images/afs7.jpg";
+  static String afs8="assets/images/afs8.jpg";
+  static String afs9="assets/images/afs9.jpg";
+  static String A8A0463="assets/images/A8A0463.jpg";
+  static String A8A0487="assets/images/A8A0487.jpg";
+  static String A8A0530="assets/images/A8A0530.jpg";
 }

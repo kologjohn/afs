@@ -3,10 +3,22 @@ class Assets {
   Assets._();
 
   static const String assetsChair = 'assets/chair.png';
+  static const String imagesA8A0463 = 'assets/images/A8A0463.jpg';
+  static const String imagesA8A0487 = 'assets/images/A8A0487.jpg';
+  static const String imagesA8A0530 = 'assets/images/A8A0530.jpg';
   static const String imagesAboutus = 'assets/images/aboutus.png';
   static const String imagesAf1 = 'assets/images/af1.png';
   static const String imagesAf2 = 'assets/images/af2.png';
   static const String imagesAfricanstrawonne = 'assets/images/africanstrawonne.jpeg';
+  static const String imagesAfs = 'assets/images/afs.png';
+  static const String imagesAfs1 = 'assets/images/afs1.png';
+  static const String imagesAfs2 = 'assets/images/afs2.png';
+  static const String imagesAfs3 = 'assets/images/afs3.png';
+  static const String imagesAfs5 = 'assets/images/afs5.jpg';
+  static const String imagesAfs6 = 'assets/images/afs6.jpg';
+  static const String imagesAfs7 = 'assets/images/afs7.jpg';
+  static const String imagesAfs8 = 'assets/images/afs8.jpg';
+  static const String imagesAfs9 = 'assets/images/afs9.jpg';
   static const String imagesBg1 = 'assets/images/bg1.png';
   static const String imagesBg2 = 'assets/images/bg2.jpeg';
   static const String imagesChair = 'assets/images/chair.png';
@@ -40,6 +52,13 @@ class Assets {
   static const String imagesMasterCard1 = 'assets/images/MasterCard1.png';
   static const String imagesPayPal = 'assets/images/PayPal.png';
   static const String imagesPayout = 'assets/images/payout.png';
+  static const String imagesReshape1 = 'assets/images/reshape1.png';
+  static const String imagesReshape2 = 'assets/images/reshape2.png';
+  static const String imagesReshape3 = 'assets/images/reshape3.png';
+  static const String imagesReshape4 = 'assets/images/reshape4.png';
+  static const String imagesReshape5 = 'assets/images/reshape5.png';
+  static const String imagesShipping = 'assets/images/shipping.jpg';
+  static const String imagesShippingProcess = 'assets/images/shipping-process.png';
   static const String imagesUshape = 'assets/images/ushape.jpg';
   static const String imagesVisa = 'assets/images/visa.jpg';
   static const String imagesVisa1 = 'assets/images/visa1.png';

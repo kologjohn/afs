@@ -15,9 +15,9 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightGreen[50],
+      backgroundColor: Colors.lightBlue[50],
       appBar: AppBar(
-        backgroundColor: Colors.lightGreen[50],
+        backgroundColor: Colors.lightBlue[50],
         title: const Text("About Us"),
         centerTitle: true,
       ),
@@ -42,7 +42,7 @@ class AboutPage extends StatelessWidget {
                               children: [
                                 Container(
                                   color: Colors.white54,
-                                  height: 500,
+                                  //height: 500,
                                   width: 550,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -52,7 +52,7 @@ class AboutPage extends StatelessWidget {
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
                                               children: [
                                                 const Text(
                                                     "WHO WE ARE!",
@@ -63,7 +63,7 @@ class AboutPage extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Container(
-                                                  width: 70,
+                                                  width: 50,
                                                   height: 3,
                                                   color: Global.mainColor,
                                                 )
@@ -72,7 +72,7 @@ class AboutPage extends StatelessWidget {
                                           ],
                                         ),
                                         const SizedBox(height: 20),
-                                         Text(Companydata.aboutus),
+                                         Text(Companydata.aboutus, style: const TextStyle(fontSize: 16)),
                                         const SizedBox(height: 20),
                                         FittedBox(
                                           child: Row(
@@ -211,36 +211,37 @@ class AboutPage extends StatelessWidget {
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: Container(
-                                      width: 100,
+                                      width: 70,
                                       height: 3,
                                       color: Global.mainColor,
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
-                                  Text(Companydata.aboutus1),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 12),
+                                  Text(Companydata.aboutus1, style: const TextStyle(fontSize: 16)),
+                                  const SizedBox(height: 12),
                                   const Align(alignment: Alignment.topLeft, child: Text("Unique Beauty for Your Home",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: Container(
-                                      width: 100,
+                                      width: 70,
                                       height: 3,
                                       color: Global.mainColor,
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
-                                  Text(Companydata.aboutus2),
+                                  const SizedBox(height: 12),
+                                  Text(Companydata.aboutus2, style: const TextStyle(fontSize: 16)),
+                                  const SizedBox(height: 12),
                                   const Align(alignment: Alignment.topLeft, child: Text("Join Us in Celebrating Tradition",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: Container(
-                                      width: 100,
+                                      width: 70,
                                       height: 3,
                                       color: Global.mainColor,
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
-                                  Text(Companydata.aboutus3),
+                                  const SizedBox(height: 12),
+                                  Text(Companydata.aboutus3, style: const TextStyle(fontSize: 16)),
                                 ],
                               ),
                             )

@@ -42,32 +42,38 @@ class MainMenu extends StatelessWidget {
               // Handle submenu item click
               if (value == 'aboutUs') {
                 Navigator.pushNamed(context, Routes.about);
-              } else if (value == 'customerDirection') {
-                //Navigator.pushNamed(context, Routes.customerDirection);
-                // Navigate to Customer Direction page
-              } else if (value == 'ourTeam') {
-               // Navigator.pushNamed(context, Routes.ourTeam);
+              } else if (value == 'shippingProcess') {
+                Navigator.pushNamed(context, Routes.shipping);
+                // Navigate to Shipping Process page
+              } else if (value == 'reshape') {
+                Navigator.pushNamed(context, Routes.reshape);
                 // Navigate to Our Team page
               } else if (value =='termsAndConditions') {
                 Navigator.pushNamed(context, Routes.terms);
+              } else if (value =='returnPolicy') {
+                Navigator.pushNamed(context, Routes.returns);
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-               PopupMenuItem<String>(
+               const PopupMenuItem<String>(
                 value: 'aboutUs',
                 child: Text('About Us'),
               ),
               const PopupMenuItem<String>(
-                value: 'customerDirection',
-                child: Text('Customer Direction'),
+                value: 'shippingProcess',
+                child: Text('Shipping Process'),
               ),
               const PopupMenuItem<String>(
-                value: 'ourTeam',
-                child: Text('Our Team'),
+                value: 'reshape',
+                child: Text('Reshaping Baskets'),
               ),
               const PopupMenuItem<String>(
                 value: 'termsAndConditions',
                   child: Text("Terms And Conditions")
+              ),
+              const PopupMenuItem<String>(
+                value: 'returnPolicy',
+                  child: Text('Return Policy')
               )
             ],
             child: const MenuType(

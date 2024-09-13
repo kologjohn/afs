@@ -12,7 +12,7 @@ class Global {
   static const Color secondaryColor = Color(0xFF2A2D3E);
   static const Color bgColor = Color(0xFF212332);
   static const Color mainColor =Color(0xFF2697FF);
-  //static const Color mainColor = Color(0xFF468D80);
+  //static const Color mainNColor = Color(0xFFD0CCCC);
 
 
   static const defaultPadding = 16.0;
