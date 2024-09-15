@@ -6,6 +6,7 @@ import 'package:africanstraw/forms/register_page.dart';
 import 'package:africanstraw/forms/reset_password.dart';
 import 'package:africanstraw/forms/signin_page.dart';
 import 'package:africanstraw/pages/about.dart';
+import 'package:africanstraw/pages/contact.dart';
 import 'package:africanstraw/pages/customer_direction.dart';
 import 'package:africanstraw/pages/our_team.dart';
 import 'package:africanstraw/pages/reshaping_basket.dart';
@@ -30,6 +31,7 @@ class Routes{
   static String table="table";
   static String resetPassword="resetPassword";
   static String about="about";
+  static String contactPage="contactPage";
   static String customerDirection="customerDirection";
   static String ourTeam="ourTeam";
   static String wholesale="wholesale";
@@ -48,6 +50,7 @@ final pages={
   Routes.table:(context)=>TableExample(),
   Routes.resetPassword:(context)=>const ResetPassword(),
   Routes.about:(context)=>const AboutPage(),
+  Routes.contactPage:(context)=>const ContactPage(),
   Routes.customerDirection:(context)=>const CustomerDirection(),
   Routes.ourTeam:(context)=>const OurTeam(),
   Routes.wholesale:(context)=>const Wholesale(),

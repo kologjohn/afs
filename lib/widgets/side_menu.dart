@@ -197,8 +197,15 @@ class _SideDrawerState extends State<SideDrawer> {
                       const ListTile(
                         title: MenuType(isSelected: false, coffeeType: 'BLOG'),
                       ),
-                      const ListTile(
-                        title: MenuType(isSelected: false, coffeeType: 'CONTACT'),
+                      ListTile(
+                        title: InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, Routes.contactPage);
+                          },
+                            child: const MenuType(
+                                isSelected: false,
+                                coffeeType: 'CONTACT')
+                        ),
                       ),
                     ],
                   ),

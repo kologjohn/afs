@@ -495,7 +495,6 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                               if(!snapshot.hasData)
                                                               {
                                                                 return const Text("No data yet");
-
                                                               }
                                                               return ListView.builder(
                                                                 itemCount: snapshot.data!.docs.length,
@@ -520,10 +519,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                                         ),
                                                                       ),
                                                                       Divider(thickness: 1,color: Colors.grey[200],),
-
                                                                     ],
                                                                   );
-
                                                                 },
                                                               );
                                                             }
@@ -921,7 +918,6 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                   String itemname=fetchedData['item'];
                                   String url=fetchedData['itemurl'];
                                   String sellingprice=fetchedData[ItemReg.sellingprice];
-
                                   return FittedBox(
                                     child: Row(
                                       children: [
@@ -953,7 +949,6 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                   ),
                                                 ),
                                                 errorWidget: (context, url, error) =>const Icon(Icons.error,color: Colors.red,),
-
                                               ),
                                               progress: false,
                                               consWidth: itemWidth,
@@ -970,13 +965,10 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 // spacing: 5,
                                 // children: items
                                 // );
-
                               },
                             )
-
                           //featuredGridview(shoenum: shoenum, widgth: 300, height: 200, name: 16, price: 16, favHeight: 30, favWidth: 100, favSize: 25, cartHeight: 30, cartWidth: 100, cartSize: 25, querySnapshot: querysnapshot,),
                         ),
-
                         // StreamBuilder<QuerySnapshot>(
                         //   stream: null,
                         //   builder: (context, snapshot) {
@@ -1040,7 +1032,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 BlogPost(title: 'TRENDING FASHIONS', mainText: Companydata.blogDescription, date: 'August 18, 2024', comments: '69', imageUrl: Imagesurls.A8A0463,),
                                 BlogPost(title: 'BOLGA ROUND BASKETS', mainText: Companydata.blogDescription, date: 'August 23, 2024', comments: '40', imageUrl: Imagesurls.A8A0530,),
                                 BlogPost(title: 'INTERIOR DECOR', mainText: Companydata.blogDescription, date: 'August 27, 2024', comments: '30', imageUrl: Imagesurls.A8A0487,),
-                                BlogPost(title: 'INTERIOR DECOR', mainText: Companydata.blogDescription, date: 'September 08, 2024', comments: '15', imageUrl: Imagesurls.afs5,),
+                                BlogPost(title: 'ARTISANS', mainText: Companydata.blogDescription, date: 'September 08, 2024', comments: '15', imageUrl: Imagesurls.afs5,),
                               ],
                             )
                           ),

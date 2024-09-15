@@ -97,9 +97,14 @@ class MainMenu extends StatelessWidget {
             coffeeType: "BLOG",
           ),
           const SizedBox(width: 30),
-          const MenuType(
-            isSelected: false,
-            coffeeType: "CONTACT",
+          InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, Routes.contactPage);
+            },
+            child: const MenuType(
+              isSelected: false,
+              coffeeType: "CONTACT",
+            ),
           ),
         ],
       ),
