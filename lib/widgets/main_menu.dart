@@ -84,7 +84,7 @@ class MainMenu extends StatelessWidget {
           const SizedBox(width: 30),
           InkWell(
             onTap: (){
-              //Navigator.pushNamed(context, Routes.wholesale);
+              Navigator.pushNamed(context, Routes.wholesale);
             },
             child: const MenuType(
               isSelected: false,

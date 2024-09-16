@@ -23,23 +23,25 @@ class SingleProduct extends StatefulWidget {
 }
 
 class _SingleProductState extends State<SingleProduct> {
+  final qty=TextEditingController();
   double rating = 3.0;
-  String itemamme="";
   @override
   Widget build(BuildContext context) {
-    final routeparam=ModalRoute.of(context)!.settings.arguments;
-    if (routeparam != null && routeparam is Map<String, dynamic>) {
-      final Map<String, dynamic> args =routeparam as Map<String, dynamic>;
-      itemamme=args['name'];
-    }
-    else
-      {
-        Navigator.pushNamed(context, Routes.dashboard);
-      }
+
+    // final routeparam=ModalRoute.of(context)!.settings.arguments;
+    // if (routeparam != null && routeparam is Map<String, dynamic>) {
+    //   final Map<String, dynamic> args =routeparam as Map<String, dynamic>;
+    //   itemamme=args['name'];
+    // }
+    // else
+    //   {
+    //     Navigator.pushNamed(context, Routes.dashboard);
+    //   }
 
       return ProgressHUD(
         child: Consumer<Ecom>(
           builder: (BuildContext context, Ecom value, Widget? child) {
+            qty.text=value.existingqty;
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.lightGreen[50],
@@ -47,29 +49,19 @@ class _SingleProductState extends State<SingleProduct> {
                 title: Text(Companydata.companyname, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
               ),
               body: StreamBuilder<QuerySnapshot>(
-                  stream: value.db.collection("items").where(ItemReg.code, isEqualTo: itemamme).snapshots(),
+                  stream: value.db.collection("items").where('code', isEqualTo: value.selecteditem).snapshots(),
                   builder: (context, snapshot) {
                     if(!snapshot.hasData){
-                      return const Text("NO RECORD FOUNND");
+                      return const Text("NO RECORD FOUND");
                     }
                     else if(snapshot.connectionState==ConnectionState.waiting)
                     {
                       return const Text("Please wait for Network");
                     }
+                    String sprice=snapshot.data!.docs[0][ItemReg.sellingprice];
                     return SingleChildScrollView(
                       child: Column(
                         children: [
-                          // Column(
-                          //   children: [
-                          //     Card(
-                          //       elevation: 3,
-                          //       child: Container(
-                          //         color: Colors.white,
-                          //         height: 100,
-                          //       ),
-                          //     )
-                          //   ],
-                          // ),
                           const SizedBox(height: 50),
                           Center(
                             child: Column(
@@ -88,42 +80,6 @@ class _SingleProductState extends State<SingleProduct> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         //mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          // Expanded(
-                                          //     child: Column(
-                                          //       crossAxisAlignment: CrossAxisAlignment.end,
-                                          //       children: [
-                                          //         FittedBox(
-                                          //           fit: BoxFit.contain,
-                                          //           child: Container(
-                                          //             height: 100,
-                                          //             width: 100,
-                                          //             color: Colors.grey[500],
-                                          //             child: Image.asset(Imagesurls.hats),
-                                          //           ),
-                                          //         ),
-                                          //         const SizedBox(height: 10),
-                                          //         FittedBox(
-                                          //           fit: BoxFit.contain,
-                                          //           child: Container(
-                                          //             height: 100,
-                                          //             width: 100,
-                                          //             color: Colors.grey[500],
-                                          //             child: Image.asset(Imagesurls.d2),
-                                          //           ),
-                                          //         ),
-                                          //         const SizedBox(height: 10),
-                                          //         FittedBox(
-                                          //           fit: BoxFit.contain,
-                                          //           child: Container(
-                                          //             height: 100,
-                                          //             width: 100,
-                                          //             color: Colors.grey[500],
-                                          //             child: Image.asset(Imagesurls.d1),
-                                          //           ),
-                                          //         ),
-                                          //       ],
-                                          //     )
-                                          // ),
                                           const SizedBox(width: 10),
                                           Expanded(
                                               flex: 5,
@@ -134,7 +90,7 @@ class _SingleProductState extends State<SingleProduct> {
                                                   FittedBox(
                                                     fit: BoxFit.contain,
                                                     child: Container(
-                                                        color: Colors.lightBlue[50],
+                                                        color: Colors.brown.withOpacity(0.5),
                                                         height: 500,
                                                         width: 500,
                                                         child:CachedNetworkImage(
@@ -195,8 +151,8 @@ class _SingleProductState extends State<SingleProduct> {
                                                                           ),
                                                                         ),
                                                                         const SizedBox(width: 20),
-                                                                        const Text(
-                                                                          "120 USD",
+                                                                         Text(
+                                                                          "${double.parse(sprice)*1.2} USD",
                                                                           style: TextStyle(
                                                                               decoration: TextDecoration.lineThrough,
                                                                               fontSize: 14,
@@ -219,14 +175,6 @@ class _SingleProductState extends State<SingleProduct> {
                                                                       ],
                                                                     ),
 
-                                                                    // const Row(
-                                                                    //   children: [
-                                                                    //     Icon(Icons.star),
-                                                                    //     Icon(Icons.star_rate),
-                                                                    //     Icon(Icons.star_rate),
-                                                                    //
-                                                                    //   ],
-                                                                    // ),
                                                                     const SizedBox(height: 10),
                                                                     SmoothStarRating(
                                                                       allowHalfRating: true,
@@ -257,36 +205,6 @@ class _SingleProductState extends State<SingleProduct> {
                                                                           ),
                                                                         ),
                                                                         const SizedBox(width: 40),
-                                                                        // Container(
-                                                                        //   padding: const EdgeInsets.all(4),
-                                                                        //   decoration: BoxDecoration(
-                                                                        //       color: Colors.orange[200],
-                                                                        //       borderRadius: BorderRadius.circular(6)
-                                                                        //   ),
-                                                                        //   child: const Icon(Icons.remove),
-                                                                        // ),
-                                                                        // const SizedBox(width: 20),
-                                                                        // Container(
-                                                                        //   width: 30,
-                                                                        //   height: 30,
-                                                                        //   decoration: BoxDecoration(
-                                                                        //       borderRadius: BorderRadius.circular(6),
-                                                                        //     border: Border.all(
-                                                                        //         color: Colors.orange,
-                                                                        //
-                                                                        //       width: 2
-                                                                        //     )
-                                                                        //   ),
-                                                                        //   child: Center(child: TextField()),),
-                                                                        // const SizedBox(width: 20),
-                                                                        // Container(
-                                                                        //   padding: const EdgeInsets.all(4),
-                                                                        //   decoration: BoxDecoration(
-                                                                        //       color: Colors.orange[200],
-                                                                        //       borderRadius: BorderRadius.circular(6)
-                                                                        //   ),
-                                                                        //   child: const Icon(Icons.add),
-                                                                        // ),
                                                                         Container(
                                                                           height: 30,
                                                                           width: 30,
@@ -299,7 +217,7 @@ class _SingleProductState extends State<SingleProduct> {
                                                                           child: const Icon(Icons.remove),
                                                                         ),
                                                                         Container(
-                                                                          width: 30,
+                                                                          width: 60,
                                                                           height: 30,
                                                                           decoration: BoxDecoration(
                                                                             border: Border.all(
@@ -307,8 +225,9 @@ class _SingleProductState extends State<SingleProduct> {
                                                                               width: 2,
                                                                             ),
                                                                           ),
-                                                                          child: const Center(
+                                                                          child:  Center(
                                                                             child: TextField(
+                                                                              controller: qty,
                                                                               textAlign: TextAlign.center,
                                                                               textAlignVertical: TextAlignVertical.center,
                                                                               decoration: InputDecoration(
@@ -349,8 +268,9 @@ class _SingleProductState extends State<SingleProduct> {
                                                                 String price=snapshot.data!.docs[0][ItemReg.sellingprice];
                                                                 String des=snapshot.data!.docs[0][ItemReg.description];
                                                                 String imageurl=snapshot.data!.docs[0][ItemReg.itemurl];
-                                                                String quantity="1";
-                                                                final savetocard=await Ecom().addtocart(name, price, quantity, code,imageurl,des,context);
+                                                                String quantity=qty.text;
+                                                                value.cartids();
+                                                                final savetocard=await value.addtocart("single",name, price, quantity, code,imageurl,des,context);
                                                                 //print(savetocard);
                                                                 if(savetocard[0]){
                                                                   SnackBar snackbar=const SnackBar(content: Text("Added to cart successfully",style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,);

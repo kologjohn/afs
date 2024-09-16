@@ -295,6 +295,7 @@ class _CartViewState extends State<CartView> {
                                                             InkWell(
                                                               onTap: ()async{
                                                                 if(value.auth.currentUser!=null){
+                                                                  value.currecy();
                                                                   Navigator.pushNamed(context, Routes.checkout);
                                                                   value.lockcart();
                                                                 }

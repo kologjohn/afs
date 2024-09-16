@@ -449,7 +449,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                             ),
                                                             TableCell(
                                                               child: Padding(
-                                                                padding: EdgeInsets.all(8.0),
+                                                                padding: const EdgeInsets.all(8.0),
                                                                 child: Text("USD ${ecom.cardvalue}"),
                                                               ),
                                                             ),

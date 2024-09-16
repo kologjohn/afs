@@ -137,17 +137,19 @@ class _featuredGridviewState extends State<featuredGridview> {
                         // height: 300,
                         width: 200,
                         child: FeaturedProduct(
+
                           featuredImage:snapshot.data!.docs[index][ItemReg.itemurl],
                           featuredName: snapshot.data!.docs[index][ItemReg.item],
                           featuredPrice: snapshot.data!.docs[index][ItemReg.sellingprice],
                           progress: false,
                           image: myimage[index],
-                          consWidth: 200,
+                          consWidth: 200, frompage: 'shop',
+                          featuredcode: snapshot.data!.docs[index]['code'],
                         ),
                       ),
                     )
                     // items[index]
-                
+
                   ],
                 ),
               )

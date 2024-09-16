@@ -6,7 +6,9 @@ import '../controller/controller.dart';
 class FeaturedProduct extends StatefulWidget {
   final String featuredImage;
   final String featuredName;
+  final String featuredcode;
   final String featuredPrice;
+  final String frompage;
   final bool progress;
   final double consWidth;
   final Widget image;
@@ -19,6 +21,7 @@ class FeaturedProduct extends StatefulWidget {
     required this.progress,
     required this.image,
     required this.consWidth,
+    required this.frompage, required this.featuredcode,
   });
 
   @override
@@ -74,16 +77,18 @@ class _FeaturedProductState extends State<FeaturedProduct> {
                                   child: InkWell(
                                     onTap: () async {
                                       value.carttotal();
+                                      value.item_alreadexist(value.cartidnumber, widget.featuredcode);
                                       setState(() {
                                         myProgress = true;
                                         cartShow = false;
                                       });
 
                                       final addCart = await value.addtocart(
+                                        widget.frompage,
                                         widget.featuredName,
                                         widget.featuredPrice,
                                         "1",
-                                        widget.featuredName,
+                                        widget.featuredcode,
                                         widget.featuredImage,
                                         "",
                                         context,

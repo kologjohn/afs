@@ -42,15 +42,17 @@ class Ecom extends ChangeNotifier{
   bool loginstatus=false;
   String nextstate="";
   String selecteditem="";
+  bool itemwithcardexist=false;
+  String existingqty="0";
+  String existingid="0";
   Ecom(){
     get_current_item();
     getcstate();
+    carttotal();
   }
   set_selecteditem(String item)async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     sharedPreferences.setString("selectedcode", item);
-    selecteditem=item;
-    notifyListeners();
   }
 
   get_current_item()async{
@@ -79,7 +81,7 @@ class Ecom extends ChangeNotifier{
   getcstate()async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     String? mysate=sharedPreferences.getString("cstate");
-    nextstate=mysate!;
+    nextstate=mysate??"null";
     notifyListeners();
   }
 
@@ -221,7 +223,7 @@ class Ecom extends ChangeNotifier{
       mycarttotal=0;
       shards.docs.forEach(
             (doc) {
-          mycarttotal += double.parse(doc.data()['price']);
+          mycarttotal += double.parse(doc.data()['total']);
           cardvalue=numformat.format(mycarttotal);
         },
       );
@@ -401,18 +403,35 @@ class Ecom extends ChangeNotifier{
     print(mycardid);
     notifyListeners();
   }
-  Future<List>addtocart(String itemname,String price,String quantity,String code,String imageurl,String description,BuildContext context)async{
+  item_alreadexist(String cartid,String itemcode)async{
+    print("Cart ID: $cartid");
+    final itemsdata=await db.collection("cart").where('cartidnumber', isEqualTo: cartid).where('code',isEqualTo: itemcode).get();
+    bool existstatus=itemsdata.docs.isNotEmpty;
+    if(existstatus)
+      {
+        existingqty=itemsdata.docs[0]['quantity'];
+        existingid=itemsdata.docs[0].id;
+      }
+   // print(itemsdata.docs[0]['quantity']);
+    itemwithcardexist= existstatus;
+    notifyListeners();
+  }
+  Future<List>addtocart(String frompage,String itemname,String price,String quantity,String code,String imageurl,String description,BuildContext context)async{
     bool success=false;
     final SharedPreferences  sprefs=await SharedPreferences.getInstance();
     final cartId=sprefs.getString("cartid");
     bool? lock=sprefs.getBool("lockstatus");
     final alreaypaid=await db.collection("checkout").doc(cartId).get();
     if(alreaypaid.exists){
+      error="Please you attempted making payment, go to cart and complete payment before you can add to cart";
+      await carttotal();
+      Navigator.pushNamed(context, Routes.cart);
       bool paid=alreaypaid['status'];
       if(paid){
         String url=alreaypaid[CheckoutFields.payurl];
         if(url.isNotEmpty)
         {
+
           error="You have a pending cart to complete, you can not add to pending cart";
           Navigator.pushNamed(context, Routes.dashboard);
           print("pending");
@@ -425,28 +444,65 @@ class Ecom extends ChangeNotifier{
 
     }
     else {
+      double total=double.parse(price)*double.parse(quantity);
       final date=DateTime.now();
       final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-      String? mycartids=sharedPreferences.getString("cartid");
+      String? mycartids=sharedPreferences.getString("cartid")??"null";
+      item_alreadexist(mycartids!,code);
       mycardid=mycartids!;
-      final data={
-        Dbfields.email:"",
-        Dbfields.contact:"",
-        Dbfields.itemname:itemname,
-        Dbfields.price:price,
-        Dbfields.quantity:quantity,
-        Dbfields.code:code,
-        Dbfields.cartidnumber:mycartids,
-        ItemReg.itemurl:imageurl,
-        ItemReg.description:description
-      };
-      await Dbfields.db.collection(Dbfields.cart).add(data);
-      cartidnumber=mycartids!;
-      success=true;
-      print("Added Successfully$cartidnumber");
-      print("object");
-    }
+      await item_alreadexist(mycartids, code);
+      if(itemwithcardexist)
+        {
+          if(frompage=="shop")
+          {
+            int updateqty=int.parse(existingqty)+int.parse(quantity);
+            quantity=updateqty.toString();
+            total=double.parse(quantity)*double.parse(price);
+            print("exist");
+          }
+          print("1");
+          final data={
+            Dbfields.email:"",
+            Dbfields.contact:"",
+            Dbfields.itemname:itemname,
+            Dbfields.price:price,
+            Dbfields.quantity:quantity,
+            Dbfields.code:code,
+            Dbfields.cartidnumber:mycartids,
+            ItemReg.itemurl:imageurl,
+            ItemReg.total:total.toString(),
+            ItemReg.description:description,
+            ItemReg.status:"pending"
+          };
+          await Dbfields.db.collection(Dbfields.cart).doc(existingid).update(data);
+          cartidnumber=mycartids!;
+          success=true;
+         //print("Item needs increment or update");
+        }
+      else
+        {
+          print("2");
+          final data={
+            Dbfields.email:"",
+            Dbfields.contact:"",
+            Dbfields.itemname:itemname,
+            Dbfields.price:price,
+            Dbfields.quantity:quantity,
+            Dbfields.code:code,
+            Dbfields.cartidnumber:mycartids,
+            ItemReg.itemurl:imageurl,
+            ItemReg.total:total.toString(),
+            ItemReg.description:description,
+            ItemReg.status:"pending"
+          };
+          await Dbfields.db.collection(Dbfields.cart).add(data);
+          cartidnumber=mycartids!;
+          success=true;
+        }
 
+     // print("Added Successfully$cartidnumber");
+    }
+    carttotal();
     notifyListeners();
     return [success,error];
   }

@@ -916,15 +916,22 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                   ), itemBuilder: (BuildContext context, int index) {
                                   final fetchedData = filteredDocs[index];
                                   String itemname=fetchedData['item'];
+                                  String item_code=fetchedData['code'];
                                   String url=fetchedData['itemurl'];
                                   String sellingprice=fetchedData[ItemReg.sellingprice];
                                   return FittedBox(
                                     child: Row(
                                       children: [
                                         InkWell(
-                                          onTap: (){
-                                            // print(widget.name);
-                                            Navigator.pushNamed(context, Routes.singleProduct,arguments: {"name":snapshot.data!.docs[index][ItemReg.code]});
+                                          onTap: ()async{
+                                            print(item_code);
+                                            value.cartids();
+                                            value.cartidmethod();
+                                            await value.set_selecteditem(item_code);
+                                            value.setnextstate("singlepage");
+                                            await value.get_current_item();
+                                            value.item_alreadexist(value.cartidnumber,item_code );
+                                            Navigator.pushNamed(context, Routes.singleProduct);
                                           },
                                           child: Container(
                                             // height: 300,
@@ -951,7 +958,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                 errorWidget: (context, url, error) =>const Icon(Icons.error,color: Colors.red,),
                                               ),
                                               progress: false,
-                                              consWidth: itemWidth,
+                                              consWidth: itemWidth, frompage: 'shop',
+                                              featuredcode: ItemReg.item,
                                             ),
                                           ),
                                         )
