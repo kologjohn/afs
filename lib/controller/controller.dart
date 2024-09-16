@@ -42,6 +42,7 @@ class Ecom extends ChangeNotifier{
   bool loginstatus=false;
   String nextstate="";
   String selecteditem="";
+  bool itemwithcardexist=false;
   Ecom(){
     get_current_item();
     getcstate();
@@ -49,8 +50,6 @@ class Ecom extends ChangeNotifier{
   set_selecteditem(String item)async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     sharedPreferences.setString("selectedcode", item);
-    selecteditem=item;
-    notifyListeners();
   }
 
   get_current_item()async{
@@ -79,7 +78,7 @@ class Ecom extends ChangeNotifier{
   getcstate()async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     String? mysate=sharedPreferences.getString("cstate");
-    nextstate=mysate!;
+    nextstate=mysate??"null";
     notifyListeners();
   }
 
@@ -401,6 +400,14 @@ class Ecom extends ChangeNotifier{
     print(mycardid);
     notifyListeners();
   }
+  item_alreadexist(String cartid,String itemcode)async{
+    final itemsdata=await db.collection("cart").where('cartidnumber', isEqualTo: cartid).get();
+    bool existstatus=itemsdata.docs.isNotEmpty;
+    print(itemsdata.docs[0]['quantity']);
+    itemwithcardexist= existstatus;
+    notifyListeners();
+
+  }
   Future<List>addtocart(String itemname,String price,String quantity,String code,String imageurl,String description,BuildContext context)async{
     bool success=false;
     final SharedPreferences  sprefs=await SharedPreferences.getInstance();
@@ -428,23 +435,33 @@ class Ecom extends ChangeNotifier{
       final date=DateTime.now();
       final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
       String? mycartids=sharedPreferences.getString("cartid");
+      item_alreadexist(mycartids!,code);
       mycardid=mycartids!;
-      final data={
-        Dbfields.email:"",
-        Dbfields.contact:"",
-        Dbfields.itemname:itemname,
-        Dbfields.price:price,
-        Dbfields.quantity:quantity,
-        Dbfields.code:code,
-        Dbfields.cartidnumber:mycartids,
-        ItemReg.itemurl:imageurl,
-        ItemReg.description:description
-      };
-      await Dbfields.db.collection(Dbfields.cart).add(data);
-      cartidnumber=mycartids!;
-      success=true;
-      print("Added Successfully$cartidnumber");
-      print("object");
+      await item_alreadexist(mycartids, code);
+      if(itemwithcardexist)
+        {
+         print("Item needs increment or update");
+        }
+      else
+        {
+          final data={
+            Dbfields.email:"",
+            Dbfields.contact:"",
+            Dbfields.itemname:itemname,
+            Dbfields.price:price,
+            Dbfields.quantity:quantity,
+            Dbfields.code:code,
+            Dbfields.cartidnumber:mycartids,
+            ItemReg.itemurl:imageurl,
+            ItemReg.description:description,
+            ItemReg.status:"pending"
+          };
+          await Dbfields.db.collection(Dbfields.cart).add(data);
+          cartidnumber=mycartids!;
+          success=true;
+        }
+
+     // print("Added Successfully$cartidnumber");
     }
 
     notifyListeners();

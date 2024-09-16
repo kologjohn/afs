@@ -32,6 +32,7 @@ class Assets {
   static const String imagesDSC6148 = 'assets/images/DSC_6148.jpg';
   static const String imagesEu = 'assets/images/eu.png';
   static const String imagesGhana = 'assets/images/ghana.png';
+  static const String imagesHandwovenFan = 'assets/images/Handwoven Fan.jpg';
   static const String imagesHandwovenFanRemovebgPreview = 'assets/images/Handwoven_Fan-removebg-preview.png';
   static const String imagesHats = 'assets/images/hats.png';
   static const String imagesHeadphone = 'assets/images/headphone.png';
@@ -47,6 +48,7 @@ class Assets {
   static const String imagesHeritage7 = 'assets/images/heritage7.png';
   static const String imagesHeritage8 = 'assets/images/heritage8.png';
   static const String imagesImage0 = 'assets/images/image_0.png';
+  static const String imagesLaceBasket  = 'assets/images/Lace Basket .jpg';
   static const String imagesMasterCard = 'assets/images/MasterCard.png';
   static const String imagesMasterCard1 = 'assets/images/MasterCard1.png';
   static const String imagesPayPal = 'assets/images/PayPal.png';

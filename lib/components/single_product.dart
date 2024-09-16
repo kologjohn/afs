@@ -23,19 +23,20 @@ class SingleProduct extends StatefulWidget {
 }
 
 class _SingleProductState extends State<SingleProduct> {
+  final qty=TextEditingController();
   double rating = 3.0;
-  String itemamme="";
   @override
   Widget build(BuildContext context) {
-    final routeparam=ModalRoute.of(context)!.settings.arguments;
-    if (routeparam != null && routeparam is Map<String, dynamic>) {
-      final Map<String, dynamic> args =routeparam as Map<String, dynamic>;
-      itemamme=args['name'];
-    }
-    else
-      {
-        Navigator.pushNamed(context, Routes.dashboard);
-      }
+
+    // final routeparam=ModalRoute.of(context)!.settings.arguments;
+    // if (routeparam != null && routeparam is Map<String, dynamic>) {
+    //   final Map<String, dynamic> args =routeparam as Map<String, dynamic>;
+    //   itemamme=args['name'];
+    // }
+    // else
+    //   {
+    //     Navigator.pushNamed(context, Routes.dashboard);
+    //   }
 
       return ProgressHUD(
         child: Consumer<Ecom>(
@@ -47,7 +48,7 @@ class _SingleProductState extends State<SingleProduct> {
                 title: Text(Companydata.companyname, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
               ),
               body: StreamBuilder<QuerySnapshot>(
-                  stream: value.db.collection("items").where(ItemReg.code, isEqualTo: itemamme).snapshots(),
+                  stream: value.db.collection("items").where(ItemReg.code, isEqualTo: value.selecteditem).snapshots(),
                   builder: (context, snapshot) {
                     if(!snapshot.hasData){
                       return const Text("NO RECORD FOUNND");
@@ -299,7 +300,7 @@ class _SingleProductState extends State<SingleProduct> {
                                                                           child: const Icon(Icons.remove),
                                                                         ),
                                                                         Container(
-                                                                          width: 30,
+                                                                          width: 60,
                                                                           height: 30,
                                                                           decoration: BoxDecoration(
                                                                             border: Border.all(
@@ -307,8 +308,9 @@ class _SingleProductState extends State<SingleProduct> {
                                                                               width: 2,
                                                                             ),
                                                                           ),
-                                                                          child: const Center(
+                                                                          child:  Center(
                                                                             child: TextField(
+                                                                              controller: qty,
                                                                               textAlign: TextAlign.center,
                                                                               textAlignVertical: TextAlignVertical.center,
                                                                               decoration: InputDecoration(
@@ -349,7 +351,8 @@ class _SingleProductState extends State<SingleProduct> {
                                                                 String price=snapshot.data!.docs[0][ItemReg.sellingprice];
                                                                 String des=snapshot.data!.docs[0][ItemReg.description];
                                                                 String imageurl=snapshot.data!.docs[0][ItemReg.itemurl];
-                                                                String quantity="1";
+                                                                String quantity=qty.text;
+                                                                value.cartids();
                                                                 final savetocard=await Ecom().addtocart(name, price, quantity, code,imageurl,des,context);
                                                                 //print(savetocard);
                                                                 if(savetocard[0]){

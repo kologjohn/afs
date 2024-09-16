@@ -916,14 +916,17 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                   ), itemBuilder: (BuildContext context, int index) {
                                   final fetchedData = filteredDocs[index];
                                   String itemname=fetchedData['item'];
+                                  String item_code=fetchedData['code'];
                                   String url=fetchedData['itemurl'];
                                   String sellingprice=fetchedData[ItemReg.sellingprice];
                                   return FittedBox(
                                     child: Row(
                                       children: [
                                         InkWell(
-                                          onTap: (){
-                                            // print(widget.name);
+                                          onTap: ()async{
+                                            print(item_code);
+                                            await value.set_selecteditem(item_code);
+                                            value.setnextstate("singlepage");
                                             Navigator.pushNamed(context, Routes.singleProduct,arguments: {"name":snapshot.data!.docs[index][ItemReg.code]});
                                           },
                                           child: Container(

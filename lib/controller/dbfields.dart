@@ -59,6 +59,7 @@ class ItemReg{
   static String wholesaleprice="wholesaleprice";
   static String quantity="quantity";
   static String code="code";
+  static String status="status";
   static String date="date";
   static  String staff="staff";
   static  String category="category";
