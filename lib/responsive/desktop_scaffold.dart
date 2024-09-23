@@ -928,7 +928,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                             value.cartids();
                                             value.cartidmethod();
                                             await value.set_selecteditem(item_code);
-                                            value.setnextstate("singlepage");
+                                            value.setnextstate("cart");
                                             await value.get_current_item();
                                             value.item_alreadexist(value.cartidnumber,item_code );
                                             Navigator.pushNamed(context, Routes.singleProduct);
