@@ -164,14 +164,16 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
         ),
         drawer: Visibility(
             visible: isNotVisible(),
-            child: const SideDrawer(dWidth: 400,)),
+            child: const SideDrawer(dWidth: 350,)),
         backgroundColor: Colors.grey[200],
         body:  SingleChildScrollView(
           reverse: false,
           child: Column(
             children: [
               Padding(
-                  padding: const EdgeInsets.only(left: 50.0, right: 50.0, top: 15),
+                  padding: MediaQuery.of(context).size.width < 500
+                      ? const EdgeInsets.only(left: 5.0, right: 5.0, top: 15)
+                      : const EdgeInsets.only(left: 50.0, right: 50.0, top: 15),
                   child: Container(
                     color: Colors.white,
                     //height: 10000,
@@ -790,64 +792,67 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                   ),
                                   Visibility(
                                     visible: true && !isMainVisible(),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                              color: Colors.lightGreen[50],
-                                              height: 400,
-                                              child: Stack(
-                                                fit: StackFit.expand,
-                                                children: [
-                                                  Image.asset(Imagesurls.A8A0487, fit: BoxFit.cover,),
-                                                  Center(
-                                                    child: Container(
-                                                      height: 300,
-                                                      color: Colors.lightBlue.withOpacity(0.2),
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          Container(
-                                                            color: Colors.lightBlue.withOpacity(0.6),
-                                                            child: const Column(
-                                                              children: [
-                                                                TypeWriterText(
-                                                                  text: Text('HAND WOVEN \n BASKETS \n 100% NATURAL \n Free pickup delivery available',
-                                                                      style: TextStyle(
-                                                                          fontSize: 25,
-                                                                          color: Colors.white,
-                                                                          fontWeight: FontWeight.bold
-                                                                      )
-                                                                  ),
-                                                                  repeat: true,
-                                                                  duration: Duration(milliseconds: 50),
-                                                                )
-                                                              ],
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(right: 10.0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: Container(
+                                                color: Colors.lightGreen[50],
+                                                height: 400,
+                                                child: Stack(
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    Image.asset(Imagesurls.A8A0487, fit: BoxFit.cover,),
+                                                    Center(
+                                                      child: Container(
+                                                        height: 300,
+                                                        color: Colors.lightBlue.withOpacity(0.2),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            Container(
+                                                              color: Colors.lightBlue.withOpacity(0.6),
+                                                              child: const Column(
+                                                                children: [
+                                                                  TypeWriterText(
+                                                                    text: Text('HAND WOVEN \n BASKETS \n 100% NATURAL \n Free pickup delivery available',
+                                                                        style: TextStyle(
+                                                                            fontSize: 25,
+                                                                            color: Colors.white,
+                                                                            fontWeight: FontWeight.bold
+                                                                        )
+                                                                    ),
+                                                                    repeat: true,
+                                                                    duration: Duration(milliseconds: 50),
+                                                                  )
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                          const SizedBox(height: 20),
-                                                          ElevatedButton(
-                                                            onPressed: (){},
-                                                            style: ButtonStyle(
-                                                              backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                                                if (states.contains(MaterialState.pressed)) {
-                                                                  return Global.mainColor.withOpacity(0.5);
-                                                                }
-                                                                return Global.mainColor; // Default color
-                                                              }),
-                                                            ),
-                                                            child: const Text("SHOP NOW", style: TextStyle(color: Colors.white),),
-                                                          )
-                                                        ],
+                                                            const SizedBox(height: 20),
+                                                            ElevatedButton(
+                                                              onPressed: (){},
+                                                              style: ButtonStyle(
+                                                                backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                                                  if (states.contains(MaterialState.pressed)) {
+                                                                    return Global.mainColor.withOpacity(0.5);
+                                                                  }
+                                                                  return Global.mainColor; // Default color
+                                                                }),
+                                                              ),
+                                                              child: const Text("SHOP NOW", style: TextStyle(color: Colors.white),),
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                        )
-                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -1,3 +1,4 @@
+import 'package:africanstraw/components/customer_profile.dart';
 import 'package:africanstraw/components/mobile_shop.dart';
 import 'package:africanstraw/components/shop.dart';
 import 'package:africanstraw/components/single_product.dart';
@@ -39,6 +40,7 @@ class Routes{
   static String returns="returns";
   static String shipping="shipping";
   static String reshape="reshape";
+  static String userProfile="userProfile";
 }
 
 final pages={
@@ -58,6 +60,7 @@ final pages={
   Routes.returns:(context)=>const ReturnPolicy(),
   Routes.shipping:(context)=>const ShippingProcess(),
   Routes.reshape:(context)=>const ReshapingBasket(),
+  Routes.userProfile:(context)=> CustomerProfilePage(),
   Routes.mainShop:(context)=>const ResponsiveLayout(isMobile: ShopPage(), isTablet: ShopPage(), isDesktop: ShopPage(),),
   Routes.dashboard:(context)=>const ResponsiveLayout(isMobile: DesktopScaffold(), isTablet: DesktopScaffold(), isDesktop: DesktopScaffold(),
   ),

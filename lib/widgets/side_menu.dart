@@ -237,7 +237,7 @@ class _SideDrawerState extends State<SideDrawer> {
                       children: [
                         const Icon(Icons.location_pin, size: 18,),
                         const SizedBox(width: 8),
-                        Text(value.companyaddress),
+                        Expanded(child: Text(value.companyaddress)),
                       ],
                     ),
                   )

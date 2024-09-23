@@ -137,7 +137,7 @@ class TabletFooter extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                       child: SizedBox(
-                        height: 280,
+                        height: 300,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -173,7 +173,15 @@ class TabletFooter extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 15),
-                            const SocialMediaIcons(),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal, // or vertical depending on your layout
+                              child: Row(
+                                children: const [
+                                  SocialMediaIcons(),
+                                ],
+                              ),
+                            ),
+
                           ],
                         ),
                         //color: Colors.red,
