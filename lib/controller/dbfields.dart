@@ -25,6 +25,7 @@ class Dbfields{
   static  String price="price";
   static  String quantity="quantity";
   static  String total="total";
+  static  String shipping="shipping";
   //Databse Cartid
   static String date="date";
   static String cartstatus="status";
@@ -48,6 +49,8 @@ class CheckoutFields{
   static String cartid="cartid";
   static String accesscode="accesscode";
   static String payurl="payurl";
+  static String shipping="shipping";
+  static String ghshipping="ghshipping";
 }
 
 class ItemReg{

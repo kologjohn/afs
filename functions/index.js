@@ -3,45 +3,105 @@ const axios = require('axios');
 const cors = require('cors')({ origin: true });
 const admin=require('firebase-admin');
 admin.initializeApp();
-exports.paystack=functions.https.onCall(async(datam,context)=>{
-  try{
- if(!context.auth)
- {
-   throw new functions.https.HttpsError('unauthenticated','Not authenticated')
- }
-  const tid=datam.tid;
-   const email=context.auth.token.email;
-   
-   //const email="info@gmmail.com";
-   const amount=datam.amount;
-   let intValue = Math.floor(amount)
-   console.log("at: "+intValue);
-   const authToken="sk_live_95b93c88db79714e361d1fc75a4b6e3a818fbd5f";
-   const postdata={
-     "amount": intValue,
-     "email": email,
-     "reference": tid,
-     "currency": "GHS",
-     "paymentChannel": [
-       "mobile_money",
-     ]
-   };
-   const config= {
-     headers:
-     {
-       'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json'  // Adjust content type based on your API requirements
-     }
-   };
-   const sendapi=await axios.post('https://api.paystack.co/transaction/initialize',postdata,config)
-   console.log(sendapi.data);
-   return sendapi.data;
+//exports.paystack=functions.https.onCall(async(datam,context)=>{
+//  try{
+// if(!context.auth)
+// {
+//   throw new functions.https.HttpsError('unauthenticated','Not authenticated')
+// }
+//  const tid=datam.tid;
+//   const email=context.auth.token.email;
+//
+//   //const email="info@gmmail.com";
+//   const amount=datam.amount;
+//   let intValue = Math.floor(amount)
+//   console.log("at: "+intValue);
+//   const authToken="sk_live_95b93c88db79714e361d1fc75a4b6e3a818fbd5f";
+//   const postdata={
+//     "amount": intValue,
+//     "email": email,
+//     "reference": tid,
+//     "currency": "GHS",
+//     "paymentChannel": [
+//       "mobile_money",
+//     ]
+//   };
+//   const config= {
+//     headers:
+//     {
+//       'Authorization': `Bearer ${authToken}`, 'Content-Type': 'application/json'  // Adjust content type based on your API requirements
+//     }
+//   };
+//   const sendapi=await axios.post('https://api.paystack.co/transaction/initialize',postdata,config)
+//   console.log(sendapi.data);
+//   return sendapi.data;
+//
+//  }catch(e){
+//console.log(e)
+//return e;
+//  }
+//
+//});
 
-  }catch(e){
-console.log(e)
-return e;
+exports.paystack = functions.https.onCall(async (datam, context) => {
+  try {
+    // Check if the user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError('unauthenticated', 'Not authenticated');
+    }
+
+    const tid = datam.tid; // Retrieve the transaction ID
+    const email = context.auth.token.email; // Get the user's email from the context
+    const amount = datam.amount; // Get the amount from the data sent by the client
+    let intValue = Math.floor(amount); // Round down the amount to an integer value
+    console.log("at: " + intValue);
+
+    const authToken = "sk_live_95b93c88db79714e361d1fc75a4b6e3a818fbd5f"; // Paystack API token
+
+    // Step 1: Retrieve ghshipping and ghtotal from the checkout collection using the tid
+    const checkoutDoc = await admin.firestore().collection('checkout').doc(tid).get();
+
+    if (!checkoutDoc.exists) {
+      throw new functions.https.HttpsError('not-found', 'Transaction not found');
+    }
+
+    const { ghshipping, ghtotal } = checkoutDoc.data();
+    console.log(`Shipping: ${ghshipping}, Total: ${ghtotal}`);
+        const totalAmount = ghshipping + ghtotal;
+
+    // Step 2: Prepare the post data for Paystack API
+    const postdata = {
+      "amount": totalAmount,
+      "email": email,
+      "reference": tid,
+      "currency": "GHS",
+      "paymentChannel": ["mobile_money"]
+    };
+
+    // Step 3: Configure the headers for the Paystack API request
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    // Step 4: Send a request to Paystack API to initialize the transaction
+    const sendapi = await axios.post('https://api.paystack.co/transaction/initialize', postdata, config);
+    console.log(sendapi.data);
+
+    return {
+      ...sendapi.data,
+      ghshipping,
+      ghtotal
+    };
+
+  } catch (e) {
+    console.log(e);
+    throw new functions.https.HttpsError('internal', e.message || 'Something went wrong');
   }
-
 });
+
 
 exports.currency=functions.https.onCall(async(datam,context)=>{
   try{

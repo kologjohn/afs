@@ -58,7 +58,7 @@ class Ecom extends ChangeNotifier{
   get_current_item()async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     String? mysate=sharedPreferences.getString("selectedcode");
-    selecteditem=mysate!;
+    selecteditem=mysate??"null";
     notifyListeners();
   }
   snackbarerror(String message,BuildContext context){
@@ -172,7 +172,7 @@ class Ecom extends ChangeNotifier{
 
     //Navigator.pushNamed(context, Routes.dashboard);
   }
-  checkout(String email_txt,String fname_txt,String lnamme_txt,String addres_txt,String phone_txt, String country_txt,String region_txt, String city_txt,String postcode_txt)async{
+  checkout(String email_txt,String fname_txt,String lnamme_txt,String addres_txt,String phone_txt, String country_txt,String region_txt, String city_txt,String postcode_txt,String shipping)async{
     try{
       String payurl="";
       String accesscode="";
@@ -182,7 +182,13 @@ class Ecom extends ChangeNotifier{
       await carttotal();
       await cartidmethod();
       await currecy();
-      double ghs=currecyval*double.parse(cardvalue);
+      if(double.parse(shipping)<0)
+        {
+          error="Please check shipping fee";
+          return;
+        }
+      double ghmyshipping=double.parse(shipping)*currecyval;
+      double ghs=currecyval*(double.parse(cardvalue));
       final alreaypaid=await db.collection("checkout").doc(cart_id).get();
       if(alreaypaid.exists) {
         openpaystack(alreaypaid['payurl']);
@@ -205,11 +211,13 @@ class Ecom extends ChangeNotifier{
         CheckoutFields.payurl:payurl,
         CheckoutFields.accesscode:accesscode,
         CheckoutFields.status:status,
+        CheckoutFields.shipping:"$shipping",
+        CheckoutFields.ghshipping:"$ghmyshipping",
       };
+      double payable=(double.parse(shipping)+double.parse(cardvalue))*100;
       await db.collection("checkout").doc(cart_id).set(checkoutdata);
-      paystacks(phone_txt, cardvalue, cart_id!);
+      paystacks(phone_txt, "$payable", cart_id!);
       error="";
-
     }on FirebaseException catch(e){
       print(e);
       error=e.message!;
@@ -221,12 +229,10 @@ class Ecom extends ChangeNotifier{
     try{
       final shards = await db.collection('cart').where(Dbfields.cartidnumber,isEqualTo:mycardid ).get();
       mycarttotal=0;
-      shards.docs.forEach(
-            (doc) {
+      for (var doc in shards.docs) {
           mycarttotal += double.parse(doc.data()['total']);
           cardvalue=numformat.format(mycarttotal);
-        },
-      );
+        }
       //print(mycarttotal);
     }catch(e){
       print(e);
