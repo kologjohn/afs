@@ -38,6 +38,9 @@ class _CartViewState extends State<CartView> {
           String cardnumber=value.mycardid;
           return Scaffold(
               appBar: AppBar(
+                leading: InkWell(child: Icon(Icons.home),onTap: (){
+                  Navigator.pushNamed(context, Routes.dashboard);
+                },),
                 centerTitle: true,
                 title: const Text("Cart"),
               ),
