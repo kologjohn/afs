@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:africanstraw/components/global.dart';
@@ -8,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../components/login_field.dart';
 import '../controller/controller.dart';
+import '../widgets/route.dart';
 
 class CheckoutForm extends StatefulWidget {
   @override
@@ -24,7 +27,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
   TextEditingController city = TextEditingController();
 
   final GlobalKey<FormState> formskey = GlobalKey<FormState>();
-
+  String? selectedValue; // Holds the selected value from the dropdown
   String _selectedCountry = 'Ghana'; // Default country
   String _selectedRegion = 'Accra'; // Default region for Ghana
 
@@ -33,6 +36,30 @@ class _CheckoutFormState extends State<CheckoutForm> {
     'Nigeria': ['Abuja', 'Lagos', 'Kano', 'Ibadan'],
     // Add more countries and their regions here
   };
+
+  String? selectedDestination;  // Holds the selected destination
+  String? amount;  // Holds the fetched amount based on the selected destination
+  int? selectedIndex;  // Holds the index of the selected item
+
+  // Fetch the amount when a destination is selected
+  Future<void> fetchAmount(String destination) async {
+    try {
+      // Query Firestore for the document with the selected destination
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('delivery')
+          .where('destination', isEqualTo: destination) // Assuming 'name' is the field for destination
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Get the amount from the first document (assuming each destination is unique)
+        setState(() {
+          amount = querySnapshot.docs.first['amount'];
+        });
+      }
+    } catch (e) {
+      print("Error fetching amount: $e");
+    }
+  }
 @override
   void initState() {
     // TODO: implement initState
@@ -72,6 +99,9 @@ class _CheckoutFormState extends State<CheckoutForm> {
           }
           return Scaffold(
             appBar: AppBar(
+              leading: InkWell(onTap:(){
+                Navigator.pushNamed(context, Routes.cart);
+              },child: Icon(Icons.arrow_back)),
               backgroundColor: Colors.lightGreen[50],
               centerTitle: true,
               title: const Text('Checkout Form'),
@@ -264,6 +294,67 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         labelText: 'Email', enabled: true,
                                                       ),
                                                       const SizedBox(height: 16),
+                                                      StreamBuilder<QuerySnapshot>(
+                                                        stream: FirebaseFirestore.instance.collection('delivery').snapshots(),
+                                                        builder: (context, snapshot) {
+                                                          if (!snapshot.hasData) {
+                                                            return const CircularProgressIndicator();
+                                                          }
+
+                                                          // Get the documents from the snapshot
+                                                          final List<DocumentSnapshot> docs = snapshot.data!.docs;
+
+                                                          // Create a list of dropdown items for destinations
+                                                          List<DropdownMenuItem<String>> dropdownItems = docs.map((doc) {
+                                                            String destination = doc['destination']; // Assuming 'name' is the field for destination
+                                                            return DropdownMenuItem<String>(
+                                                              value: destination,
+                                                              child: Text(destination),
+                                                            );
+                                                          }).toList();
+
+                                                          return DropdownButtonFormField<String>(
+                                                            validator: (val){
+                                                              if(val==null || val.isEmpty){
+                                                                return "Select Shipping Destination";
+                                                              }
+                                                            },
+
+                                                            hint: const Text('Select Destination'),
+                                                            value: selectedDestination,
+                                                            items: dropdownItems,
+                                                            onChanged: (String? newValue) {
+                                                              setState(() {
+                                                                selectedDestination = newValue;
+                                                                // Get the index of the selected item
+                                                                selectedIndex = dropdownItems.indexWhere((item) => item.value == newValue);
+                                                              });
+                                                              // Fetch the amount based on the selected destination
+                                                              if (newValue != null) {
+                                                                fetchAmount(newValue);
+                                                              }
+                                                            },
+                                                            decoration: InputDecoration(
+                                                              labelText: 'Country',
+                                                              enabledBorder: OutlineInputBorder(
+                                                                borderSide: const BorderSide(
+                                                                  color: Global.borderColor,
+                                                                  width: 1,
+                                                                ),
+                                                                borderRadius: BorderRadius.circular(6),
+                                                              ),
+                                                              focusedBorder: OutlineInputBorder(
+                                                                borderSide: const BorderSide(
+                                                                  color: Colors.orange,
+                                                                  width: 1,
+                                                                ),
+                                                                borderRadius: BorderRadius.circular(6),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                      const SizedBox(height: 16),
                                                       const Text(
                                                         "Additional Information",
                                                         style: TextStyle(
@@ -327,7 +418,8 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         ),
                                                         child: ElevatedButton(
                                                           onPressed: () async{
-                                                           // if (validator()) {
+                                                            print("Data: ${amount}");
+                                                           if (validator() && amount!=null) {
                                                               String email_txt=email.text.trim().toString();
                                                               String fname_txt=firstname.text.trim().toString();
                                                               String lname_txt=lastname.text.trim().toString();
@@ -337,21 +429,24 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                               String region_txt=_selectedRegion;
                                                               String city_txt=city.text.trim().toString();
                                                               String postcode_txt=postcode.text.trim().toString();
+
                                                               final pgress=ProgressHUD.of(context);
                                                               pgress!.show();
                                                               Future.delayed(Duration(seconds: 10),(){
                                                                 pgress.dismiss();
                                                               });
-                                                              await ecom.checkout(email_txt, fname_txt,lname_txt, addres_txt, phone_txt, country_txt, region_txt, city_txt, postcode_txt);
-                                                              double paystackvalue=convertedamt*100;
 
-                                                              ecom.paystacks(phone_txt, "$paystackvalue",ecom.mycardid);
+                                                              await ecom.checkout(email_txt, fname_txt,lname_txt, addres_txt, phone_txt, country_txt, region_txt, city_txt, postcode_txt,amount!);
+                                                              double shipping=double.parse(amount!);
+                                                              double paystackvalue=(convertedamt+shipping)*100;
+
+                                                             // ecom.paystacks(phone_txt, "$paystackvalue",ecom.mycardid);
 
                                                               pgress.dismiss();
 
-                                                            // } else {
-                                                            //   print('Form is invalid');
-                                                            // }
+                                                            } else {
+                                                              print('Form is invalid');
+                                                            }
                                                           },
                                                           style: ElevatedButton.styleFrom(
                                                             fixedSize: const Size(395, 55),
@@ -423,7 +518,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
 
                                                           ],
                                                         ),
-                                                         const TableRow(
+                                                          TableRow(
                                                           children: [
                                                             TableCell(
                                                               child: Padding(
@@ -434,7 +529,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                             TableCell(
                                                               child: Padding(
                                                                 padding: EdgeInsets.all(8.0),
-                                                                child: Text('Free shipping'),
+                                                                child: Text("USD ${amount}"),
                                                               ),
                                                             ),
                                                           ],

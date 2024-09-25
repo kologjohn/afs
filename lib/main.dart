@@ -1,5 +1,3 @@
-import 'dart:ui_web';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:africanstraw/controller/controller.dart';
@@ -8,7 +6,6 @@ import 'package:africanstraw/widgets/route.dart';
 import 'firebase_options.dart';
 import 'package:seo/seo.dart';
 void main() async {
-  urlStrategy!;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
   runApp(ChangeNotifierProvider(child: const MyApp(), create: (BuildContext context)=>Ecom()));
