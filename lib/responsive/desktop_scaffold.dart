@@ -11,6 +11,7 @@ import 'package:africanstraw/widgets/route.dart';
 import 'package:provider/provider.dart';
 import 'package:typewritertext/typewritertext.dart';
 import '../blog/blog_post.dart';
+import '../components/categoriesdData.dart';
 import '../controller/controller.dart';
 import '../footers/desktop_footer.dart';
 import '../footers/tablet_footer.dart';
@@ -333,53 +334,55 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                             height: 550,
                                             child: Padding(
                                               padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
-                                              child: StreamBuilder<QuerySnapshot>(
-                                                  stream: Dbfields.db.collection("category").snapshots(),
-                                                  builder: (context, snapshot) {
-                                                    if(!snapshot.hasData){
-                                                      return const Text("Loading...");
-                                                    }
-                                                    else if(snapshot.connectionState!=ConnectionState.active){
-                                                      return const Text("Connection Error",style: TextStyle(color: Colors.red),);
-                                                    }
-                                                    else if(snapshot.data!.docs.isEmpty)
-                                                    {
-                                                      return const Text("Empty Baskets Category");
-                                                    }
-                                                    return ListView.builder(
-                                                      scrollDirection: Axis.vertical,
-                                                      itemCount: snapshot.data!.docs.length,
-                                                      itemBuilder: (BuildContext context, int index) {
-                                                        String cate=snapshot.data!.docs[index]['name'];
-                                                        return Container(child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            InkWell(
-                                                              onTap: (){
-                                                                setState(() {
-                                                                  shoenum=cate;
-                                                                });
-                                                              },
-                                                              child: InkWell(
-                                                                onTap: (){
-                                                                  value.selected_category(cate);
-                                                                  Navigator.pushNamed(context, Routes.mainShop, arguments: {"cate":cate,"from":"desktop"});
-                                                                },
-                                                                child: MenuType(
-                                                                    isSelected: false,
-                                                                    coffeeType: cate
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Divider(thickness: 1,color: Colors.grey[200],),
-                                                            const SizedBox(height: 10),
-                                                          ],
-                                                        ),
-                                                        );
-                                                      },
-                                                    );
-                                                  }
-                                              ),
+                                              child: Categories(value)
+
+                                              // StreamBuilder<QuerySnapshot>(
+                                              //     stream: Dbfields.db.collection("category").snapshots(),
+                                              //     builder: (context, snapshot) {
+                                              //       if(!snapshot.hasData){
+                                              //         return const Text("Loading...");
+                                              //       }
+                                              //       else if(snapshot.connectionState!=ConnectionState.active){
+                                              //         return const Text("Connection Error",style: TextStyle(color: Colors.red),);
+                                              //       }
+                                              //       else if(snapshot.data!.docs.isEmpty)
+                                              //       {
+                                              //         return const Text("Empty Baskets Category");
+                                              //       }
+                                              //       return ListView.builder(
+                                              //         scrollDirection: Axis.vertical,
+                                              //         itemCount: snapshot.data!.docs.length,
+                                              //         itemBuilder: (BuildContext context, int index) {
+                                              //           String cate=snapshot.data!.docs[index]['name'];
+                                              //           return Container(child: Column(
+                                              //             crossAxisAlignment: CrossAxisAlignment.start,
+                                              //             children: [
+                                              //               InkWell(
+                                              //                 onTap: (){
+                                              //                   setState(() {
+                                              //                     shoenum=cate;
+                                              //                   });
+                                              //                 },
+                                              //                 child: InkWell(
+                                              //                   onTap: (){
+                                              //                     value.selected_category(cate);
+                                              //                     Navigator.pushNamed(context, Routes.mainShop, arguments: {"cate":cate,"from":"desktop"});
+                                              //                   },
+                                              //                   child: MenuType(
+                                              //                       isSelected: false,
+                                              //                       coffeeType: cate
+                                              //                   ),
+                                              //                 ),
+                                              //               ),
+                                              //               Divider(thickness: 1,color: Colors.grey[200],),
+                                              //               const SizedBox(height: 10),
+                                              //             ],
+                                              //           ),
+                                              //           );
+                                              //         },
+                                              //       );
+                                              //     }
+                                              // ),
                                             ),
                                           ),
                                         ),
@@ -493,42 +496,43 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(left: 20.0,top: 20),
                                                       child: SizedBox(height: 300,
-                                                        child:StreamBuilder<QuerySnapshot>(
-                                                            stream: value.db.collection("category").snapshots(),
-                                                            builder: (context, snapshot) {
-                                                              if(!snapshot.hasData)
-                                                              {
-                                                                return const Text("No data yet");
-                                                              }
-                                                              return ListView.builder(
-                                                                itemCount: snapshot.data!.docs.length,
-                                                                scrollDirection: Axis.vertical,
-                                                                itemBuilder: (BuildContext context, int index) {
-                                                                  String cate=snapshot.data!.docs[index]['name'];
-                                                                  return  Column(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Padding(
-                                                                        padding: const EdgeInsets.all(4.0),
-                                                                        child: InkWell(
-                                                                          onTap: (){
-                                                                            setState(() {
-                                                                              shoenum=cate;
-                                                                            });
-                                                                          },
-                                                                          child: MenuType(
-                                                                              isSelected: false,
-                                                                              coffeeType: cate
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Divider(thickness: 1,color: Colors.grey[200],),
-                                                                    ],
-                                                                  );
-                                                                },
-                                                              );
-                                                            }
-                                                        ),
+                                                        child:Categories(value),
+                                                        // StreamBuilder<QuerySnapshot>(
+                                                        //     stream: value.db.collection("category").snapshots(),
+                                                        //     builder: (context, snapshot) {
+                                                        //       if(!snapshot.hasData)
+                                                        //       {
+                                                        //         return const Text("No data yet");
+                                                        //       }
+                                                        //       return ListView.builder(
+                                                        //         itemCount: snapshot.data!.docs.length,
+                                                        //         scrollDirection: Axis.vertical,
+                                                        //         itemBuilder: (BuildContext context, int index) {
+                                                        //           String cate=snapshot.data!.docs[index]['name'];
+                                                        //           return  Column(
+                                                        //             crossAxisAlignment: CrossAxisAlignment.start,
+                                                        //             children: [
+                                                        //               Padding(
+                                                        //                 padding: const EdgeInsets.all(4.0),
+                                                        //                 child: InkWell(
+                                                        //                   onTap: (){
+                                                        //                     setState(() {
+                                                        //                       shoenum=cate;
+                                                        //                     });
+                                                        //                   },
+                                                        //                   child: MenuType(
+                                                        //                       isSelected: false,
+                                                        //                       coffeeType: cate
+                                                        //                   ),
+                                                        //                 ),
+                                                        //               ),
+                                                        //               Divider(thickness: 1,color: Colors.grey[200],),
+                                                        //             ],
+                                                        //           );
+                                                        //         },
+                                                        //       );
+                                                        //     }
+                                                        // ),
                                                       ),
                                                     ),
                                                   ),
@@ -881,107 +885,197 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                         ),
                         SizedBox(
                             height: 500,
-                            child: StreamBuilder<QuerySnapshot>(
-                              stream: Dbfields.db.collection("items").orderBy('date').limit(8).snapshots(),
+                            child:FutureBuilder<QuerySnapshot>(
+                              future: Dbfields.db.collection("items").orderBy('date').limit(8).get(),
                               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if(!snapshot.hasData){
+                                if (!snapshot.hasData) {
                                   return const Text("Loading...");
-                                }
-                                else if(snapshot.connectionState==ConnectionState.waiting)
-                                {
-                                  const CircularProgressIndicator();
-                                }
-                                else if(snapshot.hasError)
-                                {
+                                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
                                   return const Text("Error Loading Data");
                                 }
-                                //urls.clear();
-                                // myimage.clear();
+
                                 var filteredDocs = snapshot.data!.docs.where((doc) {
                                   var data = doc.data() as Map<String, dynamic>;
                                   String item = data['item']?.toString().toLowerCase() ?? '';
                                   String category = data['category']?.toString().toLowerCase() ?? '';
                                   String price = data['sellingprice']?.toString().toLowerCase() ?? '';
-                                  return item.contains(searchQuery.toLowerCase()) || category.contains(searchQuery.toLowerCase() )||price.contains(searchQuery.toLowerCase());
-
+                                  return item.contains(searchQuery.toLowerCase()) ||
+                                      category.contains(searchQuery.toLowerCase()) ||
+                                      price.contains(searchQuery.toLowerCase());
                                 }).toList();
-                                // for(int i=0;i<snapshot.data!.docs.length;i++){
-                                //   //print(i);
-                                //   String url= snapshot.data!.docs[i][ItemReg.itemurl];
-                                //   urls.add(url);
-                                //
-                                //   //print(url);
-                                //
-                                //
-                                // }
+
                                 return GridView.builder(
                                   itemCount: filteredDocs.length,
-                                  gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     mainAxisSpacing: 0.6,
                                     childAspectRatio: 0.7,
                                     crossAxisCount: crossAxisCount.ceil(),
-                                  ), itemBuilder: (BuildContext context, int index) {
-                                  final fetchedData = filteredDocs[index];
-                                  String itemname=fetchedData['item'];
-                                  String item_code=fetchedData['code'];
-                                  String url=fetchedData['itemurl'];
-                                  String sellingprice=fetchedData[ItemReg.sellingprice];
-                                  return FittedBox(
-                                    child: Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: ()async{
-                                            print(item_code);
-                                            value.cartids();
-                                            value.cartidmethod();
-                                            await value.set_selecteditem(item_code);
-                                            value.setnextstate("cart");
-                                            await value.get_current_item();
-                                            value.item_alreadexist(value.cartidnumber,item_code );
-                                            Navigator.pushNamed(context, Routes.singleProduct);
-                                          },
-                                          child: Container(
-                                            // height: 300,
-                                            width: 220,
-                                            child: FeaturedProduct(
-                                              featuredImage:url,
-                                              featuredName: itemname,
-                                              featuredPrice: sellingprice,
-                                              image: CachedNetworkImage(
-                                                errorListener:(rr){
-                                                  //print("${name_txt} image are not uploaded yet");
-                                                } ,
-                                                imageUrl: url,
-                                                height: 200,
-                                                width: 400,
-                                                fit: BoxFit.contain,
-                                                placeholder: (context, url) => const Center(
-                                                  child: SizedBox(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: CircularProgressIndicator(),
+                                  ),
+                                  itemBuilder: (BuildContext context, int index) {
+                                    final fetchedData = filteredDocs[index];
+                                    String itemname = fetchedData['item'];
+                                    String item_code = fetchedData['code'];
+                                    String url = fetchedData['itemurl'];
+                                    String sellingprice = fetchedData[ItemReg.sellingprice];
+
+                                    return FittedBox(
+                                      child: Row(
+                                        children: [
+                                          InkWell(
+                                            onTap: () async {
+                                              print(item_code);
+                                              value.cartids();
+                                              value.cartidmethod();
+                                              await value.set_selecteditem(item_code);
+                                              value.setnextstate("cart");
+                                              await value.get_current_item();
+                                              value.item_alreadexist(value.cartidnumber, item_code);
+                                              Navigator.pushNamed(context, Routes.singleProduct);
+                                            },
+                                            child: Container(
+                                              width: 220,
+                                              child: FeaturedProduct(
+                                                featuredImage: url,
+                                                featuredName: itemname,
+                                                featuredPrice: sellingprice,
+                                                image: CachedNetworkImage(
+                                                  errorListener: (rr) {
+                                                    // handle error
+                                                  },
+                                                  imageUrl: url,
+                                                  height: 200,
+                                                  width: 400,
+                                                  fit: BoxFit.contain,
+                                                  placeholder: (context, url) => const Center(
+                                                    child: SizedBox(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child: CircularProgressIndicator(),
+                                                    ),
+                                                  ),
+                                                  errorWidget: (context, url, error) => const Icon(
+                                                    Icons.error,
+                                                    color: Colors.red,
                                                   ),
                                                 ),
-                                                errorWidget: (context, url, error) =>const Icon(Icons.error,color: Colors.red,),
+                                                progress: false,
+                                                consWidth: itemWidth,
+                                                frompage: 'shop',
+                                                featuredcode: ItemReg.item,
                                               ),
-                                              progress: false,
-                                              consWidth: itemWidth, frompage: 'shop',
-                                              featuredcode: ItemReg.item,
                                             ),
                                           ),
-                                        )
-                                        // items[index]
-                                      ],
-                                    ),
-                                  );
-                                },);
-                                // Wrap(
-                                // runSpacing: 5,
-                                // spacing: 5,
-                                // children: items
-                                // );
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
                               },
                             )
+
+                          // StreamBuilder<QuerySnapshot>(
+                            //   stream: Dbfields.db.collection("items").orderBy('date').limit(8).snapshots(),
+                            //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            //     if(!snapshot.hasData){
+                            //       return const Text("Loading...");
+                            //     }
+                            //     else if(snapshot.connectionState==ConnectionState.waiting)
+                            //     {
+                            //       const CircularProgressIndicator();
+                            //     }
+                            //     else if(snapshot.hasError)
+                            //     {
+                            //       return const Text("Error Loading Data");
+                            //     }
+                            //     //urls.clear();
+                            //     // myimage.clear();
+                            //     var filteredDocs = snapshot.data!.docs.where((doc) {
+                            //       var data = doc.data() as Map<String, dynamic>;
+                            //       String item = data['item']?.toString().toLowerCase() ?? '';
+                            //       String category = data['category']?.toString().toLowerCase() ?? '';
+                            //       String price = data['sellingprice']?.toString().toLowerCase() ?? '';
+                            //       return item.contains(searchQuery.toLowerCase()) || category.contains(searchQuery.toLowerCase() )||price.contains(searchQuery.toLowerCase());
+                            //
+                            //     }).toList();
+                            //     // for(int i=0;i<snapshot.data!.docs.length;i++){
+                            //     //   //print(i);
+                            //     //   String url= snapshot.data!.docs[i][ItemReg.itemurl];
+                            //     //   urls.add(url);
+                            //     //
+                            //     //   //print(url);
+                            //     //
+                            //     //
+                            //     // }
+                            //     return GridView.builder(
+                            //       itemCount: filteredDocs.length,
+                            //       gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+                            //         mainAxisSpacing: 0.6,
+                            //         childAspectRatio: 0.7,
+                            //         crossAxisCount: crossAxisCount.ceil(),
+                            //       ), itemBuilder: (BuildContext context, int index) {
+                            //       final fetchedData = filteredDocs[index];
+                            //       String itemname=fetchedData['item'];
+                            //       String item_code=fetchedData['code'];
+                            //       String url=fetchedData['itemurl'];
+                            //       String sellingprice=fetchedData[ItemReg.sellingprice];
+                            //       return FittedBox(
+                            //         child: Row(
+                            //           children: [
+                            //             InkWell(
+                            //               onTap: ()async{
+                            //                 print(item_code);
+                            //                 value.cartids();
+                            //                 value.cartidmethod();
+                            //                 await value.set_selecteditem(item_code);
+                            //                 value.setnextstate("cart");
+                            //                 await value.get_current_item();
+                            //                 value.item_alreadexist(value.cartidnumber,item_code );
+                            //                 Navigator.pushNamed(context, Routes.singleProduct);
+                            //               },
+                            //               child: Container(
+                            //                 // height: 300,
+                            //                 width: 220,
+                            //                 child: FeaturedProduct(
+                            //                   featuredImage:url,
+                            //                   featuredName: itemname,
+                            //                   featuredPrice: sellingprice,
+                            //                   image: CachedNetworkImage(
+                            //                     errorListener:(rr){
+                            //                       //print("${name_txt} image are not uploaded yet");
+                            //                     } ,
+                            //                     imageUrl: url,
+                            //                     height: 200,
+                            //                     width: 400,
+                            //                     fit: BoxFit.contain,
+                            //                     placeholder: (context, url) => const Center(
+                            //                       child: SizedBox(
+                            //                         height: 50,
+                            //                         width: 50,
+                            //                         child: CircularProgressIndicator(),
+                            //                       ),
+                            //                     ),
+                            //                     errorWidget: (context, url, error) =>const Icon(Icons.error,color: Colors.red,),
+                            //                   ),
+                            //                   progress: false,
+                            //                   consWidth: itemWidth, frompage: 'shop',
+                            //                   featuredcode: ItemReg.item,
+                            //                 ),
+                            //               ),
+                            //             )
+                            //             // items[index]
+                            //           ],
+                            //         ),
+                            //       );
+                            //     },);
+                            //     // Wrap(
+                            //     // runSpacing: 5,
+                            //     // spacing: 5,
+                            //     // children: items
+                            //     // );
+                            //   },
+                            // )
                           //featuredGridview(shoenum: shoenum, widgth: 300, height: 200, name: 16, price: 16, favHeight: 30, favWidth: 100, favSize: 25, cartHeight: 30, cartWidth: 100, cartSize: 25, querySnapshot: querysnapshot,),
                         ),
                         // StreamBuilder<QuerySnapshot>(
@@ -1075,6 +1169,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
       },
     );
   }
+
 }
 
 

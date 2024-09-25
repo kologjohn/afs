@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -24,12 +25,12 @@ class _CheckoutFormState extends State<CheckoutForm> {
   TextEditingController contact = TextEditingController();
   TextEditingController postcode = TextEditingController();
   TextEditingController street = TextEditingController();
-  TextEditingController city = TextEditingController();
 
   final GlobalKey<FormState> formskey = GlobalKey<FormState>();
   String? selectedValue; // Holds the selected value from the dropdown
-  String _selectedCountry = 'Ghana'; // Default country
-  String _selectedRegion = 'Accra'; // Default region for Ghana
+  String? _selectedCountry; // Default country
+  String? _selectedRegion; // Default region for Ghana
+  String? _selectedCity; // Default region for Ghana
 
   final Map<String, List<String>> _regionsByCountry = {
     'Ghana': ['Accra', 'Kumasi', 'Tamale', 'Cape Coast'],
@@ -85,8 +86,8 @@ class _CheckoutFormState extends State<CheckoutForm> {
             ecom.cartidmethod();
             print(ecom.currecyval);
           }
-          double convertedamt=double.parse(ecom.cardvalue)*ecom.currecyval;
-          String finalconverted=ecom.numformat.format(convertedamt);
+         // double convertedamt=double.parse(ecom.cardvalue);
+        //  String finalconverted=ecom.numformat.format(convertedamt);
           if(ecom.auth.currentUser!=null){
             String? fullname=ecom.auth.currentUser!.displayName;
             List<String> split=fullname!.split(" ");
@@ -129,6 +130,50 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                       spacing: 5,
                                       runSpacing: 5,
                                       children: [
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            // DropdownButton<String>(
+                                            //   hint: const Text("Select Country"),
+                                            //   value: ecom.selectedCountry,
+                                            //   onChanged: (newValue) {
+                                            //     setState(() {
+                                            //       ecom.selectedCountry = newValue;
+                                            //       ecom.cities = ecom.countryCityData['countries']
+                                            //           .firstWhere((country) => country['name'] == newValue)['cities']
+                                            //           .cast<String>();
+                                            //       ecom.selectedCity = null;
+                                            //     });
+                                            //   },
+                                            //   items: countries.map((String country) {
+                                            //     return DropdownMenuItem<String>(
+                                            //       value: country,
+                                            //       child: Text(country),
+                                            //     );
+                                            //   }).toList(),
+                                            // ),
+                                            // SizedBox(height: 20),
+                                            // DropdownButton<String>(
+                                            //   hint: const Text("Select City"),
+                                            //   value: ecom.selectedCity,
+                                            //   onChanged: (newValue) {
+                                            //     setState(() {
+                                            //       ecom.selectedCity = newValue;
+                                            //     });
+                                            //   },
+                                            //   items: ecom.cities.map((String city) {
+                                            //     return DropdownMenuItem<String>(
+                                            //       value: city,
+                                            //       child: Text(city),
+                                            //     );
+                                            //   }).toList(),
+                                            // ),
+                                            // SizedBox(height: 20),
+                                           // Text("Selected Country: $countryValue"),
+                                           // Text("Selected State: $stateValue"),
+                                            //Text("Selected City: $cityValue"),
+                                          ],
+                                        ),
                                         Container(
                                           //color: Colors.lightBlue[50],
                                           width: 600,
@@ -176,76 +221,103 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         ],
                                                       ),
                                                       const SizedBox(height: 16.0),
+                                                      SelectState(
+                                                        onCountryChanged: (value) {
+                                                          setState(() {
+                                                             _selectedCountry = value;
+                                                          });
+                                                        },
+                                                        onStateChanged: (value) {
+
+                                                          setState(() {
+                                                            _selectedRegion = value;
+                                                          });
+                                                        },
+                                                        onCityChanged: (value) {
+                                                          setState(() {
+                                                            _selectedCity = value;
+                                                          });
+                                                        }, decoration: InputDecoration(
+                                                          border: OutlineInputBorder()
+                                                      ),
+                                                        validation: (myval){
+                                                          if(myval.toString().isEmpty){
+                                                            return "Field Required";
+                                                          }
+
+                                                        },
+                                                      ),
+
                                                       Row(
                                                         children: <Widget>[
-                                                          Expanded(
-                                                            child: DropdownButtonFormField<String>(
-                                                              value: _selectedCountry,
-                                                              onChanged: (value) {
-                                                                setState(() {
-                                                                  _selectedCountry = value!;
-                                                                  _selectedRegion = _regionsByCountry[value]![0];
-                                                                });
-                                                              },
-                                                              items: _regionsByCountry.keys.map((String country) {
-                                                                return DropdownMenuItem<String>(
-                                                                  value: country,
-                                                                  child: Text(country),
-                                                                );
-                                                              }).toList(),
-                                                              decoration: InputDecoration(
-                                                                labelText: 'Country',
-                                                                enabledBorder: OutlineInputBorder(
-                                                                  borderSide: const BorderSide(
-                                                                    color: Global.borderColor,
-                                                                    width: 1,
-                                                                  ),
-                                                                  borderRadius: BorderRadius.circular(6),
-                                                                ),
-                                                                focusedBorder: OutlineInputBorder(
-                                                                  borderSide: const BorderSide(
-                                                                    color: Colors.orange,
-                                                                    width: 1,
-                                                                  ),
-                                                                  borderRadius: BorderRadius.circular(6),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(width: 16.0),
-                                                          Expanded(
-                                                            child: DropdownButtonFormField<String>(
-                                                              value: _selectedRegion,
-                                                              onChanged: (value) {
-                                                                setState(() {
-                                                                  _selectedRegion = value!;
-                                                                });
-                                                              },
-                                                              items: _regionsByCountry[_selectedCountry]!.map((String region) {
-                                                                return DropdownMenuItem<String>(
-                                                                  value: region,
-                                                                  child: Text(region),
-                                                                );
-                                                              }).toList(),
-                                                              decoration: InputDecoration(
-                                                                labelText: 'Region/State',
-                                                                enabledBorder: OutlineInputBorder(
-                                                                  borderSide: const BorderSide(
-                                                                    color: Global.borderColor,
-                                                                    width: 1,
-                                                                  ),
-                                                                  borderRadius: BorderRadius.circular(6),
-                                                                ),
-                                                                focusedBorder: OutlineInputBorder(
-                                                                  borderSide: const BorderSide(
-                                                                    color: Colors.orange,
-                                                                    width: 1,
-                                                                  ),
-                                                                  borderRadius: BorderRadius.circular(6),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
+                                                          // Expanded(
+                                                          //   child: DropdownButtonFormField<String>(
+                                                          //     value: _selectedCountry,
+                                                          //     onChanged: (value) {
+                                                          //       setState(() {
+                                                          //         _selectedCountry = value!;
+                                                          //         _selectedRegion = _regionsByCountry[value]![0];
+                                                          //       });
+                                                          //     },
+                                                          //     items: _regionsByCountry.keys.map((String country) {
+                                                          //       return DropdownMenuItem<String>(
+                                                          //         value: country,
+                                                          //         child: Text(country),
+                                                          //       );
+                                                          //     }).toList(),
+                                                          //     decoration: InputDecoration(
+                                                          //       labelText: 'Country',
+                                                          //       enabledBorder: OutlineInputBorder(
+                                                          //         borderSide: const BorderSide(
+                                                          //           color: Global.borderColor,
+                                                          //           width: 1,
+                                                          //         ),
+                                                          //         borderRadius: BorderRadius.circular(6),
+                                                          //       ),
+                                                          //       focusedBorder: OutlineInputBorder(
+                                                          //         borderSide: const BorderSide(
+                                                          //           color: Colors.orange,
+                                                          //           width: 1,
+                                                          //         ),
+                                                          //         borderRadius: BorderRadius.circular(6),
+                                                          //       ),
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
+                                                          // const SizedBox(width: 16.0),
+                                                          // Expanded(
+                                                          //   child: DropdownButtonFormField<String>(
+                                                          //     value: _selectedRegion,
+                                                          //     onChanged: (value) {
+                                                          //       setState(() {
+                                                          //         _selectedRegion = value!;
+                                                          //       });
+                                                          //     },
+                                                          //     items: _regionsByCountry[_selectedCountry]!.map((String region) {
+                                                          //       return DropdownMenuItem<String>(
+                                                          //         value: region,
+                                                          //         child: Text(region),
+                                                          //       );
+                                                          //     }).toList(),
+                                                          //     decoration: InputDecoration(
+                                                          //       labelText: 'Region/State',
+                                                          //       enabledBorder: OutlineInputBorder(
+                                                          //         borderSide: const BorderSide(
+                                                          //           color: Global.borderColor,
+                                                          //           width: 1,
+                                                          //         ),
+                                                          //         borderRadius: BorderRadius.circular(6),
+                                                          //       ),
+                                                          //       focusedBorder: OutlineInputBorder(
+                                                          //         borderSide: const BorderSide(
+                                                          //           color: Colors.orange,
+                                                          //           width: 1,
+                                                          //         ),
+                                                          //         borderRadius: BorderRadius.circular(6),
+                                                          //       ),
+                                                          //     ),
+                                                          //   ),
+                                                          // ),
                                                         ],
                                                       ),
                                                       const SizedBox(height: 16.0),
@@ -255,15 +327,6 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         textInputType: TextInputType.text,
                                                         obscure: false,
                                                         labelText: 'Street Address',
-                                                        enabled: true,
-                                                      ),
-                                                      const SizedBox(height: 16.0),
-                                                      LoginField(
-                                                        hintText: 'Town/City',
-                                                        controller: city,
-                                                        textInputType: TextInputType.text,
-                                                        obscure: false,
-                                                        labelText: 'Town/City',
                                                         enabled: true,
                                                       ),
                                                       const SizedBox(height: 16.0),
@@ -423,9 +486,9 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                               String lname_txt=lastname.text.trim().toString();
                                                               String addres_txt=street.text.trim().toString();
                                                               String phone_txt=contact.text.trim().toString();
-                                                              String country_txt=_selectedCountry;
-                                                              String region_txt=_selectedRegion;
-                                                              String city_txt=city.text.trim().toString();
+                                                              String country_txt=_selectedCountry!;
+                                                              String region_txt=_selectedRegion!;
+                                                              String city_txt=_selectedCity!;
                                                               String postcode_txt=postcode.text.trim().toString();
 
                                                               final pgress=ProgressHUD.of(context);
@@ -436,7 +499,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
 
                                                               await ecom.checkout(email_txt, fname_txt,lname_txt, addres_txt, phone_txt, country_txt, region_txt, city_txt, postcode_txt,amount!,selectedDestination!);
                                                               double shipping=double.parse(amount!);
-                                                              double paystackvalue=(convertedamt+shipping)*100;
+                                                              //double paystackvalue=(convertedamt+shipping)*100;
 
                                                              // ecom.paystacks(phone_txt, "$paystackvalue",ecom.mycardid);
 
@@ -526,7 +589,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                             ),
                                                             TableCell(
                                                               child: Padding(
-                                                                padding: EdgeInsets.all(8.0),
+                                                                padding: const EdgeInsets.all(8.0),
                                                                 child: Text("USD ${amount}"),
                                                               ),
                                                             ),
@@ -560,7 +623,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                               child: Padding(
                                                                 padding: EdgeInsets.all(8.0),
                                                                 child: Text("GHS ${
-                                                                    double.parse(finalconverted)+(double.parse(amount!)*ecom.currecyval)
+                                                                    ((double.parse(ecom.cardvalue)+(double.parse(amount!)))*ecom.currecyval)
                                                                 }"),
                                                               ),
                                                             ),

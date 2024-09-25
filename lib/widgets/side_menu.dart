@@ -25,7 +25,7 @@ class _SideDrawerState extends State<SideDrawer> {
   Widget build(BuildContext context) {
     return Consumer<Ecom>(
         builder: (BuildContext context, Ecom value, Widget? child){
-          value.paystacks("0552111770","200","432244892579076662");
+          //value.paystacks("0552111770","200","432244892579076662");
           if(value.companyphone.isEmpty){
             value.companyinfo();
           }

@@ -188,27 +188,30 @@ class _ShopPageState extends State<ShopPage> {
                             visible: isNotVisible(),
                             child: Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                        onTap: (){
-                                          Navigator.pushNamed(context, Routes.singleProduct);
-                                        },
-                                        child: const Icon(Icons.favorite)
-                                    ),
-                                    const SizedBox(width: 8),
-                                    InkWell(
-                                        onTap: ()async{
-                                          await value.cartidmethod();
-                                          final st=await value.alreadypaid(context);
-                                          Navigator.pushNamed(context, Routes.cart);
-                                        },
-                                        child: const Icon(Icons.shopping_cart)
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
-                                  ],
+                                Container(
+                                  
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                          onTap: (){
+                                            Navigator.pushNamed(context, Routes.singleProduct);
+                                          },
+                                          child: const Icon(Icons.favorite)
+                                      ),
+                                      const SizedBox(width: 8),
+                                      InkWell(
+                                          onTap: ()async{
+                                            await value.cartidmethod();
+                                            final st=await value.alreadypaid(context);
+                                            Navigator.pushNamed(context, Routes.cart);
+                                          },
+                                          child: const Icon(Icons.shopping_cart)
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -280,49 +283,101 @@ class _ShopPageState extends State<ShopPage> {
                                             child: Padding(
                                               padding: const EdgeInsets.only(left: 20.0,top: 20),
                                               child: SizedBox(height: 300,
-                                                child:StreamBuilder<QuerySnapshot>(
-                                                    stream: value.db.collection("category").snapshots(),
-                                                    builder: (context, snapshot) {
-                                                      if(!snapshot.hasData)
-                                                      {
-                                                        return Text("No data yet");
+                                                child:FutureBuilder<QuerySnapshot>(
+                                                  future: value.db.collection("category").get(), // Fetch data from Firestore as a Future
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                                      // Show a loading indicator while the data is being fetched
+                                                      return CircularProgressIndicator();
+                                                    }
 
-                                                      }
-                                                      return ListView.builder(
-                                                        itemCount: snapshot.data!.docs.length,
-                                                        scrollDirection: Axis.vertical,
-                                                        itemBuilder: (BuildContext context, int index) {
-                                                          String categoryName = snapshot.data!.docs[index]['name'];
-                                                          return  InkWell(
-                                                            onTap: (){},
-                                                            child: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: InkWell(
-                                                                    onTap: (){
-                                                                      setState(() {
-                                                                        value.selected_category(categoryName);
-                                                                        shoenum=categoryName;
-                                                                      });
-                                                                    },
-                                                                    child: MenuType(
-                                                                        isSelected: false,
-                                                                        coffeeType: categoryName
-                                                                    ),
+                                                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                                      // Handle the case when there's no data
+                                                      return Text("No data yet");
+                                                    }
+
+                                                    // If data is available, build the list
+                                                    return ListView.builder(
+                                                      itemCount: snapshot.data!.docs.length,
+                                                      scrollDirection: Axis.vertical,
+                                                      itemBuilder: (BuildContext context, int index) {
+                                                        String categoryName = snapshot.data!.docs[index]['name']; // Fetch category name from Firestore document
+
+                                                        return InkWell(
+                                                          onTap: () {}, // Define your onTap functionality here
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(4.0),
+                                                                child: InkWell(
+                                                                  onTap: () {
+                                                                    setState(() {
+                                                                      value.selected_category(categoryName); // Handle category selection
+                                                                      shoenum = categoryName; // Set the selected category
+                                                                    });
+                                                                  },
+                                                                  child: MenuType(
+                                                                    isSelected: false,
+                                                                    coffeeType: categoryName, // Pass the category name to the MenuType widget
                                                                   ),
                                                                 ),
-                                                                Divider(thickness: 1,color: Colors.grey[200],),
+                                                              ),
+                                                              Divider(
+                                                                thickness: 1,
+                                                                color: Colors.grey[200],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                )
 
-                                                              ],
-                                                            ),
-                                                          );
-
-                                                        },
-                                                      );
-                                                    }
-                                                ),
+                                                // StreamBuilder<QuerySnapshot>(
+                                                //     stream: value.db.collection("category").snapshots(),
+                                                //     builder: (context, snapshot) {
+                                                //       if(!snapshot.hasData)
+                                                //       {
+                                                //         return Text("No data yet");
+                                                //
+                                                //       }
+                                                //       return ListView.builder(
+                                                //         itemCount: snapshot.data!.docs.length,
+                                                //         scrollDirection: Axis.vertical,
+                                                //         itemBuilder: (BuildContext context, int index) {
+                                                //           String categoryName = snapshot.data!.docs[index]['name'];
+                                                //           return  InkWell(
+                                                //             onTap: (){},
+                                                //             child: Column(
+                                                //               crossAxisAlignment: CrossAxisAlignment.start,
+                                                //               children: [
+                                                //                 Padding(
+                                                //                   padding: const EdgeInsets.all(4.0),
+                                                //                   child: InkWell(
+                                                //                     onTap: (){
+                                                //                       setState(() {
+                                                //                         value.selected_category(categoryName);
+                                                //                         shoenum=categoryName;
+                                                //                       });
+                                                //                     },
+                                                //                     child: MenuType(
+                                                //                         isSelected: false,
+                                                //                         coffeeType: categoryName
+                                                //                     ),
+                                                //                   ),
+                                                //                 ),
+                                                //                 Divider(thickness: 1,color: Colors.grey[200],),
+                                                //
+                                                //               ],
+                                                //             ),
+                                                //           );
+                                                //
+                                                //         },
+                                                //       );
+                                                //     }
+                                                // ),
                                               ),
                                             ),
                                           ),

@@ -22,7 +22,7 @@ class Ecom extends ChangeNotifier{
   final numformat = NumberFormat("#,##0.00", "en_US");
 
   //cart id with provider
-  double currecyval=0;
+  double currecyval=0.0;
   bool lockstatus=false;
   String mycardid="";
   String companyname="";
@@ -46,11 +46,18 @@ class Ecom extends ChangeNotifier{
   bool itemwithcardexist=false;
   String existingqty="0";
   String existingid="0";
+  Map<String, dynamic> countryCityData = {};
+  List<String> countries = [];
+  List<String> cities = [];
+  String? selectedCountry;
+  String? selectedCity;
+
   Ecom(){
     get_current_item();
     getcstate();
     carttotal();
     currecy();
+    fetchCountries();
   }
   set_selecteditem(String item)async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
@@ -788,4 +795,15 @@ class Ecom extends ChangeNotifier{
     notifyListeners();
   }
 
+
+  Future<void> fetchCountries() async {
+    final response = await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+        countries = data.map((country) => country['name']['common'].toString()).toList();
+
+    } else {
+      throw Exception('Failed to load countries');
+    }
+  }
 }
