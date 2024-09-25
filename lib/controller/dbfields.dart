@@ -50,6 +50,7 @@ class CheckoutFields{
   static String accesscode="accesscode";
   static String payurl="payurl";
   static String shipping="shipping";
+  static String destination="destination";
   static String ghshipping="ghshipping";
 }
 

@@ -171,7 +171,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
           child: Column(
             children: [
               Padding(
-                  padding: MediaQuery.of(context).size.width < 500
+                  padding: MediaQuery.of(context).size.width < 900
                       ? const EdgeInsets.only(left: 5.0, right: 5.0, top: 15)
                       : const EdgeInsets.only(left: 50.0, right: 50.0, top: 15),
                   child: Container(
@@ -241,26 +241,28 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                       child: SizedBox(
                                         height: 50,
                                         //color: Colors.red,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            InkWell(
-                                                onTap: (){
-                                                  Navigator.pushNamed(context, Routes.singleProduct);
-                                                },
-                                                child: const Icon(Icons.favorite)
-                                            ),
-                                            InkWell(
-                                                onTap: ()async{
-                                                  await value.cartidmethod();
-                                                  final st=await value.alreadypaid(context);
-                                                  print(st);
-                                                  Navigator.pushNamed(context, Routes.cart);
-                                                },
-                                                child: const Icon(Icons.shopping_cart)
-                                            ),
-                                            Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
-                                          ],
+                                        child: Container(
+                                          color: Global.primaryColor,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              InkWell(
+                                                  onTap: (){
+                                                   // Navigator.pushNamed(context, Routes.singleProduct);
+                                                  },
+                                                  child: const Icon(Icons.favorite,color: Colors.white,)
+                                              ),
+                                              InkWell(
+                                                  onTap: ()async{
+                                                    await value.cartidmethod();
+                                                    final st=await value.alreadypaid(context);
+                                                    Navigator.pushNamed(context, Routes.cart);
+                                                  },
+                                                  child: const Icon(Icons.shopping_cart,color: Colors.white,)
+                                              ),
+                                              Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),)
+                                            ],
+                                          ),
                                         ),
                                       )
                                   )

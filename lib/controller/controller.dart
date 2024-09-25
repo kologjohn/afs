@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,6 +50,7 @@ class Ecom extends ChangeNotifier{
     get_current_item();
     getcstate();
     carttotal();
+    currecy();
   }
   set_selecteditem(String item)async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
@@ -172,7 +174,7 @@ class Ecom extends ChangeNotifier{
 
     //Navigator.pushNamed(context, Routes.dashboard);
   }
-  checkout(String email_txt,String fname_txt,String lnamme_txt,String addres_txt,String phone_txt, String country_txt,String region_txt, String city_txt,String postcode_txt,String shipping)async{
+  checkout(String email_txt,String fname_txt,String lnamme_txt,String addres_txt,String phone_txt, String country_txt,String region_txt, String city_txt,String postcode_txt,String shipping,String destination)async{
     try{
       String payurl="";
       String accesscode="";
@@ -212,6 +214,7 @@ class Ecom extends ChangeNotifier{
         CheckoutFields.accesscode:accesscode,
         CheckoutFields.status:status,
         CheckoutFields.shipping:"$shipping",
+        CheckoutFields.destination:destination,
         CheckoutFields.ghshipping:"$ghmyshipping",
       };
       double payable=(double.parse(shipping)+double.parse(cardvalue))*100;
@@ -324,11 +327,16 @@ class Ecom extends ChangeNotifier{
           snackbarerror(notverified, context);
           await setnextstate("not verified");
           await getcstate();
+          SnackBar snackBar=SnackBar(content: Text("Account Not Verified"));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
         }
+        else
+          {
+            print("No Dcition");
+          }
       }
       else {
-        await auth.createUserWithEmailAndPassword(email: email, password: password);
         final data={
           Dbfields.firstname:firstname,
           Dbfields.lastname:lastname,
@@ -336,7 +344,6 @@ class Ecom extends ChangeNotifier{
           Dbfields.contact:contact,
           Dbfields.sex:sex,
           Dbfields.email:email,
-          Dbfields.password:password,
           Dbfields.userid:userid
         };
         await Dbfields.db.collection(Dbfields.users).doc(email).set(data);
@@ -377,10 +384,15 @@ class Ecom extends ChangeNotifier{
 
 
         }
+        else
+          {
+            print("No decition");
+          }
       }
     }on FirebaseException catch (e){
       accountcreated=false;
       error=e.code!;
+      print(error);
     }
     notifyListeners();
 
@@ -729,17 +741,17 @@ class Ecom extends ChangeNotifier{
               else {
                 print("URL NOT GENERATED");
               }
-            } else {
-              print("Error:${response.reasonPhrase}");
+            }
+            else {
+              print("Error:${response.statusCode}");
             }
 
           }
 
         }
       }
-    }
-    catch(e){
-      print(e);
+    }on HttpException catch (e){
+      print(e.message);
     }
 
 
@@ -765,8 +777,8 @@ class Ecom extends ChangeNotifier{
       if (response.statusCode == 200) {
         String resdata = await response.stream.bytesToString();
         final Map parsed = json.decode(resdata);
-        final  finaldata = parsed['result'];
-        currecyval=finaldata;
+        String  finaldata = parsed['result'].toStringAsFixed(2);
+        currecyval=double.parse(finaldata);
         print(finaldata);
       } else {
         print("Error:${response.reasonPhrase}");

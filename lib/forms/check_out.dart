@@ -38,7 +38,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
   };
 
   String? selectedDestination;  // Holds the selected destination
-  String? amount;  // Holds the fetched amount based on the selected destination
+  String? amount="0";  // Holds the fetched amount based on the selected destination
   int? selectedIndex;  // Holds the index of the selected item
 
   // Fetch the amount when a destination is selected
@@ -83,7 +83,6 @@ class _CheckoutFormState extends State<CheckoutForm> {
           if(ecom.mycarttotal==0){
             ecom.carttotal();
             ecom.cartidmethod();
-            ecom.currecy();
             print(ecom.currecyval);
           }
           double convertedamt=double.parse(ecom.cardvalue)*ecom.currecyval;
@@ -418,7 +417,6 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         ),
                                                         child: ElevatedButton(
                                                           onPressed: () async{
-                                                            print("Data: ${amount}");
                                                            if (validator() && amount!=null) {
                                                               String email_txt=email.text.trim().toString();
                                                               String fname_txt=firstname.text.trim().toString();
@@ -436,7 +434,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                                 pgress.dismiss();
                                                               });
 
-                                                              await ecom.checkout(email_txt, fname_txt,lname_txt, addres_txt, phone_txt, country_txt, region_txt, city_txt, postcode_txt,amount!);
+                                                              await ecom.checkout(email_txt, fname_txt,lname_txt, addres_txt, phone_txt, country_txt, region_txt, city_txt, postcode_txt,amount!,selectedDestination!);
                                                               double shipping=double.parse(amount!);
                                                               double paystackvalue=(convertedamt+shipping)*100;
 
@@ -520,7 +518,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         ),
                                                           TableRow(
                                                           children: [
-                                                            TableCell(
+                                                            const TableCell(
                                                               child: Padding(
                                                                 padding: EdgeInsets.all(8.0),
                                                                 child: Text('Shipping'),
@@ -545,7 +543,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                             TableCell(
                                                               child: Padding(
                                                                 padding: const EdgeInsets.all(8.0),
-                                                                child: Text("USD ${ecom.cardvalue}"),
+                                                                child: Text("USD ${double.parse(ecom.cardvalue)+double.parse(amount!)}"),
                                                               ),
                                                             ),
                                                           ],
@@ -561,7 +559,9 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                             TableCell(
                                                               child: Padding(
                                                                 padding: EdgeInsets.all(8.0),
-                                                                child: Text("GHS ${finalconverted}"),
+                                                                child: Text("GHS ${
+                                                                    double.parse(finalconverted)+(double.parse(amount!)*ecom.currecyval)
+                                                                }"),
                                                               ),
                                                             ),
                                                           ],
