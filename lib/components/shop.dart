@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:africanstraw/components/shimmer.dart';
 import 'package:africanstraw/footers/desktop_footer.dart';
 import 'package:africanstraw/footers/tablet_footer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -288,12 +289,14 @@ class _ShopPageState extends State<ShopPage> {
                                                   builder: (context, snapshot) {
                                                     if (snapshot.connectionState == ConnectionState.waiting) {
                                                       // Show a loading indicator while the data is being fetched
-                                                      return CircularProgressIndicator();
+                                                      return ShimmerLoadingList();
+                                                        //CircularProgressIndicator();
+
                                                     }
 
                                                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                                                       // Handle the case when there's no data
-                                                      return Text("No data yet");
+                                                      return ShimmerLoadingList();
                                                     }
 
                                                     // If data is available, build the list
@@ -335,49 +338,6 @@ class _ShopPageState extends State<ShopPage> {
                                                   },
                                                 )
 
-                                                // StreamBuilder<QuerySnapshot>(
-                                                //     stream: value.db.collection("category").snapshots(),
-                                                //     builder: (context, snapshot) {
-                                                //       if(!snapshot.hasData)
-                                                //       {
-                                                //         return Text("No data yet");
-                                                //
-                                                //       }
-                                                //       return ListView.builder(
-                                                //         itemCount: snapshot.data!.docs.length,
-                                                //         scrollDirection: Axis.vertical,
-                                                //         itemBuilder: (BuildContext context, int index) {
-                                                //           String categoryName = snapshot.data!.docs[index]['name'];
-                                                //           return  InkWell(
-                                                //             onTap: (){},
-                                                //             child: Column(
-                                                //               crossAxisAlignment: CrossAxisAlignment.start,
-                                                //               children: [
-                                                //                 Padding(
-                                                //                   padding: const EdgeInsets.all(4.0),
-                                                //                   child: InkWell(
-                                                //                     onTap: (){
-                                                //                       setState(() {
-                                                //                         value.selected_category(categoryName);
-                                                //                         shoenum=categoryName;
-                                                //                       });
-                                                //                     },
-                                                //                     child: MenuType(
-                                                //                         isSelected: false,
-                                                //                         coffeeType: categoryName
-                                                //                     ),
-                                                //                   ),
-                                                //                 ),
-                                                //                 Divider(thickness: 1,color: Colors.grey[200],),
-                                                //
-                                                //               ],
-                                                //             ),
-                                                //           );
-                                                //
-                                                //         },
-                                                //       );
-                                                //     }
-                                                // ),
                                               ),
                                             ),
                                           ),
@@ -441,7 +401,8 @@ class _ShopPageState extends State<ShopPage> {
                                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
                                                   if (!snapshot.hasData)
                                                   {
-                                                    return Text("No data");
+                                                    return ShimmerLoadingList();
+
                                                   }
 
                                                   return ListView.builder(
@@ -531,11 +492,15 @@ class _ShopPageState extends State<ShopPage> {
                                             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
                                               if(!snapshot.hasData){
-                                                return const Text("Loading...");
+                                                //return const Text("Loading...");
+                                                return ShimmerLoadingList();
+
                                               }
                                               else if(snapshot.connectionState==ConnectionState.waiting)
                                               {
-                                                const CircularProgressIndicator();
+                                                return ShimmerLoadingList();
+
+                                                // const CircularProgressIndicator();
                                               }
                                               else if(snapshot.hasError)
                                               {
