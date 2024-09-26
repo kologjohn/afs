@@ -250,7 +250,11 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                   onTap: (){
                                                    // Navigator.pushNamed(context, Routes.singleProduct);
                                                   },
-                                                  child: const Icon(Icons.favorite,color: Colors.white,)
+                                                  child: const Tooltip(
+                                                    message: 'Favorites',
+
+                                                      child: Icon(Icons.favorite,color: Colors.white,)
+                                                  )
                                               ),
                                               InkWell(
                                                   onTap: ()async{
@@ -258,7 +262,10 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                     final st=await value.alreadypaid(context);
                                                     Navigator.pushNamed(context, Routes.cart);
                                                   },
-                                                  child: const Icon(Icons.shopping_cart,color: Colors.white,)
+                                                  child: const Tooltip(
+                                                    message: 'Cart',
+                                                      child: Icon(Icons.shopping_cart,color: Colors.white,)
+                                                  )
                                               ),
                                               Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),)
                                             ],

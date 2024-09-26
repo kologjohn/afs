@@ -367,7 +367,8 @@ class _ShopPageState extends State<ShopPage> {
                                             ),
                                             height: 30,
                                             width: 80,
-                                              child: Center(child: Text("Default")),
+                                              child: const Center(child: Text("Default")
+                                              ),
                                           ),
                                         ],
                                       ),
@@ -383,12 +384,50 @@ class _ShopPageState extends State<ShopPage> {
                                                 ),
                                                 borderRadius: BorderRadius.circular(30)
                                             ),
-                                              child: const Center(
+                                              child: Center(
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                     children: [
-                                                      Text("Sort by"),
-                                                      Icon(Icons.arrow_drop_down),
+                                                      //Text("Sort by"),
+                                                      PopupMenuTheme(
+                                                          data: PopupMenuThemeData(
+                                                            color: Colors.lightBlue[50]
+                                                          ),
+                                                          child: PopupMenuButton<String>(
+                                                            onSelected: (value) {
+                                                              // Handle submenu item click
+                                                              if (value == 'recent') {
+
+                                                              } else if (value == 'lPrice') {
+
+                                                              } else if (value == 'hPrice') {
+
+                                                              } else if (value =='name') {
+
+                                                              }
+                                                            },
+                                                            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                                              const PopupMenuItem<String>(
+                                                                value: 'recent',
+                                                                child: Text('Most Recent'),
+                                                              ),
+                                                              const PopupMenuItem<String>(
+                                                                value: 'lPrice',
+                                                                child: Text('Lowest Price'),
+                                                              ),
+                                                              const PopupMenuItem<String>(
+                                                                value: 'hPrice',
+                                                                child: Text('Highest Price'),
+                                                              ),
+                                                              const PopupMenuItem<String>(
+                                                                  value: 'name',
+                                                                  child: Text("Name")
+                                                              ),
+                                                            ],
+                                                            child: Text("Sort by"),
+                                                          ),
+                                                      ),
+                                                      const Icon(Icons.arrow_drop_down),
                                                     ],
                                                   )
                                               ),
