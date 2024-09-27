@@ -172,7 +172,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
           child: Column(
             children: [
               Padding(
-                  padding: MediaQuery.of(context).size.width < 500
+                  padding: MediaQuery.of(context).size.width < 900
                       ? const EdgeInsets.only(left: 5.0, right: 5.0, top: 15)
                       : const EdgeInsets.only(left: 50.0, right: 50.0, top: 15),
                   child: Container(
@@ -251,7 +251,11 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                   onTap: (){
                                                    // Navigator.pushNamed(context, Routes.singleProduct);
                                                   },
-                                                  child: const Icon(Icons.favorite,color: Colors.white,)
+                                                  child: const Tooltip(
+                                                    message: 'Favorites',
+
+                                                      child: Icon(Icons.favorite,color: Colors.white,)
+                                                  )
                                               ),
                                               InkWell(
                                                   onTap: ()async{
@@ -259,7 +263,10 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                     final st=await value.alreadypaid(context);
                                                     Navigator.pushNamed(context, Routes.cart);
                                                   },
-                                                  child: const Icon(Icons.shopping_cart,color: Colors.white,)
+                                                  child: const Tooltip(
+                                                    message: 'Cart',
+                                                      child: Icon(Icons.shopping_cart,color: Colors.white,)
+                                                  )
                                               ),
                                               Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),)
                                             ],

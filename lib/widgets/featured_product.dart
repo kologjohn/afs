@@ -45,7 +45,8 @@ class _FeaturedProductState extends State<FeaturedProduct> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(bottom: 5.0),
-                  child: SizedBox(
+                  child: Container(
+                    color: Colors.lightBlue[50],
                     width: widget.consWidth,
                     height: 200,
                     child: widget.image,

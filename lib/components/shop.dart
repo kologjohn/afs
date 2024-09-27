@@ -88,82 +88,79 @@ class _ShopPageState extends State<ShopPage> {
                 width: double.infinity,
                 height: 50,
                 color: Colors.transparent,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Row(
-                          children: [
-                            MainMenu()
-                          ],
-                        ),
-                        const SizedBox(width: 120),
-                        Row(
-                          children: [
-                            SizedBox(
-                              height: 50,
-                              width: 400,
-                              child: Column(
-                                children: [
-                                  TextField(
-                                    controller: searchController,
-                                    onChanged: (txt){
-                                      setState(() {
-                                        searchQuery=txt;
-
-                                      });
-                                    },
-                                    decoration: const InputDecoration(
-                                        hintText: 'Search by Item name,category or price?',
-                                        hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
-                                        fillColor: Colors.white54,
-                                        filled: true
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 50,
-                              width: 150,
-                              color: Global.mainColor,
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Search", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 120),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            InkWell(
-                                onTap: (){
-                                  Navigator.pushNamed(context, Routes.singleProduct);
-                                },
-                                child: const Icon(Icons.favorite)
-                            ),
-                            const SizedBox(width: 8),
-                            InkWell(
-                                onTap: ()async{
-                                  await value.cartidmethod();
-                                  final st=await value.alreadypaid(context);
-                                  Navigator.pushNamed(context, Routes.cart);
-                                },
-                                child: const Icon(Icons.shopping_cart)
-                            ),
-                            const SizedBox(width: 8),
-                            Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
-                          ],
-                        ),
-                      ],
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          MainMenu()
+                        ],
+                      ),
+                      const SizedBox(width: 120),
+                      // Row(
+                      //   children: [
+                      //     SizedBox(
+                      //       height: 50,
+                      //       width: 400,
+                      //       child: Column(
+                      //         children: [
+                      //           TextField(
+                      //             controller: searchController,
+                      //             onChanged: (txt){
+                      //               setState(() {
+                      //                 searchQuery=txt;
+                      //
+                      //               });
+                      //             },
+                      //             decoration: const InputDecoration(
+                      //                 hintText: 'Search by Item name,category or price?',
+                      //                 hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
+                      //                 fillColor: Colors.white54,
+                      //                 filled: true
+                      //             ),
+                      //           )
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     Container(
+                      //       height: 50,
+                      //       width: 150,
+                      //       color: Global.mainColor,
+                      //       child: const Column(
+                      //         mainAxisAlignment: MainAxisAlignment.center,
+                      //         children: [
+                      //           Text("Search", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      const SizedBox(width: 120),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                              onTap: (){
+                                Navigator.pushNamed(context, Routes.singleProduct);
+                              },
+                              child: const Icon(Icons.favorite)
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                              onTap: ()async{
+                                await value.cartidmethod();
+                                final st=await value.alreadypaid(context);
+                                Navigator.pushNamed(context, Routes.cart);
+                              },
+                              child: const Icon(Icons.shopping_cart)
+                          ),
+                          const SizedBox(width: 8),
+                          Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold),)
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -179,7 +176,9 @@ class _ShopPageState extends State<ShopPage> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10),
+                  padding: MediaQuery.of(context).size.width < 700
+                      ? const EdgeInsets.only(left: 5.0, right: 5.0, top: 15)
+                      : const EdgeInsets.only(left: 30.0, right: 30.0, top: 15),
                   child: Container(
                       color: Colors.white,
                       child: Column(
@@ -219,57 +218,228 @@ class _ShopPageState extends State<ShopPage> {
                           ),
                           const SizedBox(height: 20),
                           Visibility(
-                            visible: isNotVisible(),
+                            visible: true,
                             child: Column(
                               children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        child: GestureDetector(
-                                          onTap: ()async{
-                                            setState(() {
-                                              if(show==false)
-                                              {
-                                                show=true;
-                                              }
-                                              else if(show==true)
-                                              {
-                                                show=false;
-                                              }
-                                              //show=true;
-                                            });
-                                          },
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                                  child: Row(
+                                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
                                           child: Container(
-                                            color: Global.mainColor,
-                                            height: 50,
-                                            child: const Padding(
-                                              padding: EdgeInsets.only(left: 18.0, right: 18),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Row(
+                                            child: Wrap(
+                                              runSpacing: 10,
+                                              spacing: 10,
+                                              alignment: WrapAlignment.spaceBetween,
+                                              runAlignment: WrapAlignment.spaceBetween,
+                                              children: [
+                                                PopupMenuTheme(
+                                                  data: PopupMenuThemeData(
+                                                    color: Colors.lightBlue[50],
+                                                  ),
+                                                  child: Container(
+                                                    constraints: const BoxConstraints(maxWidth: 800, minWidth: 650),
+                                                    color: Global.mainColor,
+                                                    height: 50,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              const Icon(Icons.menu, color: Colors.white),
+                                                              const SizedBox(width: 8), // Spacing between icon and text
+                                                              StreamBuilder<QuerySnapshot>(
+                                                                stream: value.db.collection("category").snapshots(),
+                                                                builder: (context, snapshot) {
+                                                                  if (!snapshot.hasData) {
+                                                                    return const Text(
+                                                                      "Loading...",
+                                                                      style: TextStyle(color: Colors.white),
+                                                                    );
+                                                                  }
+                                                                  return PopupMenuButton<String>(
+                                                                    onSelected: (selectedCategory) {
+                                                                      // Perform action based on selected category
+                                                                      setState(() {
+                                                                        value.selected_category(selectedCategory);
+                                                                        shoenum = selectedCategory;
+                                                                      });
+                                                                    },
+                                                                    itemBuilder: (BuildContext context) {
+                                                                      return snapshot.data!.docs.map((DocumentSnapshot document) {
+                                                                        String categoryName = document['name'];
+                                                                        return PopupMenuItem<String>(
+                                                                          value: categoryName,
+                                                                          child: Text(categoryName),
+                                                                        );
+                                                                      }).toList();
+                                                                    },
+                                                                    child: const Text(
+                                                                      "BASKET CATEGORIES",
+                                                                      style: TextStyle(color: Colors.white),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          const Icon(
+                                                            Icons.arrow_drop_down,
+                                                            size: 30,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  constraints: const BoxConstraints(maxWidth: 800, minWidth: 650), // Limit width
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Aligns children inside the row
                                                     children: [
-                                                      Icon(Icons.menu, color: Colors.white,),
-                                                      Text(
-                                                        "BASKETS CATEGORIES",
-                                                        style: TextStyle(
-                                                            color: Colors.white
+                                                      // Search Input
+                                                      Flexible(
+                                                        flex: 3,
+                                                        child: TextField(
+                                                          controller: searchController,
+                                                          onChanged: (txt) {
+                                                            setState(() {
+                                                              searchQuery = txt;
+                                                            });
+                                                          },
+                                                          decoration: InputDecoration(
+                                                            hintText: 'Search for anything',
+                                                            hintStyle: TextStyle(
+                                                              color: Colors.grey[500],
+                                                              fontSize: 16,
+                                                            ),
+                                                            fillColor: Colors.white,
+                                                            filled: true,
+                                                            suffixIcon: Icon(Icons.search, color: Colors.blue), // Search Icon
+                                                            contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Padding inside TextField
+                                                            border: OutlineInputBorder(
+                                                              borderRadius: BorderRadius.circular(30), // Rounded corners
+                                                              borderSide: BorderSide.none, // No visible border
+                                                            ),
+                                                            enabledBorder: OutlineInputBorder(
+                                                              borderRadius: BorderRadius.circular(30),
+                                                              borderSide: BorderSide(
+                                                                  color: Colors.blue,
+                                                                  width: 1
+                                                              ),
+                                                            ),
+                                                            focusedBorder: OutlineInputBorder(
+                                                              borderRadius: BorderRadius.circular(30),
+                                                              borderSide: BorderSide.none,
+                                                            ),
+                                                          ),
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 16,
+                                                          ),
                                                         ),
-                                                      )
+                                                      ),
                                                     ],
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      Icon(Icons.arrow_drop_down, size: 30, color: Colors.white,),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                                                )
+                                              ],
                                             ),
+                                          )
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 30),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.blue,
+                                                    width: 1
+                                                ),
+                                              borderRadius: BorderRadius.circular(30)
+                                            ),
+                                            height: 30,
+                                            width: 80,
+                                              child: const Center(child: Text("Default")
+                                              ),
                                           ),
-                                        )
-                                    )
-                                  ],
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            height: 30,
+                                              width: 100,
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.blue,
+                                                    width: 1
+                                                ),
+                                                borderRadius: BorderRadius.circular(30)
+                                            ),
+                                              child: Center(
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                    children: [
+                                                      //Text("Sort by"),
+                                                      PopupMenuTheme(
+                                                          data: PopupMenuThemeData(
+                                                            color: Colors.lightBlue[50]
+                                                          ),
+                                                          child: PopupMenuButton<String>(
+                                                            onSelected: (value) {
+                                                              // Handle submenu item click
+                                                              if (value == 'recent') {
+
+                                                              } else if (value == 'lPrice') {
+
+                                                              } else if (value == 'hPrice') {
+
+                                                              } else if (value =='name') {
+
+                                                              }
+                                                            },
+                                                            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                                              const PopupMenuItem<String>(
+                                                                value: 'recent',
+                                                                child: Text('Most Recent'),
+                                                              ),
+                                                              const PopupMenuItem<String>(
+                                                                value: 'lPrice',
+                                                                child: Text('Lowest Price'),
+                                                              ),
+                                                              const PopupMenuItem<String>(
+                                                                value: 'hPrice',
+                                                                child: Text('Highest Price'),
+                                                              ),
+                                                              const PopupMenuItem<String>(
+                                                                  value: 'name',
+                                                                  child: Text("Name")
+                                                              ),
+                                                            ],
+                                                            child: Text("Sort by"),
+                                                          ),
+                                                      ),
+                                                      const Icon(Icons.arrow_drop_down),
+                                                    ],
+                                                  )
+                                              ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                                 Row(
                                   children: [
@@ -352,7 +522,7 @@ class _ShopPageState extends State<ShopPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Visibility(
-                                visible: isVisible(),
+                                visible: false,
                                 child: Expanded(
                                     child: SizedBox(
                                       height: 1200,
@@ -459,32 +629,32 @@ class _ShopPageState extends State<ShopPage> {
                                   flex: 3,
                                   child: Column(
                                     children: [
-                                      Container(
-                                        //color: Colors.lightGreen[50],
-                                        height: 50,
-                                        child: const Padding(
-                                          padding: EdgeInsets.only(left: 20.0),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "Sort by",
-                                                style: TextStyle(
-                                                    fontSize: 15
-                                                ),
-                                              ),
-                                              SizedBox(width: 60),
-                                              Text(
-                                                "Default",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15
-                                                ),
-                                              ),
-                                              Icon(Icons.keyboard_arrow_down)
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      // Container(
+                                      //   //color: Colors.lightGreen[50],
+                                      //   height: 50,
+                                      //   child: const Padding(
+                                      //     padding: EdgeInsets.only(left: 20.0),
+                                      //     child: Row(
+                                      //       children: [
+                                      //         Text(
+                                      //           "Sort by",
+                                      //           style: TextStyle(
+                                      //               fontSize: 15
+                                      //           ),
+                                      //         ),
+                                      //         SizedBox(width: 60),
+                                      //         Text(
+                                      //           "Default",
+                                      //           style: TextStyle(
+                                      //               fontWeight: FontWeight.bold,
+                                      //               fontSize: 15
+                                      //           ),
+                                      //         ),
+                                      //         Icon(Icons.keyboard_arrow_down)
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
                                       SizedBox(
                                           height: 1200,
                                           child: StreamBuilder<QuerySnapshot>(
@@ -604,7 +774,7 @@ class _ShopPageState extends State<ShopPage> {
                                           )
 
                                         //featuredGridview(shoenum: shoenum, widgth: 300, height: 200, name: 16, price: 16, favHeight: 30, favWidth: 100, favSize: 25, cartHeight: 30, cartWidth: 100, cartSize: 25, querySnapshot: querysnapshot,),
-                                      )
+                                      ),
                                     ],
                                   )
                               )

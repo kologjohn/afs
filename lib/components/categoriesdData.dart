@@ -1,4 +1,3 @@
-import 'package:africanstraw/components/shimmer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +11,7 @@ FutureBuilder<QuerySnapshot<Object?>> Categories(Ecom value) {
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         // Show a loading indicator while the data is being fetched
-        return ShimmerLoadingList();
-          // Center(child: CircularProgressIndicator());
+        return CircularProgressIndicator();
       }
 
       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
