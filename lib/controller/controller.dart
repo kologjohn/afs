@@ -46,6 +46,7 @@ class Ecom extends ChangeNotifier{
   bool itemwithcardexist=false;
   String existingqty="0";
   String existingid="0";
+  String contact="";
   Ecom(){
     get_current_item();
     getcstate();
@@ -304,10 +305,8 @@ class Ecom extends ChangeNotifier{
   }
   signupwithemail(String firstname,String lastname,String username,String contact,String sex,String email,String password,BuildContext context)async{
     try{
-      // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
-      // sharedPreferences.setString("fname",firstname);
-      // sharedPreferences.setString("lastname",lastname);
-      // sharedPreferences.setString("phone",contact);
+      final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+      sharedPreferences.setString("phone",contact);
       //print(email);
       final eixistuser=await Dbfields.db.collection(Dbfields.users).doc(email).get();
       final countexiist=await Dbfields.db.collection(Dbfields.users).get();
