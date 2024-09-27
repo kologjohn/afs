@@ -11,7 +11,9 @@ import 'package:africanstraw/widgets/route.dart';
 import 'package:provider/provider.dart';
 import 'package:typewritertext/typewritertext.dart';
 import '../blog/blog_post.dart';
+import '../components/banner.dart';
 import '../components/categoriesdData.dart';
+import '../controller/cachedManager.dart';
 import '../controller/controller.dart';
 import '../footers/desktop_footer.dart';
 import '../footers/tablet_footer.dart';
@@ -39,7 +41,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double itemWidth = 250.0;
+    double itemWidth = 400.0;
 
     bool isVisible () {
       double screenWidth = MediaQuery.of(context).size.width;
@@ -65,11 +67,11 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
       crossAxisCount = 2;
     }
     else if (screenWidth <= 600 && screenWidth<800) {
-      crossAxisCount = (screenWidth / 200).floor();
+      crossAxisCount = (screenWidth / 400).floor();
     }
     else if(screenWidth >=600 && screenWidth<1000)
     {
-      crossAxisCount = (screenWidth / 230).floor();
+      crossAxisCount = (screenWidth / 400).floor();
 
     }
 
@@ -165,9 +167,9 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
         ),
         drawer: Visibility(
             visible: isNotVisible(),
-            child: const SideDrawer(dWidth: 350,)),
+            child:  SideDrawer(dWidth: 350, value: value,)),
         backgroundColor: Colors.grey[200],
-        body:  SingleChildScrollView(
+        body: SingleChildScrollView(
           reverse: false,
           child: Column(
             children: [
@@ -180,15 +182,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                     //height: 10000,
                     child: Column(
                       children: [
-                        // if(value.nextstate=="not verified")
-                        // Padding(
-                        //   padding: const EdgeInsets.all(8.0),
-                        //   child: Container(
-                        //     width: 900,
-                        //     color: Colors.red,
-                        //     child: const Text("Please a verification email has been sent to your account",style: TextStyle(fontSize: 16,color: Colors.white),),
-                        //   ),
-                        // ),
+
 
                         Column(
                           children: [
@@ -196,27 +190,6 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                               visible: isVisible(),
                               child: Row(
                                 children: [
-                                  // const Expanded(
-                                  //     flex: 2,
-                                  //     child: SizedBox(
-                                  //       //color: Colors.lightBlue[50],
-                                  //       height: 50,
-                                  //       child: Expanded(
-                                  //         child: Column(
-                                  //           children: [
-                                  //             Expanded(
-                                  //               child: Row(
-                                  //                 //mainAxisAlignment: MainAxisAlignment.center,
-                                  //                 crossAxisAlignment: CrossAxisAlignment.center,
-                                  //                 children: [
-                                  //                   Expanded(child: Text("RAIN INN MALL", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),))
-                                  //                 ],
-                                  //               ),
-                                  //             )
-                                  //           ],
-                                  //         ),
-                                  //       ),
-                                  //     )),
                                   const SizedBox(width: 10),
                                   Expanded(
                                     flex: 4,
@@ -342,54 +315,6 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                             child: Padding(
                                               padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
                                               child: Categories(value)
-
-                                              // StreamBuilder<QuerySnapshot>(
-                                              //     stream: Dbfields.db.collection("category").snapshots(),
-                                              //     builder: (context, snapshot) {
-                                              //       if(!snapshot.hasData){
-                                              //         return const Text("Loading...");
-                                              //       }
-                                              //       else if(snapshot.connectionState!=ConnectionState.active){
-                                              //         return const Text("Connection Error",style: TextStyle(color: Colors.red),);
-                                              //       }
-                                              //       else if(snapshot.data!.docs.isEmpty)
-                                              //       {
-                                              //         return const Text("Empty Baskets Category");
-                                              //       }
-                                              //       return ListView.builder(
-                                              //         scrollDirection: Axis.vertical,
-                                              //         itemCount: snapshot.data!.docs.length,
-                                              //         itemBuilder: (BuildContext context, int index) {
-                                              //           String cate=snapshot.data!.docs[index]['name'];
-                                              //           return Container(child: Column(
-                                              //             crossAxisAlignment: CrossAxisAlignment.start,
-                                              //             children: [
-                                              //               InkWell(
-                                              //                 onTap: (){
-                                              //                   setState(() {
-                                              //                     shoenum=cate;
-                                              //                   });
-                                              //                 },
-                                              //                 child: InkWell(
-                                              //                   onTap: (){
-                                              //                     value.selected_category(cate);
-                                              //                     Navigator.pushNamed(context, Routes.mainShop, arguments: {"cate":cate,"from":"desktop"});
-                                              //                   },
-                                              //                   child: MenuType(
-                                              //                       isSelected: false,
-                                              //                       coffeeType: cate
-                                              //                   ),
-                                              //                 ),
-                                              //               ),
-                                              //               Divider(thickness: 1,color: Colors.grey[200],),
-                                              //               const SizedBox(height: 10),
-                                              //             ],
-                                              //           ),
-                                              //           );
-                                              //         },
-                                              //       );
-                                              //     }
-                                              // ),
                                             ),
                                           ),
                                         ),
@@ -504,42 +429,6 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                       padding: const EdgeInsets.only(left: 20.0,top: 20),
                                                       child: SizedBox(height: 300,
                                                         child:Categories(value),
-                                                        // StreamBuilder<QuerySnapshot>(
-                                                        //     stream: value.db.collection("category").snapshots(),
-                                                        //     builder: (context, snapshot) {
-                                                        //       if(!snapshot.hasData)
-                                                        //       {
-                                                        //         return const Text("No data yet");
-                                                        //       }
-                                                        //       return ListView.builder(
-                                                        //         itemCount: snapshot.data!.docs.length,
-                                                        //         scrollDirection: Axis.vertical,
-                                                        //         itemBuilder: (BuildContext context, int index) {
-                                                        //           String cate=snapshot.data!.docs[index]['name'];
-                                                        //           return  Column(
-                                                        //             crossAxisAlignment: CrossAxisAlignment.start,
-                                                        //             children: [
-                                                        //               Padding(
-                                                        //                 padding: const EdgeInsets.all(4.0),
-                                                        //                 child: InkWell(
-                                                        //                   onTap: (){
-                                                        //                     setState(() {
-                                                        //                       shoenum=cate;
-                                                        //                     });
-                                                        //                   },
-                                                        //                   child: MenuType(
-                                                        //                       isSelected: false,
-                                                        //                       coffeeType: cate
-                                                        //                   ),
-                                                        //                 ),
-                                                        //               ),
-                                                        //               Divider(thickness: 1,color: Colors.grey[200],),
-                                                        //             ],
-                                                        //           );
-                                                        //         },
-                                                        //       );
-                                                        //     }
-                                                        // ),
                                                       ),
                                                     ),
                                                   ),
@@ -868,6 +757,9 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                       ),
                                     ),
                                   ),
+                                  // FlashingBanner(),
+                                  // ImageCarousel(imageUrls: Imagesurls.carouselImages)
+
                                 ],
                               ),
                             ),
@@ -892,9 +784,9 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                         ),
                         SizedBox(
                             height: 500,
-                            child:FutureBuilder<QuerySnapshot>(
-                              future: Dbfields.db.collection("items").orderBy('date').limit(8).get(),
-                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                            child:FutureBuilder<List<dynamic>>(
+                              future: value.fetchItems(),
+                              builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return const Text("Loading...");
                                 } else if (snapshot.connectionState == ConnectionState.waiting) {
@@ -902,19 +794,20 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                 } else if (snapshot.hasError) {
                                   return const Text("Error Loading Data");
                                 }
-
-                                var filteredDocs = snapshot.data!.docs.where((doc) {
-                                  var data = doc.data() as Map<String, dynamic>;
-                                  String item = data['item']?.toString().toLowerCase() ?? '';
-                                  String category = data['category']?.toString().toLowerCase() ?? '';
-                                  String price = data['sellingprice']?.toString().toLowerCase() ?? '';
-                                  return item.contains(searchQuery.toLowerCase()) ||
-                                      category.contains(searchQuery.toLowerCase()) ||
-                                      price.contains(searchQuery.toLowerCase());
+                                print(snapshot.data);
+                                var filteredDocs = snapshot.data!.where((doc) {
+                                  // var data = doc.data() as Map<String, dynamic>;
+                                  // String item = data['item']?.toString().toLowerCase() ?? '';
+                                  // String category = data['category']?.toString().toLowerCase() ?? '';
+                                  // String price = data['sellingprice']?.toString().toLowerCase() ?? '';
+                                  print(doc['id']);
+                                  return 'item'.contains(searchQuery.toLowerCase()) ||
+                                      'category'.contains(searchQuery.toLowerCase()) ||
+                                      'price'.contains(searchQuery.toLowerCase());
                                 }).toList();
 
                                 return GridView.builder(
-                                  itemCount: filteredDocs.length,
+                                  itemCount: 5,
                                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     mainAxisSpacing: 0.6,
                                     childAspectRatio: 0.7,
@@ -944,28 +837,45 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                             child: Container(
                                               width: 220,
                                               child: FeaturedProduct(
+
                                                 featuredImage: url,
                                                 featuredName: itemname,
                                                 featuredPrice: sellingprice,
                                                 image: CachedNetworkImage(
-                                                  errorListener: (rr) {
-                                                    // handle error
-                                                  },
+                                                  cacheManager: CustomCacheManager(),
                                                   imageUrl: url,
-                                                  height: 200,
-                                                  width: 400,
-                                                  fit: BoxFit.contain,
-                                                  placeholder: (context, url) => const Center(
-                                                    child: SizedBox(
-                                                      height: 50,
-                                                      width: 50,
-                                                      child: CircularProgressIndicator(),
-                                                    ),
-                                                  ),
-                                                  errorWidget: (context, url, error) => const Icon(
-                                                    Icons.error,
-                                                    color: Colors.red,
-                                                  ),
+                                                  placeholder: (context, url) => const CircularProgressIndicator(),
+                                                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                                                  fit: BoxFit.cover,
+                                                  width: 150,
+                                                  height: 150,
+                                                  // progressIndicatorBuilder: (context, url, downloadProgress) =>
+                                                  //     Center(
+                                                  //       child: CircularProgressIndicator(
+                                                  //         value: downloadProgress.progress, // Displays loading progress
+                                                  //       ),
+                                                  //     ),
+                                                  //  maxHeightDiskCache: 100,
+                                                  // maxWidthDiskCache: 100,
+                                                  // errorListener: (rr) {
+                                                  // Text("Erro");
+                                                  //   // handle error
+                                                  // },
+                                                  // imageUrl: url,
+                                                  // height: 200,
+                                                  // width: 400,
+                                                  // fit: BoxFit.cover,
+                                                  // placeholder: (context, url) => const Center(
+                                                  //   child: SizedBox(
+                                                  //     height: 50,
+                                                  //     width: 50,
+                                                  //     child: CircularProgressIndicator(),
+                                                  //   ),
+                                                  // ),
+                                                  // errorWidget: (context, url, error) => const Icon(
+                                                  //   Icons.error,
+                                                  //   color: Colors.red,
+                                                  // ),
                                                 ),
                                                 progress: false,
                                                 consWidth: itemWidth,
@@ -1163,11 +1073,11 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
               ),
               Visibility(
                 visible: isVisible(),
-                child: const DesktopFooter(),
+                child:  DesktopFooter(value: value,),
               ),
               Visibility(
                 visible: isNotVisible(),
-                child: const TabletFooter(),
+                child:  TabletFooter(value: value,),
               ),
             ],
            ),

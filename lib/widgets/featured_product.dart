@@ -96,7 +96,7 @@ class _FeaturedProductState extends State<FeaturedProduct> {
                                       );
 
                                       if (value.error.isNotEmpty) {
-                                        final snackBar = SnackBar(
+                                        SnackBar snackBar = SnackBar(
                                           content: Text(
                                             value.error,
                                             style: const TextStyle(
@@ -108,12 +108,12 @@ class _FeaturedProductState extends State<FeaturedProduct> {
                                           backgroundColor: Colors.deepOrangeAccent,
                                         );
                                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                        setState(() {
+
                                           myProgress = false;
                                           cartShow = true;
-                                        });
+
                                       } else if (addCart[0]) {
-                                        final snackBar = SnackBar(
+                                        SnackBar snackBar = SnackBar(
                                           content: Text(
                                             "${widget.featuredName} added successfully",
                                             style: const TextStyle(
@@ -125,10 +125,10 @@ class _FeaturedProductState extends State<FeaturedProduct> {
                                           backgroundColor: Colors.green,
                                         );
                                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                        setState(() {
+
                                           myProgress = false;
                                           cartShow = true;
-                                        });
+
                                       }
                                     },
                                     child: Container(

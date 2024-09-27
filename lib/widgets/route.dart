@@ -16,10 +16,10 @@ import 'package:africanstraw/pages/shipping_process.dart';
 import 'package:africanstraw/pages/terms.dart';
 import 'package:africanstraw/pages/wholesale.dart';
 import 'package:africanstraw/responsive/desktop_scaffold.dart';
-import 'package:africanstraw/responsive/mobile_scaffold.dart';
-import 'package:africanstraw/responsive/responsive_layout.dart';
 import 'package:africanstraw/tables/checkout_table.dart';
 import 'package:africanstraw/widgets/cart.dart';
+
+import '../components/productTest.dart';
 
 class Routes{
   static String cart="cart";
@@ -41,6 +41,7 @@ class Routes{
   static String shipping="shipping";
   static String reshape="reshape";
   static String userProfile="userProfile";
+  static String test="test";
 }
 
 final pages={
@@ -61,7 +62,8 @@ final pages={
   Routes.shipping:(context)=>const ShippingProcess(),
   Routes.reshape:(context)=>const ReshapingBasket(),
   Routes.userProfile:(context)=> CustomerProfilePage(),
-  Routes.mainShop:(context)=>const ResponsiveLayout(isMobile: ShopPage(), isTablet: ShopPage(), isDesktop: ShopPage(),),
-  Routes.dashboard:(context)=>const ResponsiveLayout(isMobile: DesktopScaffold(), isTablet: DesktopScaffold(), isDesktop: DesktopScaffold(),
-  ),
+  Routes.dashboard:(context)=> DesktopScaffold(),
+  Routes.mainShop:(context)=> ShopPage(),
+  Routes.test:(context)=> ECommercePage()
+
 };

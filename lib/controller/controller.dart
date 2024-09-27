@@ -57,7 +57,7 @@ class Ecom extends ChangeNotifier{
     getcstate();
     carttotal();
     currecy();
-    fetchCountries();
+    companyinfo();
   }
   set_selecteditem(String item)async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
@@ -78,7 +78,6 @@ class Ecom extends ChangeNotifier{
     SnackBar snackBar=SnackBar(content: Text(message,style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
-
   selected_category(String selected)async{
     selectedcategory=selected;
     notifyListeners();
@@ -447,6 +446,7 @@ class Ecom extends ChangeNotifier{
     final cartId=sprefs.getString("cartid");
     bool? lock=sprefs.getBool("lockstatus");
     final alreaypaid=await db.collection("checkout").doc(cartId).get();
+
     if(alreaypaid.exists){
       error="Please you attempted making payment, go to cart and complete payment before you can add to cart";
       await carttotal();
@@ -795,15 +795,27 @@ class Ecom extends ChangeNotifier{
     notifyListeners();
   }
 
+  Future<List<dynamic>> fetchItems() async {
+    var headers = {
+      'Content-Type': 'application/json',
+    };
+    var request = http.Request(
+        'POST', Uri.parse('https://fetchitems-3tiooztrya-uc.a.run.app'));
+    request.body = json.encode({
+      "data": {"tid": "43456"},
+    });
+    request.headers.addAll(headers);
 
-  Future<void> fetchCountries() async {
-    final response = await http.get(Uri.parse('https://restcountries.com/v3.1/all'));
+    http.StreamedResponse response = await request.send();
+
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
-        countries = data.map((country) => country['name']['common'].toString()).toList();
-
+      var jsonResponse = json.decode(await response.stream.bytesToString());
+      return jsonResponse['result']['items'];
     } else {
-      throw Exception('Failed to load countries');
+      throw Exception('Failed to load items');
     }
   }
+
+
 }
+

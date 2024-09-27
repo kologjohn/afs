@@ -15,6 +15,7 @@ class Companydata{
 }
 
 class Imagesurls{
+
   static String d1="assets/images/ushape.jpg";
   static String d2="assets/images/eu.png";
   static String hats="assets/images/hats.png";
@@ -38,4 +39,10 @@ class Imagesurls{
   static String A8A0463="assets/images/A8A0463.jpg";
   static String A8A0487="assets/images/A8A0487.jpg";
   static String A8A0530="assets/images/A8A0530.jpg";
+
+  static final List<String> carouselImages = [
+    A8A0463,
+    A8A0487,
+    A8A0530,
+  ];
 }

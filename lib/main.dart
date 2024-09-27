@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:africanstraw/responsive/desktop_scaffold.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: "African Straw Basket",
         routes: pages,
-        initialRoute: Routes.dashboard,
+        home: DesktopScaffold(),
         debugShowCheckedModeBanner: false,
       ),
     );
