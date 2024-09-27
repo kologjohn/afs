@@ -16,43 +16,92 @@ class CustomerProfilePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 100.0, bottom: 60.0),
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 40.0, bottom: 60.0),
             child: Column(
               children: [
                 // Profile Picture and Name
-                const CircleAvatar(
-                  radius: 80,
-                  backgroundImage: AssetImage("assets/images/A8A0463.jpg"),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'African Straw',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 5),
-                const Text('africanstrawenterprise@yahoo.com', style: TextStyle(color: Colors.grey)),
-                const SizedBox(height: 5),
-                const Text(
-                  '+233 243 972280',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Global.mainColor,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                      elevation: MaterialStateProperty.all(0),
-                    ),
-                    child: const Text('Edit Profile', style: TextStyle(color: Colors.white),),
-                  ),
+                Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Container(
+                              width: 300,
+                              height: 60,
+                              color: Colors.transparent,
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              width: 900,
+                              height: 250,
+                              decoration: BoxDecoration(
+                                color: Colors.white70,
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 80,
+                                    ),
+                                    const Text(
+                                      "CUSTOMER NAME",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                    //const SizedBox(height: 30),
+                                    const SizedBox(height: 5),
+                                    const Text('africanstrawenterprise@yahoo.com', style: TextStyle(color: Colors.grey)),
+                                    const SizedBox(height: 5),
+                                    const Text(
+                                      '+233 243 972280',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Global.mainColor,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                                          elevation: MaterialStateProperty.all(0),
+                                        ),
+                                        child: const Text('Edit Profile', style: TextStyle(color: Colors.white),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Positioned(
+                          top: 0, // Adjust the position as needed
+                          child: CircleAvatar(
+                            radius: 80,
+                            backgroundColor: Colors.lightGreen,
+                            child: CircleAvatar(
+                              radius: 80,
+                              backgroundImage: AssetImage("assets/images/A8A0463.jpg"),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
 
                 Container(
                   width: 900,
