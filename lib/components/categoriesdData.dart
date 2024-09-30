@@ -1,22 +1,20 @@
+import 'package:africanstraw/components/shimmer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/controller.dart';
 import '../widgets/menu_type.dart';
+import '../widgets/route.dart';
 
 FutureBuilder<QuerySnapshot<Object?>> Categories(Ecom value) {
   return FutureBuilder<QuerySnapshot>(
     future: value.db.collection("category").get(), // Fetch data from Firestore as a Future
     builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        // Show a loading indicator while the data is being fetched
-        return CircularProgressIndicator();
-      }
 
       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
         // Handle the case when there's no data
-        return Text("No data yet");
+        return ShimmerLoadingList();
       }
 
       // If data is available, build the list
@@ -35,7 +33,9 @@ FutureBuilder<QuerySnapshot<Object?>> Categories(Ecom value) {
                   padding: const EdgeInsets.all(4.0),
                   child: InkWell(
                     onTap: () {
-                      value.selected_category(categoryName); // Handle category selection
+                      value.selected_category(categoryName);
+                      Navigator.pushNamed(context, Routes.mainShop);
+                      // Handle category selection
                       //shoenum = categoryName;
                     },
                     child: MenuType(

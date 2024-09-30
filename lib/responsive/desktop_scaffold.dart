@@ -1,4 +1,5 @@
 import 'package:africanstraw/blog/banner.dart';
+import 'package:africanstraw/components/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -788,10 +789,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                               future: value.fetchItems(),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
-                                  return const Text("Loading...");
-                                } else if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const Center(child: CircularProgressIndicator());
-                                } else if (snapshot.hasError) {
+                                  return ShimmerLoadingList();
+                                }  else if (snapshot.hasError) {
                                   return const Text("Error Loading Data");
                                 }
                                 print(snapshot.data);
@@ -844,7 +843,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                 image: CachedNetworkImage(
                                                   cacheManager: CustomCacheManager(),
                                                   imageUrl: url,
-                                                  placeholder: (context, url) => const CircularProgressIndicator(),
+                                                  placeholder: (context, url) => Center(child: const CircularProgressIndicator()),
                                                   errorWidget: (context, url, error) => const Icon(Icons.error),
                                                   fit: BoxFit.cover,
                                                   width: 150,
