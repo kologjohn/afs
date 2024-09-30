@@ -19,7 +19,7 @@ class BannerPost extends StatelessWidget {
       child: FittedBox(
         fit: BoxFit.contain,
         child: Container(
-          height: 300,
+          height: 350,
           color: conColor,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,

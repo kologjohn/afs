@@ -259,9 +259,9 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                             Visibility(
                               visible: isVisible(),
                               child: Expanded(
-                                flex: 2,
+                                flex: 1,
                                 child: SizedBox(
-                                    height: 600,
+                                    height: 740,
                                     child: Column(
                                       children: [
                                         GestureDetector(
@@ -312,7 +312,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                           visible: editShow,
                                           child: Container(
                                             color: Colors.white,
-                                            height: 550,
+                                            height: 650,
                                             child: Padding(
                                               padding: const EdgeInsets.only(left: 20.0, top: 20, right: 20),
                                               child: Categories(value)
@@ -577,7 +577,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                       padding: const EdgeInsets.only(right: 8.0),
                                       child: Container(
                                         color: Colors.lightBlue[50],
-                                        height: 530,
+                                        height: 700,
                                         child:  Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -650,7 +650,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                               ),
                                             ),
                                             Expanded(
-                                              //flex: 2,
+                                              flex: 2,
                                               child: Row(
                                                 children: [
                                                   Expanded(
@@ -660,18 +660,20 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                       children: [
                                                         Container(
                                                           color: Colors.lightBlue[50],
-                                                          height: 530,
+                                                          // Remove fixed height to let it expand fully
+                                                          height: 700,
                                                           child: CarouselSlider(
                                                             items: [
-                                                              Image.asset(Imagesurls.A8A0463, height: 500,),
-                                                              Image.asset(Imagesurls.A8A0487, height: 500,),
-                                                              Image.asset(Imagesurls.A8A0530, height: 500,),
-                                                              Image.asset(Imagesurls.afs6, height: 500,),
-                                                              Image.asset(Imagesurls.afs7, height: 500,),
-                                                              Image.asset(Imagesurls.afs8, height: 500,),
+                                                              Image.asset(Imagesurls.slide1, fit: BoxFit.cover, width: double.infinity),
+                                                              Image.asset(Imagesurls.slide2, fit: BoxFit.cover, width: double.infinity),
+                                                              Image.asset(Imagesurls.slide3, fit: BoxFit.cover, width: double.infinity),
+                                                              Image.asset(Imagesurls.slide4, fit: BoxFit.cover, width: double.infinity),
+                                                              Image.asset(Imagesurls.slide5, fit: BoxFit.cover, width: double.infinity),
+                                                              Image.asset(Imagesurls.slide6, fit: BoxFit.cover, width: double.infinity),
+                                                              Image.asset(Imagesurls.slide7, fit: BoxFit.cover, width: double.infinity),
                                                             ],
                                                             options: CarouselOptions(
-                                                              aspectRatio: 16/9,
+                                                              aspectRatio: 16 / 9,
                                                               enlargeCenterPage: false,
                                                               autoPlay: true,
                                                               autoPlayInterval: const Duration(seconds: 3),
@@ -679,6 +681,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                               enableInfiniteScroll: true,
                                                               autoPlayCurve: Curves.fastOutSlowIn,
                                                               scrollDirection: Axis.horizontal,
+                                                              viewportFraction: 1.0, // Ensures no space between images
                                                             ),
                                                           ),
                                                         ),
@@ -784,7 +787,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                           ],
                         ),
                         SizedBox(
-                            height: 500,
+                            height: 700,
                             child:FutureBuilder<List<dynamic>>(
                               future: value.fetchItems(),
                               builder: (context, snapshot) {

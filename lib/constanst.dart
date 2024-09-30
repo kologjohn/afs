@@ -39,6 +39,13 @@ class Imagesurls{
   static String A8A0463="assets/images/A8A0463.jpg";
   static String A8A0487="assets/images/A8A0487.jpg";
   static String A8A0530="assets/images/A8A0530.jpg";
+  static String slide1="assets/images/_A8A0575.jpg";
+  static String slide2="assets/images/slide2.jpg";
+  static String slide3="assets/images/slide3.jpg";
+  static String slide4="assets/images/slide4.jpg";
+  static String slide5="assets/images/slide5.jpg";
+  static String slide6="assets/images/slide6.jpg";
+  static String slide7="assets/images/slide7.jpg";
 
   static final List<String> carouselImages = [
     A8A0463,

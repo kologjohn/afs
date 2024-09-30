@@ -448,10 +448,9 @@ class _ShopPageState extends State<ShopPage> {
                                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if (!snapshot.hasData) {
                                       return ShimmerLoadingList();
-                                    } else if (snapshot.hasError) {
+                                    }
+                                    if (snapshot.hasError) {
                                       return const Text("Error Loading Data");
-                                    } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                                      return const Text("No Items Found");
                                     }
 
                                     // Clear the previous lists
@@ -508,6 +507,7 @@ class _ShopPageState extends State<ShopPage> {
                                                     featuredPrice: sellingprice,
                                                     image: CachedNetworkImage(
                                                       cacheManager: CustomCacheManager(),
+                                                      cacheKey: 'image_$index', // Ensures unique cache for each image
                                                       imageUrl: url,
                                                       imageBuilder: (context, imageProvider) => FadeInImage(
                                                         image: imageProvider,
