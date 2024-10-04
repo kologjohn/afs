@@ -197,7 +197,7 @@ class AboutPage extends StatelessWidget {
                                       ),
                                     ),
                                   child: Image.asset(
-                                      "assets/images/aboutus.png",
+                                      Imagesurls.A8A0463,
                                     fit: BoxFit.cover,
                                   )
                                 ),

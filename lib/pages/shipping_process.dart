@@ -43,7 +43,7 @@ class ShippingProcess extends StatelessWidget {
                                         ),
                                       ),
                                       child: Image.asset(
-                                        "assets/images/shipping-process.png",
+                                        Imagesurls.A8A0487,
                                         fit: BoxFit.cover,
                                       )
                                   ),

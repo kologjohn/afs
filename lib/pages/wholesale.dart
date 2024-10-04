@@ -9,7 +9,7 @@ class Wholesale extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlue[50],
-        title: const Text("Wholesale"),
+        title: const Text("ASE Wholesale"),
         centerTitle: true,
       ),
       backgroundColor: Colors.white54,
@@ -72,7 +72,7 @@ class Wholesale extends StatelessWidget {
                                             ],
                                           ),
                                           const SizedBox(height: 20),
-                                          Text(Companydata.wholesale, style: const TextStyle(fontSize: 16),),
+                                          Text(Companydata.wholesale, style: const TextStyle(fontSize: 20),),
                                         ],
                                       ),
                                     ),

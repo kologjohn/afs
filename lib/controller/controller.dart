@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart'as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../widgets/menu_type.dart';
 import '../widgets/route.dart';
 import 'dbfields.dart';
 class Ecom extends ChangeNotifier{
@@ -50,6 +50,7 @@ class Ecom extends ChangeNotifier{
   List<String> cities = [];
   String? selectedCountry;
   String? selectedCity;
+  String phoneNumber="";
 
   Ecom(){
     get_current_item();
@@ -57,7 +58,23 @@ class Ecom extends ChangeNotifier{
     carttotal();
     currecy();
     companyinfo();
+    getPhoneNumber();
   }
+
+  setPhoneNumber(String phoneNumber) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phoneNumber', phoneNumber);
+  }
+
+  getPhoneNumber() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    phoneNumber=prefs.getString('phoneNumber')!;
+    notifyListeners();
+
+  }
+
+
+
   set_selecteditem(String item)async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     sharedPreferences.setString("selectedcode", item);
@@ -74,7 +91,7 @@ class Ecom extends ChangeNotifier{
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
   snackbarsucess(String message,BuildContext context){
-    SnackBar snackBar=SnackBar(content: Text(message,style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,);
+    SnackBar snackBar=SnackBar(content: Text(message,style: const TextStyle(color: Colors.white),),backgroundColor: Colors.green,);
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
   selected_category(String selected)async{
@@ -309,6 +326,7 @@ class Ecom extends ChangeNotifier{
   }
   signupwithemail(String firstname,String lastname,String username,String contact,String sex,String email,String password,BuildContext context)async{
     try{
+
       // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
       // sharedPreferences.setString("fname",firstname);
       // sharedPreferences.setString("lastname",lastname);
@@ -325,6 +343,7 @@ class Ecom extends ChangeNotifier{
         //await Dbfields.auth.createUserWithEmailAndPassword(email: email, password: password);
         if(auth.currentUser!=null&& auth.currentUser!.emailVerified)
         {
+          setPhoneNumber(contact);
           Navigator.pushNamed(context, Routes.dashboard);
         }
         else if(auth.currentUser!=null && !auth.currentUser!.emailVerified)
@@ -334,6 +353,7 @@ class Ecom extends ChangeNotifier{
           await getcstate();
           SnackBar snackBar=SnackBar(content: Text("Account Not Verified"));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          setPhoneNumber(contact);
 
         }
         else
@@ -362,6 +382,7 @@ class Ecom extends ChangeNotifier{
           snackbarerror(notverified, context);
           await setnextstate("not verified");
           await getcstate();
+          setPhoneNumber(contact);
           Navigator.pushNamed(context, Routes.dashboard);
 
 
@@ -374,7 +395,9 @@ class Ecom extends ChangeNotifier{
           snackbarerror(notverified, context);
           await setnextstate("not verified");
           await getcstate();
-          Navigator.pushNamed(context, Routes.dashboard);
+          Navigator.pushNamed(context, Routes.signup);
+
+          await getPhoneNumber();
 
         }
         else if(auth.currentUser!=null && auth.currentUser!.emailVerified) {
@@ -386,7 +409,6 @@ class Ecom extends ChangeNotifier{
           await setnextstate("not verified");
           await getcstate();
           snackbarsucess("Account created successfully", context);
-
 
         }
         else
@@ -409,6 +431,12 @@ class Ecom extends ChangeNotifier{
       {
         Dbfields.auth.currentUser!.sendEmailVerification();
         error="Please verify your email to continue to add to cart";
+      }
+      else{
+        final userdata=await db.collection("users").doc(email).get();
+        String phone=userdata['contact'];
+        setPhoneNumber(phone);
+
       }
       String? myemail=Dbfields.auth.currentUser!.email;
       //cartid("id", "date", false, "method", myemail!);
@@ -564,34 +592,6 @@ class Ecom extends ChangeNotifier{
     notifyListeners();
     return cid;
   }
-  Future<void> signInWithGoogle() async {
-    // Create a new provider
-    try {
-      GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-      googleProvider.setCustomParameters({
-        'login_hint': 'user@example.com'
-      });
-      // Once signed in, return the UserCredential
-      final my_login = await Dbfields.auth.signInWithPopup(googleProvider);
-      if(my_login!=null)
-      {
-        String? displayname = auth.currentUser!.displayName;
-        String? loginmail = auth.currentUser!.email;
-        List? namelist = displayname!.split(" ");
-        String fname = namelist[0];
-        String lname = namelist[1];
-        user_email=loginmail!;
-        user_firstname=fname;
-        user_lastname=lname;
-      }
-      //print(my_login);
-    }on FirebaseException catch(e){
-      // print(e);
-      //errorMsgs=e.message!;
-    }
-    notifyListeners();
-  }
   signout(BuildContext context)async{
     try{
       final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
@@ -599,7 +599,6 @@ class Ecom extends ChangeNotifier{
       sharedPreferences.remove("lastname");
       sharedPreferences.remove("phone");
       await auth.signOut();
-      Navigator.pushNamed(context, Routes.dashboard);
     }on FirebaseException catch(e){
       error=e.message!;
       print(e.message);
@@ -639,6 +638,9 @@ class Ecom extends ChangeNotifier{
           final existdata=await Dbfields.db.collection("users").doc(auth.currentUser!.email).get();
           if(existdata.exists)
           {
+            String phone=existdata['contact'].toString();
+            setPhoneNumber(phone);
+            //await getPhoneNumber();
             print("Exist");
             Navigator.pushNamed(context, Routes.dashboard);
             // String phone=existdata.data()!['phone'];
@@ -653,6 +655,7 @@ class Ecom extends ChangeNotifier{
             //   Navigator.pushNamed(context, Routes.pinsetup);
             //
             // }
+
           }
           else
           {
@@ -818,4 +821,3 @@ class Ecom extends ChangeNotifier{
 
 
 }
-

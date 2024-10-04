@@ -260,8 +260,8 @@ class TermsAndConditions extends StatelessWidget {
                                         bottom: BorderSide(color: Colors.white, width: 10.0), // Bottom border
                                       ),
                                     ),
-                                    child: SvgPicture.asset(
-                                      'assets/svg/terms.svg',
+                                    child: Image.asset(
+                                      Imagesurls.slide5,
                                       width: 200,
                                       height: 400,
                                     ),

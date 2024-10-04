@@ -58,7 +58,7 @@ class CustomerProfilePage extends StatelessWidget {
                                         ),
                                         Text(
                                           value.auth.currentUser!.displayName.toString(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 16,
                                             fontWeight: FontWeight.w300,
@@ -68,8 +68,8 @@ class CustomerProfilePage extends StatelessWidget {
                                         const SizedBox(height: 5),
                                          Text("${value.auth.currentUser?.email}", style: TextStyle(color: Colors.grey)),
                                         const SizedBox(height: 5),
-                                        const Text(
-                                          '+233 243 972280',
+                                         Text(
+                                          '${value.phoneNumber}',
                                           style: TextStyle(color: Colors.grey),
                                         ),
                                         const SizedBox(height: 10),
@@ -93,17 +93,25 @@ class CustomerProfilePage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const Positioned(
+                            Positioned(
                               top: 0, // Adjust the position as needed
                               child: CircleAvatar(
                                 radius: 80,
                                 backgroundColor: Colors.lightGreen,
-                                child: CircleAvatar(
-                                  radius: 80,
-                                  backgroundImage: AssetImage("assets/images/A8A0463.jpg"),
-                                ),
+                                backgroundImage: value.auth.currentUser!.photoURL != null
+                                    ? NetworkImage(value.auth.currentUser!.photoURL!)
+                                    : null, // Fallback if no photo is available
+                                onBackgroundImageError: (exception, stackTrace) {
+                                  print("Failed to load profile picture: $exception");
+                                },
+                                child: value.auth.currentUser!.photoURL == null
+                                    ? Icon(Icons.account_circle, size: 80, color: Colors.white) // Default icon
+                                    : null, // No child if the image exists
                               ),
                             ),
+
+
+
                           ],
                         )
                       ],
@@ -181,11 +189,9 @@ class CustomerProfilePage extends StatelessWidget {
                                   if (!snapshot.hasData) {
                                     return const Text("No Pending Records",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),);
                                   } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
+                                    return Text('Error: ${snapshot.error}'
+                                    );
                                   }
-
-
-
                                   return Container(
                                     height: 200,
                                     child: ListView.builder(
@@ -201,12 +207,11 @@ class CustomerProfilePage extends StatelessWidget {
                                         }catch(e){
                                           print(e);
                                         }
-
                                         return Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text('Order History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                            const SizedBox(height: 10),
+                                            //const Text('Order History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                            //const SizedBox(height: 10),
                                             ListTile(
                                               leading: const Icon(Icons.shopping_cart),
                                               title: Text('Cart ID: $cartid'),
@@ -247,7 +252,6 @@ class CustomerProfilePage extends StatelessWidget {
                             } else if (!snapshot.hasData) {
                               return const Text('No orders found');
                             }
-
 
                               return ListView.builder(
                                 itemCount:snapshot.data!.docs.length ,

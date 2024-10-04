@@ -7,6 +7,8 @@ import 'package:africanstraw/forms/register_page.dart';
 import 'package:africanstraw/forms/reset_password.dart';
 import 'package:africanstraw/forms/signin_page.dart';
 import 'package:africanstraw/pages/about.dart';
+import 'package:africanstraw/pages/blog_page.dart';
+import 'package:africanstraw/pages/brands.dart';
 import 'package:africanstraw/pages/contact.dart';
 import 'package:africanstraw/pages/customer_direction.dart';
 import 'package:africanstraw/pages/our_team.dart';
@@ -42,6 +44,8 @@ class Routes{
   static String reshape="reshape";
   static String userProfile="userProfile";
   static String test="test";
+  static String brand="brand";
+  static String blog="blog";
 }
 
 final pages={
@@ -61,9 +65,11 @@ final pages={
   Routes.returns:(context)=>const ReturnPolicy(),
   Routes.shipping:(context)=>const ShippingProcess(),
   Routes.reshape:(context)=>const ReshapingBasket(),
-  Routes.userProfile:(context)=> CustomerProfilePage(),
-  Routes.dashboard:(context)=> DesktopScaffold(),
-  Routes.mainShop:(context)=> ShopPage(),
-  Routes.test:(context)=> ECommercePage()
+  Routes.userProfile:(context)=> const CustomerProfilePage(),
+  Routes.dashboard:(context)=> const DesktopScaffold(),
+  Routes.mainShop:(context)=> const ShopPage(),
+  Routes.test:(context)=> ECommercePage(),
+  Routes.brand:(context)=> const BrandStory(),
+  Routes.blog:(context)=> BlogPage()
 
 };

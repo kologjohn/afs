@@ -80,7 +80,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
       crossAxisCount = 1;
     }
     return   Consumer<Ecom>(builder: (context,  value,  child) {
-
+     //value.setPhoneNumber("0557676787");
       if(value.mycarttotal==0)
       {
         // value.carttotal();

@@ -158,6 +158,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           String contact_txt = contact.text.trim();
                                           String sex = "Male";
                                           await value.signupwithemail(firstnname_txt, lastname_txt, username_txt, contact_txt, sex, email_txt, password_txt,context);
+
                                           progress.dismiss();
 
                                         }

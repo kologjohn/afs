@@ -141,7 +141,15 @@ class _SideDrawerState extends State<SideDrawer> {
                           onTap: (){
                             Navigator.pushNamed(context, Routes.about);
                           },
-                          child: const Text("ABOUT AFS")
+                          child: const Text("ABOUT US")
+                      ),
+                    ),
+                    ListTile(
+                      title: InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, Routes.brand);
+                          },
+                          child: const Text("OUR BRAND STORY")
                       ),
                     ),
                     ListTile(
@@ -181,13 +189,18 @@ class _SideDrawerState extends State<SideDrawer> {
                 ListTile(
                   title: InkWell(
                       onTap: (){
-                        //Navigator.pushNamed(context, Routes.wholesale);
+                        Navigator.pushNamed(context, Routes.wholesale);
                       },
                       child: const MenuType(isSelected: false, coffeeType: 'WHOLESALE')
                   ),
                 ),
-                const ListTile(
-                  title: MenuType(isSelected: false, coffeeType: 'BLOG'),
+                ListTile(
+                  title: InkWell(
+                    onTap: (){
+                      Navigator.pushNamed(context, Routes.blog);
+                    },
+                      child: const MenuType(isSelected: false, coffeeType: 'BLOG')
+                  ),
                 ),
                 ListTile(
                   title: InkWell(

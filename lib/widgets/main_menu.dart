@@ -52,12 +52,18 @@ class MainMenu extends StatelessWidget {
                 Navigator.pushNamed(context, Routes.terms);
               } else if (value =='returnPolicy') {
                 Navigator.pushNamed(context, Routes.returns);
+              }else if (value =='brand') {
+                Navigator.pushNamed(context, Routes.brand);
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                const PopupMenuItem<String>(
                 value: 'aboutUs',
                 child: Text('About Us'),
+              ),
+              const PopupMenuItem<String>(
+                  value: 'brand',
+                  child: Text('Brand Story')
               ),
               const PopupMenuItem<String>(
                 value: 'shippingProcess',
@@ -74,7 +80,7 @@ class MainMenu extends StatelessWidget {
               const PopupMenuItem<String>(
                 value: 'returnPolicy',
                   child: Text('Return Policy')
-              )
+              ),
             ],
             child: const MenuType(
               isSelected: false,
@@ -94,7 +100,7 @@ class MainMenu extends StatelessWidget {
           const SizedBox(width: 30),
           InkWell(
             onTap: (){
-              Navigator.pushNamed(context, Routes.userProfile);
+              Navigator.pushNamed(context, Routes.blog);
             },
             child: const MenuType(
               isSelected: false,
