@@ -144,7 +144,14 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                       const SizedBox(width: 10),
                       InkWell(
                         onTap: (){
-                          Navigator.pushNamed(context, Routes.login);
+                          if(value.auth.currentUser!=null){
+                            Navigator.pushNamed(context, Routes.userProfile);
+                          }
+                          else
+                            {
+                              Navigator.pushNamed(context, Routes.login);
+
+                            }
                           //itemupload(context);
                         },
                         child: const Row(
@@ -788,27 +795,28 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                         ),
                         SizedBox(
                             height: 700,
-                            child:FutureBuilder<List<dynamic>>(
-                              future: value.fetchItems(),
+                            child:FutureBuilder<QuerySnapshot>(
+                              future: value.db.collection("items").limit(5).orderBy('date').get(),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return ShimmerLoadingList();
                                 }  else if (snapshot.hasError) {
                                   return const Text("Error Loading Data");
                                 }
-                                print(snapshot.data);
-                                var filteredDocs = snapshot.data!.where((doc) {
-                                  // var data = doc.data() as Map<String, dynamic>;
-                                  // String item = data['item']?.toString().toLowerCase() ?? '';
-                                  // String category = data['category']?.toString().toLowerCase() ?? '';
-                                  // String price = data['sellingprice']?.toString().toLowerCase() ?? '';
-                                  print(doc['id']);
-                                  return 'item'.contains(searchQuery.toLowerCase()) ||
-                                      'category'.contains(searchQuery.toLowerCase()) ||
-                                      'price'.contains(searchQuery.toLowerCase());
+
+                                var filteredDocs = snapshot.data!.docs.where((doc) {
+                                  var data = doc.data() as Map<String, dynamic>;
+                                  String item = data['item']?.toString().toLowerCase() ?? '';
+                                  String category = data['category']?.toString().toLowerCase() ?? '';
+                                  String price = data['sellingprice']?.toString().toLowerCase() ?? '';
+                                  return item.contains(searchQuery.toLowerCase()) ||
+                                      category.contains(searchQuery.toLowerCase()) ||
+                                      price.contains(searchQuery.toLowerCase());
                                 }).toList();
 
                                 return GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: const ClampingScrollPhysics(),
                                   itemCount: 5,
                                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     mainAxisSpacing: 0.6,
@@ -882,7 +890,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                 progress: false,
                                                 consWidth: itemWidth,
                                                 frompage: 'shop',
-                                                featuredcode: ItemReg.item,
+                                                featuredcode: item_code,
                                               ),
                                             ),
                                           ),

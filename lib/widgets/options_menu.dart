@@ -1,3 +1,4 @@
+import 'package:africanstraw/widgets/route.dart';
 import 'package:flutter/material.dart';
 import '../controller/controller.dart';
 class options_menu extends StatelessWidget {
@@ -26,17 +27,22 @@ class options_menu extends StatelessWidget {
           ),
           PopupMenuItem<String>(
             value: 'name',
-            child: Row(children: [
-              const Icon(Icons.person,color: Colors.green,),
-              Text('${ecom.auth.currentUser!.displayName}')
-            ],
+            child: InkWell(
+              onTap: (){
+                Navigator.pushNamed(context, Routes.userProfile);
+              },
+              child: Row(children: [
+                const Icon(Icons.person,color: Colors.green,),
+                Text('${ecom.auth.currentUser!.displayName}')
+              ],
+              ),
             ),
           ),
           PopupMenuItem<String>(
             onTap: ()async{
               //final progress=ProgressHUD.of(context);
               //progress!.show();
-              await ecom.signout();
+              await ecom.signout(context);
               //Navigator.pushNamed(context, Routes.dashboard);
              // progress.dismiss();
             },

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -593,13 +592,14 @@ class Ecom extends ChangeNotifier{
     }
     notifyListeners();
   }
-  signout()async{
+  signout(BuildContext context)async{
     try{
       final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
       sharedPreferences.remove("fname");
       sharedPreferences.remove("lastname");
       sharedPreferences.remove("phone");
       await auth.signOut();
+      Navigator.pushNamed(context, Routes.dashboard);
     }on FirebaseException catch(e){
       error=e.message!;
       print(e.message);

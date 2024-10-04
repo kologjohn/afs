@@ -1,4 +1,5 @@
 import 'package:africanstraw/components/global.dart';
+import 'package:africanstraw/components/shimmer.dart';
 import 'package:africanstraw/controller/controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +14,6 @@ class CustomerProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Ecom>(
       builder: (BuildContext context, value, Widget? child){
-        if(value.auth.currentUser==null){
-          Navigator.pushNamed(context, Routes.login);
-        }
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.lightBlue[50],
@@ -175,73 +173,57 @@ class CustomerProfilePage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Cart / Pending Orders', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            const Text('Pending Orders', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                             const SizedBox(height: 10),
-                            ListTile(
-                              leading: Image.asset("assets/images/A8A0463.jpg"),
-                              title: const Text('Item 1 - \$30'),
-                              subtitle: const Text('Quantity: 2'),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.remove),
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.add),
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {},
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 50.0, right: 50.0),
-                              child: Divider(
-                                color: Colors.grey[200],
-                              ),
-                            ),
-                            ListTile(
-                              leading: Image.asset("assets/images/A8A0463.jpg"),
-                              title: const Text('Item 2 - \$50'),
-                              subtitle: const Text('Quantity: 1'),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.remove),
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.add),
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {},
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Global.mainColor,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                                  elevation: MaterialStateProperty.all(0),
-                                ),
-                                child: const Text('Proceed To Checkout', style: TextStyle(color: Colors.white),),
-                              ),
-                            ),
+                            FutureBuilder<QuerySnapshot>(
+                                future: value.db.collection("checkout").where('email', isEqualTo: value.auth.currentUser!.email.toString()).where('status', isEqualTo: false).get(),
+                                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return const Text("No Pending Records",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),);
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  }
+
+
+
+                                  return Container(
+                                    height: 200,
+                                    child: ListView.builder(
+                                      itemCount:snapshot.data!.docs.length ,
+                                      itemBuilder: (BuildContext context, int index,) {
+                                        final data=snapshot.data!.docs[index];
+                                        String total="";
+                                        String cartid="";
+                                        try{
+                                          total=data['total'];
+                                          cartid=data['cartid'];
+
+                                        }catch(e){
+                                          print(e);
+                                        }
+
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text('Order History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                            const SizedBox(height: 10),
+                                            ListTile(
+                                              leading: const Icon(Icons.shopping_cart),
+                                              title: Text('Cart ID: $cartid'),
+                                              subtitle: const Text('Placed on: Sep 20, 2024'),
+                                              trailing: Text('\$$total', style: const TextStyle(fontSize: 18)),
+                                              onTap: () {},
+                                            ),
+                                            Divider(color: Colors.grey[200])
+                                          ],
+                                        );
+
+                                      },
+                                    ),
+                                  );
+                                }
+
+                            )
                           ],
                         ),
                       ),
@@ -342,10 +324,14 @@ class CustomerProfilePage extends StatelessWidget {
                                 color: Colors.grey[200],
                               ),
                             ),
-                            ListTile(
-                              leading: const Icon(Icons.exit_to_app),
-                              title: const Text('Log Out'),
-                              onTap: () {},
+                            InkWell(
+                                onTap: ()async{
+                                 await value.signout(context);
+                                },
+                              child: const ListTile(
+                                leading: Icon(Icons.exit_to_app),
+                                title: Text('Log Out'),
+                              ),
                             ),
                           ],
                         ),

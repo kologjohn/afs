@@ -22,6 +22,7 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
+  
 
   bool show=false;
   List<String> urls=[];
@@ -475,7 +476,7 @@ class _ShopPageState extends State<ShopPage> {
                                     return GridView.builder(
 
                                       shrinkWrap: true,
-                                      //physics: const ClampingScrollPhysics(),
+                                      physics: const ClampingScrollPhysics(),
                                       itemCount: filteredDocs.length,
                                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                         mainAxisSpacing: 0.6,
@@ -505,21 +506,26 @@ class _ShopPageState extends State<ShopPage> {
                                                     featuredImage: url,
                                                     featuredName: itemname,
                                                     featuredPrice: sellingprice,
-                                                    image: CachedNetworkImage(
-                                                      cacheManager: CustomCacheManager(),
-                                                      cacheKey: 'image_$index', // Ensures unique cache for each image
-                                                      imageUrl: url,
-                                                      imageBuilder: (context, imageProvider) => FadeInImage(
-                                                        image: imageProvider,
-                                                        placeholder: const AssetImage('assets/placeholder.jpg'),
+                                                    image: RepaintBoundary(
+                                                      child: CachedNetworkImage(
+                                                        errorListener: (val){
+                                                          Text("Error:${val}");
+                                                        },
+                                                        cacheManager: CustomCacheManager(),
+                                                        cacheKey: 'image_$index', // Ensures unique cache for each image
+                                                        imageUrl: url,
+                                                        imageBuilder: (context, imageProvider) => FadeInImage(
+                                                          image: imageProvider,
+                                                          placeholder: const AssetImage('assets/placeholder.jpg'),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                        height: 150,
+                                                        width: 150,
                                                         fit: BoxFit.cover,
-                                                      ),
-                                                      height: 150,
-                                                      width: 150,
-                                                      fit: BoxFit.cover,
-                                                      errorWidget: (context, url, error) => const Icon(
-                                                        Icons.error,
-                                                        color: Colors.red,
+                                                        errorWidget: (context, url, error) => const Icon(
+                                                          Icons.error,
+                                                          color: Colors.red,
+                                                        ),
                                                       ),
                                                     ),
                                                     progress: false,

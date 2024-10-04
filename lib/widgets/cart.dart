@@ -2,14 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:africanstraw/components/global.dart';
 import 'package:africanstraw/controller/controller.dart';
 import 'package:africanstraw/controller/dbfields.dart';
 import 'package:africanstraw/widgets/route.dart';
 import 'package:provider/provider.dart';
-
-import '../constanst.dart';
 
 class CartView extends StatefulWidget {
   const CartView({super.key});
@@ -20,6 +19,7 @@ class CartView extends StatefulWidget {
 
 class _CartViewState extends State<CartView> {
   List<Widget> items=[];
+  List<String> qty_input=[];
   @override
   Widget build(BuildContext context) {
     return ProgressHUD(
@@ -30,11 +30,11 @@ class _CartViewState extends State<CartView> {
             {
               email=value.auth.currentUser!.email!;
             }
-          if(value.mycardid.isEmpty)
-            {
-              value.cartidmethod();
-              value.carttotal();
-            }
+          // if(value.mycardid.isEmpty)
+          //   {
+          //     value.cartidmethod();
+          //     value.carttotal();
+          //   }
           String cardnumber=value.mycardid;
           return Scaffold(
               appBar: AppBar(
@@ -57,178 +57,260 @@ class _CartViewState extends State<CartView> {
                             child: StreamBuilder<QuerySnapshot>(
                                 stream: value.db.collection("cart").where(Dbfields.cartidnumber, isEqualTo: cardnumber).snapshots(),
                                 builder: (context, snapshot) {
-                                  items.clear();
                                   if(snapshot.hasData){
+                                    items.clear();
+                                    qty_input.clear();
                                     for(int i=0;i<snapshot.data!.docs.length;i++){
                                       String itemname=snapshot.data!.docs[i][Dbfields.itemname];
+                                      String itemcode=snapshot.data!.docs[i][Dbfields.code];
                                       String imageurl=snapshot.data!.docs[i][ItemReg.itemurl];
                                       String des=snapshot.data!.docs[i][ItemReg.description];
                                       String price=snapshot.data!.docs[i][Dbfields.price];
+                                      String total=snapshot.data!.docs[i][Dbfields.total];
+                                      String qty=snapshot.data!.docs[i][Dbfields.quantity];
                                       String key=snapshot.data!.docs[i].id;
+                                      qty_input.add(qty);
+                                      //print(qty_input[i].text);
                                        // totalamt+=double.parse(price);
-                                      items.add(FittedBox(
-                                            child: Container(
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      items.add(
+                                          LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              double screenWidth = constraints.maxWidth;
+                                              bool isMobile = screenWidth < 600;
+
+                                              return Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                                child: Column(
                                                   children: [
                                                     Row(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Column(
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Container(
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(10),
-                                                                    color: Colors.brown[30]
-                                                                  ),
-                                                                  height:300,
-                                                                  width: 300,
-                                                                  child: Column(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                        // Product Image Section
+                                                        Container(
+                                                          width: isMobile ? screenWidth * 0.3 : 200,
+                                                          height: isMobile ? 150 : 150,
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(10),
+                                                            color: Colors.brown[100],
+                                                          ),
+                                                          child: CachedNetworkImage(
+                                                            imageUrl: imageurl,
+                                                            imageBuilder: (context, imageProvider) => Container(
+                                                              decoration: BoxDecoration(
+                                                                image: DecorationImage(
+                                                                  image: imageProvider,
+                                                                  fit: BoxFit.fill,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            placeholder: (context, url) => Center(
+                                                                child: Transform.scale(
+                                                                  scale: 0.4,
+                                                                  child: const CircularProgressIndicator(),
+                                                                )),
+                                                            errorWidget: (context, url, error) => const Icon(
+                                                              Icons.error,
+                                                              color: Colors.red,
+                                                              size: 40,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(width: 16),
+
+                                                        // Product Details Section
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              // Item Name
+                                                              Text(
+                                                                itemname,
+                                                                style: const TextStyle(
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 18),
+                                                              ),
+                                                              const SizedBox(height: 10),
+
+                                                              // Item Description
+                                                              Text(
+                                                                des,
+                                                                style: const TextStyle(fontSize: 14),
+                                                                maxLines: 2,
+                                                                overflow: TextOverflow.ellipsis,
+                                                              ),
+                                                              const SizedBox(height: 10),
+
+                                                              // Price
+                                                              Text(
+                                                                "USD ${value.numformat.format(double.parse(total))}",
+                                                                style: const TextStyle(
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 16),
+                                                              ),
+
+                                                              const SizedBox(height: 10),
+
+                                                              // Stock Availability and Actions
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  // Stock Status
+                                                                  // Text(
+                                                                  //   true ? "Qty: $qty" : "Out of Stock",
+                                                                  //   style: const TextStyle(
+                                                                  //       color: true
+                                                                  //           ? Colors.green
+                                                                  //           : Colors.redAccent,
+                                                                  //       fontWeight: FontWeight.bold,
+                                                                  //       fontSize: 15),
+                                                                  // ),
+                                                                  Row(
                                                                     children: [
-                                                                      CachedNetworkImage(
-                                                                        imageUrl: imageurl,
-                                                                        height: 200,
-                                                                        imageBuilder: (context, imageProvider) => Container(
+
+                                                                      InkWell(
+                                                                        child: Container(
+                                                                          height: 30,
+                                                                          width: 30,
                                                                           decoration: BoxDecoration(
-                                                                            image: DecorationImage(
-                                                                              image: imageProvider,
-                                                                              fit: BoxFit.fill,
-                                                                              // colorFilter: ColorFilter.mode(Colors.white, BlendMode.colorDodge)
+                                                                              border: Border.all(
+                                                                                  color: Colors.black26,
+                                                                                  width: 2
+                                                                              )
+                                                                          ),
+                                                                          child: const Icon(Icons.remove),
+                                                                        ),
+                                                                        onTap: ()async{
+                                                                          final progress=ProgressHUD.of(context);
+                                                                          int newval=int.parse(qty)-1;;
+                                                                          if(newval<=0){
+                                                                            value.snackbarerror("Invalid Quantity ", context);
+                                                                            return;
+                                                                          }
+                                                                          qty_input[i]=newval.toString();
+                                                                          final savetocard=await value.addtocart("single",itemname, price, qty_input[i], itemcode,imageurl,des,context);
+                                                                          progress!.dismiss();
+
+                                                                          print(qty);
+
+                                                                          //print(savetocard);
+                                                                          if(savetocard[0]){
+                                                                            SnackBar snackbar=const SnackBar(content: Text("Added to cart successfully",style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,);
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                                                          }
+                                                                          else
+                                                                          {
+                                                                            SnackBar snackbar= SnackBar(content: Text(savetocard[1],style: const TextStyle(color: Colors.white),),backgroundColor: Colors.red,);
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                                                          }
+                                                                        },
+                                                                      ),
+                                                                      Container(
+                                                                        width: 60,
+                                                                        height: 30,
+                                                                        decoration: BoxDecoration(
+                                                                          border: Border.all(
+                                                                            color: Colors.black26,
+                                                                            width: 2,
+                                                                          ),
+                                                                        ),
+                                                                        child:  Center(
+                                                                          child: TextFormField(
+                                                                            keyboardType: TextInputType.number,
+                                                                            inputFormatters: [
+                                                                              FilteringTextInputFormatter.allow(RegExp(r'^[1-9]\d*')), // Allows only positive integers greater than zero
+                                                                            ],
+                                                                            onChanged: (val)async{
+                                                                              final progress=ProgressHUD.of(context);
+                                                                              qty_input[i]=val;
+                                                                              final savetocard=await value.addtocart("single",itemname, price, qty_input[i], itemcode,imageurl,des,context);
+                                                                              progress!.dismiss();
+                                                                              print(qty);
+
+                                                                              //print(savetocard);
+                                                                              if(savetocard[0]){
+                                                                                SnackBar snackbar=const SnackBar(content: Text("Added to cart successfully",style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,);
+                                                                                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                                                              }
+                                                                              else
+                                                                              {
+                                                                                SnackBar snackbar= SnackBar(content: Text(savetocard[1],style: const TextStyle(color: Colors.white),),backgroundColor: Colors.red,);
+                                                                                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                                                              }
+                                                                              qty_input[i]=val;
+                                                                            },
+                                                                            textAlign: TextAlign.center,
+                                                                            textAlignVertical: TextAlignVertical.center,
+                                                                            decoration:  InputDecoration(
+                                                                              hintText: qty,
+                                                                              contentPadding: EdgeInsets.all(0),
+                                                                              isDense: true,
+                                                                              border: InputBorder.none,
+                                                                            ),
+                                                                            style: const TextStyle(
+                                                                              fontSize: 14, // Adjust the font size as needed
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                        placeholder: (context, url) => Transform.scale(scale:0.4,child: const CircularProgressIndicator()),
-                                                                        errorWidget: (context, url, error) => const Icon(Icons.error,color: Colors.red,size: 40,),
-                                                                      )
+                                                                      ),
+                                                                      InkWell(
+                                                                        onTap: ()async{
+                                                                          final progress=ProgressHUD.of(context);
+                                                                          progress!.show();
+                                                                          int newval=int.parse(qty)+1;;
+                                                                            qty_input[i]=newval.toString();
+                                                                            final savetocard=await value.addtocart("single",itemname, price, qty_input[i], itemcode,imageurl,des,context);
+                                                                             progress!.dismiss();
+
+                                                                          print(qty);
+
+                                                                          //print(savetocard);
+                                                                          if(savetocard[0]){
+                                                                            SnackBar snackbar=const SnackBar(content: Text("Added to cart successfully",style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,);
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                                                          }
+                                                                          else
+                                                                          {
+                                                                            SnackBar snackbar= SnackBar(content: Text(savetocard[1],style: const TextStyle(color: Colors.white),),backgroundColor: Colors.red,);
+                                                                            ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                                                          }
+
+                                                                        },
+                                                                        enableFeedback: true,
+                                                                        child: Container(
+                                                                          height: 30,
+                                                                          width: 30,
+                                                                          decoration: BoxDecoration(
+                                                                              border: Border.all(
+                                                                                  color: Colors.black26,
+                                                                                  width: 2
+                                                                              )
+                                                                          ),
+                                                                          child: const Icon(Icons.add),
+                                                                        ),
+                                                                      ),
                                                                     ],
                                                                   ),
-                                                                ),
-                                                                SizedBox(width: 20,),
-                                                                Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                     Text(
-                                                                      itemname,
-                                                                      style: const TextStyle(
-                                                                          color: Colors.black,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 15
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(height: 15),
-                                                                    SizedBox(
-                                                                      width: 500,
-                                                                      child:   Text(des,
-                                                                        style: const TextStyle(
-                                                                            fontSize: 15
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    const SizedBox(height: 15),
-                                                                     Text(
-                                                                      "USD ${price}",
-                                                                      style: const TextStyle(
-                                                                          color: Colors.black,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 15
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(height: 15),
-                                                                    const Text(
-                                                                      "In Stock",
-                                                                      style: TextStyle(
-                                                                          color: Global.mainColor,
-                                                                          fontSize: 15
-                                                                      ),
-                                                                    ),
-                                                                    Row(
-                                                                      children: [
-                                                                         InkWell(
-                                                                          onTap: ()async{
-                                                                            final progres=ProgressHUD.of(context);
-                                                                            progres!.show();
-                                                                            Future.delayed(const Duration(seconds: 10),(){
-                                                                              progres.dismiss();
-                                                                              //print("Stoped");
-                                                                            });
-                                                                            await value.carttotal();
-                                                                            await value.deleteitem(key);
-                                                                            //print(value.mycarttotal);
-                                                                            progres.dismiss();
-                                                                            if(value.mycarttotal==0)
-                                                                              {
-                                                                                Navigator.pushNamed(context, Routes.dashboard);
-                                                                                value.resetcart(context);
-                                                                              }
-                                                                          },
-                                                                          child: const Row(
-                                                                            children: [
-                                                                              Icon(Icons.delete_outline, color: Global.mainColor,),
-                                                                              Text(
-                                                                                "Remove",
-                                                                                style: TextStyle(color: Global.mainColor,),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        SizedBox(width: 30),
-                                                                        QuantityTableCell(),
-                                                                        // Row(
-                                                                        //   children: [
-                                                                        //     Container(
-                                                                        //       padding: const EdgeInsets.all(4),
-                                                                        //       decoration: BoxDecoration(
-                                                                        //           color: Global.mainColor,
-                                                                        //           borderRadius: BorderRadius.circular(6)
-                                                                        //       ),
-                                                                        //       child: const Icon(Icons.remove),
-                                                                        //     ),
-                                                                        //     const SizedBox(width: 20),
-                                                                        //     const SizedBox(
-                                                                        //       width: 10,
-                                                                        //       child: TextField(),),
-                                                                        //     const SizedBox(width: 20),
-                                                                        //     Container(
-                                                                        //       padding: const EdgeInsets.all(4),
-                                                                        //       decoration: BoxDecoration(
-                                                                        //           color: Global.mainColor,
-                                                                        //           borderRadius: BorderRadius.circular(6)
-                                                                        //       ),
-                                                                        //       child: const Icon(Icons.add),
-                                                                        //     ),
-                                                                        //   ],
-                                                                        // ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        )
+
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
                                                       ],
                                                     ),
+                                                    const Divider(),
                                                   ],
                                                 ),
-                                                Divider(),
-                                              ],
-                                            ),
-                                                                                  ),
-                                          ));
-                                    }
-                                    if(snapshot.data!.docs.isEmpty){
-                                      value.resetcart(context);
-                                      return Container(
-                                        color: Global.mainColor,
-                                          child: const Center(child: Text("Your cart is empty",style: TextStyle(fontSize: 20,color: Colors.white),)));
-                                    //  Navigator.pushNamed(context, Routes.dashboard);
+                                              );
+                                            },
+                                          )
+                                      );
                                     }
                                    // print(snapshot.data!.docs.length);
                                   }
+
                                   return Column(
                                     children: [
                                       Row(
@@ -286,7 +368,7 @@ class _CartViewState extends State<CartView> {
                                                                   ),
                                                                 ),
                                                                 Text(
-                                                                  "USD ${value.mycarttotal}",
+                                                                  "USD ${value.numformat.format(value.mycarttotal)}",
                                                                   style: const TextStyle(
                                                                       fontSize: 15,
                                                                       fontWeight: FontWeight.w600
@@ -321,7 +403,7 @@ class _CartViewState extends State<CartView> {
                                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                                   children: [
                                                                     Text(
-                                                                      "Checkout (USD ${value.mycarttotal})",
+                                                                      "Checkout (USD ${value.numformat.format(value.mycarttotal)})",
                                                                       style: const TextStyle(
                                                                           color: Colors.white,
                                                                           fontSize: 15

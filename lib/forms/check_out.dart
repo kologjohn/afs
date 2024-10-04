@@ -247,79 +247,6 @@ class _CheckoutFormState extends State<CheckoutForm> {
 
                                                         },
                                                       ),
-
-                                                      Row(
-                                                        children: <Widget>[
-                                                          // Expanded(
-                                                          //   child: DropdownButtonFormField<String>(
-                                                          //     value: _selectedCountry,
-                                                          //     onChanged: (value) {
-                                                          //       setState(() {
-                                                          //         _selectedCountry = value!;
-                                                          //         _selectedRegion = _regionsByCountry[value]![0];
-                                                          //       });
-                                                          //     },
-                                                          //     items: _regionsByCountry.keys.map((String country) {
-                                                          //       return DropdownMenuItem<String>(
-                                                          //         value: country,
-                                                          //         child: Text(country),
-                                                          //       );
-                                                          //     }).toList(),
-                                                          //     decoration: InputDecoration(
-                                                          //       labelText: 'Country',
-                                                          //       enabledBorder: OutlineInputBorder(
-                                                          //         borderSide: const BorderSide(
-                                                          //           color: Global.borderColor,
-                                                          //           width: 1,
-                                                          //         ),
-                                                          //         borderRadius: BorderRadius.circular(6),
-                                                          //       ),
-                                                          //       focusedBorder: OutlineInputBorder(
-                                                          //         borderSide: const BorderSide(
-                                                          //           color: Colors.orange,
-                                                          //           width: 1,
-                                                          //         ),
-                                                          //         borderRadius: BorderRadius.circular(6),
-                                                          //       ),
-                                                          //     ),
-                                                          //   ),
-                                                          // ),
-                                                          // const SizedBox(width: 16.0),
-                                                          // Expanded(
-                                                          //   child: DropdownButtonFormField<String>(
-                                                          //     value: _selectedRegion,
-                                                          //     onChanged: (value) {
-                                                          //       setState(() {
-                                                          //         _selectedRegion = value!;
-                                                          //       });
-                                                          //     },
-                                                          //     items: _regionsByCountry[_selectedCountry]!.map((String region) {
-                                                          //       return DropdownMenuItem<String>(
-                                                          //         value: region,
-                                                          //         child: Text(region),
-                                                          //       );
-                                                          //     }).toList(),
-                                                          //     decoration: InputDecoration(
-                                                          //       labelText: 'Region/State',
-                                                          //       enabledBorder: OutlineInputBorder(
-                                                          //         borderSide: const BorderSide(
-                                                          //           color: Global.borderColor,
-                                                          //           width: 1,
-                                                          //         ),
-                                                          //         borderRadius: BorderRadius.circular(6),
-                                                          //       ),
-                                                          //       focusedBorder: OutlineInputBorder(
-                                                          //         borderSide: const BorderSide(
-                                                          //           color: Colors.orange,
-                                                          //           width: 1,
-                                                          //         ),
-                                                          //         borderRadius: BorderRadius.circular(6),
-                                                          //       ),
-                                                          //     ),
-                                                          //   ),
-                                                          // ),
-                                                        ],
-                                                      ),
                                                       const SizedBox(height: 16.0),
                                                       LoginField(
                                                         hintText: 'Street Address',
@@ -360,7 +287,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         stream: FirebaseFirestore.instance.collection('delivery').snapshots(),
                                                         builder: (context, snapshot) {
                                                           if (!snapshot.hasData) {
-                                                            return const CircularProgressIndicator();
+                                                            return Center(child: const CircularProgressIndicator());
                                                           }
 
                                                           // Get the documents from the snapshot
