@@ -93,17 +93,25 @@ class CustomerProfilePage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const Positioned(
+                            Positioned(
                               top: 0, // Adjust the position as needed
                               child: CircleAvatar(
                                 radius: 80,
                                 backgroundColor: Colors.lightGreen,
-                                child: CircleAvatar(
-                                  radius: 80,
-                                  backgroundImage: AssetImage("assets/images/A8A0463.jpg"),
-                                ),
+                                backgroundImage: value.auth.currentUser!.photoURL != null
+                                    ? NetworkImage(value.auth.currentUser!.photoURL!)
+                                    : null, // Fallback if no photo is available
+                                onBackgroundImageError: (exception, stackTrace) {
+                                  print("Failed to load profile picture: $exception");
+                                },
+                                child: value.auth.currentUser!.photoURL == null
+                                    ? Icon(Icons.account_circle, size: 80, color: Colors.white) // Default icon
+                                    : null, // No child if the image exists
                               ),
                             ),
+
+
+
                           ],
                         )
                       ],

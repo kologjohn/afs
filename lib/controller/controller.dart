@@ -50,6 +50,7 @@ class Ecom extends ChangeNotifier{
   List<String> cities = [];
   String? selectedCountry;
   String? selectedCity;
+  String phoneNumber="";
 
   Ecom(){
     get_current_item();
@@ -58,6 +59,19 @@ class Ecom extends ChangeNotifier{
     currecy();
     companyinfo();
   }
+
+  setPhoneNumber(String phoneNumber) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phoneNumber', phoneNumber);
+  }
+
+  getPhoneNumber() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('phoneNumber');
+  }
+
+
+
   set_selecteditem(String item)async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     sharedPreferences.setString("selectedcode", item);
@@ -309,6 +323,7 @@ class Ecom extends ChangeNotifier{
   }
   signupwithemail(String firstname,String lastname,String username,String contact,String sex,String email,String password,BuildContext context)async{
     try{
+
       // final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
       // sharedPreferences.setString("fname",firstname);
       // sharedPreferences.setString("lastname",lastname);
@@ -374,7 +389,9 @@ class Ecom extends ChangeNotifier{
           snackbarerror(notverified, context);
           await setnextstate("not verified");
           await getcstate();
-          Navigator.pushNamed(context, Routes.dashboard);
+          Navigator.pushNamed(context, Routes.signup);
+
+          await getPhoneNumber();
 
         }
         else if(auth.currentUser!=null && auth.currentUser!.emailVerified) {
@@ -386,6 +403,7 @@ class Ecom extends ChangeNotifier{
           await setnextstate("not verified");
           await getcstate();
           snackbarsucess("Account created successfully", context);
+
 
 
         }
@@ -818,4 +836,3 @@ class Ecom extends ChangeNotifier{
 
 
 }
-

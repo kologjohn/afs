@@ -141,7 +141,15 @@ class _SideDrawerState extends State<SideDrawer> {
                           onTap: (){
                             Navigator.pushNamed(context, Routes.about);
                           },
-                          child: const Text("ABOUT AFS")
+                          child: const Text("ABOUT US")
+                      ),
+                    ),
+                    ListTile(
+                      title: InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, Routes.brand);
+                          },
+                          child: const Text("OUR BRAND STORY")
                       ),
                     ),
                     ListTile(
