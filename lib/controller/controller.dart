@@ -66,7 +66,7 @@ class Ecom extends ChangeNotifier{
     getPhoneNumber();
     getpurchaseid();
   }
-  void setpurchaseid(String purchaseid)async{
+   setpurchaseid(String purchaseid)async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('purchaseid', purchaseid);
 
@@ -170,7 +170,7 @@ class Ecom extends ChangeNotifier{
       if(status)
       {
         // print("paid");
-        status=true;
+        status= true;
         sprefs.remove("cartid");
         SnackBar snackBar=const SnackBar(content: Text("Thank you have paid already",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),backgroundColor: Colors.green,);
         ScaffoldMessenger.of(context).showSnackBar(snackBar);

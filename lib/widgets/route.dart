@@ -20,6 +20,7 @@ import 'package:africanstraw/responsive/desktop_scaffold.dart';
 import 'package:africanstraw/tables/checkout_table.dart';
 import 'package:africanstraw/widgets/cart.dart';
 import 'package:africanstraw/widgets/orders.dart';
+import 'package:africanstraw/widgets/paiditems.dart';
 
 import '../components/productTest.dart';
 
@@ -47,6 +48,7 @@ class Routes{
   static String brand="brand";
   static String blog="blog";
   static String orders="orders";
+  static String paid="paid";
 }
 
 final pages={
@@ -72,6 +74,7 @@ final pages={
   Routes.test:(context)=> ECommercePage(),
   Routes.brand:(context)=> const BrandStory(),
   Routes.blog:(context)=> BlogPage(),
-  Routes.orders:(context)=> Orders()
+  Routes.orders:(context)=> Orders(),
+  Routes.paid:(context)=> Paiditems()
 
 };

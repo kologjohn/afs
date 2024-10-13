@@ -189,7 +189,7 @@ class ReshapingBasket extends StatelessWidget {
                                             baseline: 15, // This value should match the baseline of the dot
                                             baselineType: TextBaseline.alphabetic,
                                             child: Text(
-                                              "Soak: Keep the basket in the water for about 60 seconds or a bit longer. Shake off any excess water when you take it out.",
+                                              "4.	Soak: Keep the basket in the water for about 15 seconds. Shake off any excess water when you take it out.",
                                               style: TextStyle(fontSize: 18),
                                             ),
                                           ),
