@@ -70,4 +70,7 @@ class ItemReg{
   static  String category="category";
   static  String companyemail="companyemail";
   static  String companycode="companycode";
+  static  String dimensions="dimensions";
+  static  String weight="weight";
+  static  String totalweight="totalweight";
 }

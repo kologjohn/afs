@@ -43,7 +43,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
   int? selectedIndex;  // Holds the index of the selected item
 
   // Fetch the amount when a destination is selected
-  Future<void> fetchAmount(String destination) async {
+  Future<void> fetchAmount(String destination,String totalweight) async {
     try {
       // Query Firestore for the document with the selected destination
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -54,7 +54,10 @@ class _CheckoutFormState extends State<CheckoutForm> {
       if (querySnapshot.docs.isNotEmpty) {
         // Get the amount from the first document (assuming each destination is unique)
         setState(() {
-          amount = querySnapshot.docs.first['amount'];
+          double t_weight=double.parse(totalweight);
+          double amt = double.parse(querySnapshot.docs.first['amount']);
+          double final_amt=t_weight*amt;
+          amount = final_amt.toString();
         });
       }
     } catch (e) {
@@ -283,11 +286,14 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         labelText: 'Email', enabled: true,
                                                       ),
                                                       const SizedBox(height: 16),
-                                                      StreamBuilder<QuerySnapshot>(
-                                                        stream: FirebaseFirestore.instance.collection('delivery').snapshots(),
+                                                      FutureBuilder<QuerySnapshot>(
+                                                        future: FirebaseFirestore.instance.collection('delivery').get(),
                                                         builder: (context, snapshot) {
                                                           if (!snapshot.hasData) {
-                                                            return Center(child: const CircularProgressIndicator());
+                                                            return const Center(child: CircularProgressIndicator());
+                                                          }
+                                                          if(snapshot.hasError){
+                                                            return Text("Error");
                                                           }
 
                                                           // Get the documents from the snapshot
@@ -305,11 +311,11 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                           return DropdownButtonFormField<String>(
                                                             validator: (val){
                                                               if(val==null || val.isEmpty){
-                                                                return "Select Shipping Destination";
+                                                                return "Select Delivery Zone";
                                                               }
                                                             },
 
-                                                            hint: const Text('Select Destination'),
+                                                            hint: const Text('Select Delivery Zone'),
                                                             value: selectedDestination,
                                                             items: dropdownItems,
                                                             onChanged: (String? newValue) {
@@ -320,11 +326,13 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                               });
                                                               // Fetch the amount based on the selected destination
                                                               if (newValue != null) {
-                                                                fetchAmount(newValue);
+                                                              //  double amt=(ecom.totalweight)*(double.parse(newValue.toString()));
+                                                                fetchAmount(newValue,ecom.totalweight.toString());
+
                                                               }
                                                             },
                                                             decoration: InputDecoration(
-                                                              labelText: 'Country',
+                                                              labelText: 'Delivery Zone',
                                                               enabledBorder: OutlineInputBorder(
                                                                 borderSide: const BorderSide(
                                                                   color: Global.borderColor,
@@ -408,6 +416,8 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                         child: ElevatedButton(
                                                           onPressed: () async{
                                                            if (validator() && amount!=null) {
+                                                              double finalshipping=double.parse(amount.toString())* double.parse(ecom.totalweight.toString());
+                                                             // amount=ecom.numformat.format(finalshipping);
                                                               String email_txt=email.text.trim().toString();
                                                               String fname_txt=firstname.text.trim().toString();
                                                               String lname_txt=lastname.text.trim().toString();
@@ -424,6 +434,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                                 pgress.dismiss();
                                                               });
 
+                                                              print("object ${amount}");
                                                               await ecom.checkout(email_txt, fname_txt,lname_txt, addres_txt, phone_txt, country_txt, region_txt, city_txt, postcode_txt,amount!,selectedDestination!);
                                                               double shipping=double.parse(amount!);
                                                               //double paystackvalue=(convertedamt+shipping)*100;
@@ -533,7 +544,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                                             TableCell(
                                                               child: Padding(
                                                                 padding: const EdgeInsets.all(8.0),
-                                                                child: Text("USD ${double.parse(ecom.cardvalue)+double.parse(amount!)}"),
+                                                                child: Text("USD ${double.parse(ecom.cardvalue)+double.parse(amount.toString())}"),
                                                               ),
                                                             ),
                                                           ],

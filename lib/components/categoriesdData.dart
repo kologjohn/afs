@@ -12,10 +12,14 @@ FutureBuilder<QuerySnapshot<Object?>> Categories(Ecom value) {
     future: value.db.collection("category").get(), // Fetch data from Firestore as a Future
     builder: (context, snapshot) {
 
-      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+      if (!snapshot.hasData) {
         // Handle the case when there's no data
         return ShimmerLoadingList();
       }
+      if(snapshot.hasError)
+        {
+          return Text("Error!!: ${snapshot.error}");
+        }
 
       // If data is available, build the list
       return ListView.builder(

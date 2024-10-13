@@ -1,7 +1,9 @@
+import 'package:africanstraw/components/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:africanstraw/components/global.dart';
@@ -23,27 +25,29 @@ class SingleProduct extends StatefulWidget {
 }
 
 class _SingleProductState extends State<SingleProduct> {
+  @override
+
   final qty=TextEditingController();
   double rating = 3.0;
   @override
   Widget build(BuildContext context) {
-
-    // final routeparam=ModalRoute.of(context)!.settings.arguments;
-    // if (routeparam != null && routeparam is Map<String, dynamic>) {
-    //   final Map<String, dynamic> args =routeparam as Map<String, dynamic>;
-    //   itemamme=args['name'];
-    // }
-    // else
-    //   {
-    //     Navigator.pushNamed(context, Routes.dashboard);
-    //   }
-
       return ProgressHUD(
         child: Consumer<Ecom>(
           builder: (BuildContext context, Ecom value, Widget? child) {
-            qty.text=value.existingqty;
+            if(int.parse(value.existingqty)==0){
+              qty.text="1";
+            }
+            else
+              {
+                qty.text=value.existingqty;
+              }
             return Scaffold(
               appBar: AppBar(
+                leading: InkWell(child: Icon(Icons.arrow_back_outlined,),
+                    onTap: (){
+                        Navigator.pushNamed(context, Routes.dashboard);
+                    },
+                ),
                 backgroundColor: Colors.lightGreen[50],
                 centerTitle: true,
                 title: Text(Companydata.companyname, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
@@ -52,13 +56,17 @@ class _SingleProductState extends State<SingleProduct> {
                   stream: value.db.collection("items").where('code', isEqualTo: value.selecteditem).snapshots(),
                   builder: (context, snapshot) {
                     if(!snapshot.hasData){
-                      return const Text("NO RECORD FOUND");
+                      return ShimmerLoadingList();
                     }
                     else if(snapshot.connectionState==ConnectionState.waiting)
                     {
                       return const Text("Please wait for Network");
                     }
                     String sprice=snapshot.data!.docs[0][ItemReg.sellingprice];
+                    String weight=snapshot.data!.docs[0][ItemReg.weight];
+                    String dimensions=snapshot.data!.docs[0][ItemReg.dimensions];
+
+
                     return SingleChildScrollView(
                       child: Column(
                         children: [
@@ -162,14 +170,15 @@ class _SingleProductState extends State<SingleProduct> {
                                                                       ],
                                                                     ),
                                                                     const SizedBox(height: 10),
-                                                                    const Row(
+                                                                     Row(
                                                                       children: [
-                                                                        Icon(Icons.info_outline, size: 20, color: Colors.red,),
+                                                                        Icon(Icons.info_outline, size: 20, color: Colors.amber,),
                                                                         SizedBox(width: 10),
                                                                         Text(
-                                                                          "21 units left",
-                                                                          style: TextStyle(
-                                                                              color: Colors.red
+                                                                          "Size:$dimensions Weight: ${weight}",
+                                                                          style: const TextStyle(
+                                                                            fontSize: 16,
+                                                                              color: Colors.blue,fontWeight: FontWeight.bold
                                                                           ),
                                                                         )
                                                                       ],
@@ -205,16 +214,31 @@ class _SingleProductState extends State<SingleProduct> {
                                                                           ),
                                                                         ),
                                                                         const SizedBox(width: 40),
-                                                                        Container(
-                                                                          height: 30,
-                                                                          width: 30,
-                                                                          decoration: BoxDecoration(
-                                                                              border: Border.all(
-                                                                                  color: Colors.black,
-                                                                                  width: 2
-                                                                              )
+                                                                        InkWell(
+                                                                          onTap: (){
+
+                                                                            int a= int.parse(qty.text);
+                                                                            a--;
+                                                                            if(a<=0)
+                                                                              {
+                                                                                value.snackbarerror("Invalid Quantity", context);
+                                                                                return;
+                                                                              }
+                                                                            qty.text="${a}";
+                                                                            print(qty.text);
+
+                                                                          },
+                                                                          child: Container(
+                                                                            height: 30,
+                                                                            width: 30,
+                                                                            decoration: BoxDecoration(
+                                                                                border: Border.all(
+                                                                                    color: Colors.black,
+                                                                                    width: 2
+                                                                                )
+                                                                            ),
+                                                                            child: const Icon(Icons.remove),
                                                                           ),
-                                                                          child: const Icon(Icons.remove),
                                                                         ),
                                                                         Container(
                                                                           width: 60,
@@ -226,31 +250,49 @@ class _SingleProductState extends State<SingleProduct> {
                                                                             ),
                                                                           ),
                                                                           child:  Center(
-                                                                            child: TextField(
+                                                                            child: TextFormField(
+                                                                              validator: (val){
+                                                                                if(int.parse(val.toString())==0){
+                                                                                  return "Invalid Quantity";
+
+                                                                                }
+                                                                              },
+                                                                              inputFormatters: [
+                                                                                FilteringTextInputFormatter.digitsOnly, // Only allow digits
+                                                                              ],
                                                                               controller: qty,
                                                                               textAlign: TextAlign.center,
                                                                               textAlignVertical: TextAlignVertical.center,
-                                                                              decoration: InputDecoration(
+                                                                              decoration: const InputDecoration(
                                                                                 contentPadding: EdgeInsets.all(0),
                                                                                 isDense: true,
                                                                                 border: InputBorder.none,
                                                                               ),
-                                                                              style: TextStyle(
+                                                                              style: const TextStyle(
                                                                                 fontSize: 14, // Adjust the font size as needed
                                                                               ),
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                        Container(
-                                                                          height: 30,
-                                                                          width: 30,
-                                                                          decoration: BoxDecoration(
-                                                                              border: Border.all(
-                                                                                  color: Colors.black,
-                                                                                  width: 2
-                                                                              )
+                                                                        InkWell(
+                                                                          onTap: (){
+                                                                            int a= int.parse(qty.text);
+                                                                            a++;
+                                                                            qty.text="${a}";
+                                                                            print(qty.text);
+
+                                                                          },
+                                                                          child: Container(
+                                                                            height: 30,
+                                                                            width: 30,
+                                                                            decoration: BoxDecoration(
+                                                                                border: Border.all(
+                                                                                    color: Colors.black,
+                                                                                    width: 2
+                                                                                )
+                                                                            ),
+                                                                            child: const Icon(Icons.add),
                                                                           ),
-                                                                          child: const Icon(Icons.add),
                                                                         ),
                                                                       ],
                                                                     ),
@@ -261,6 +303,11 @@ class _SingleProductState extends State<SingleProduct> {
                                                             const SizedBox(height: 20),
                                                             InkWell(
                                                               onTap: ()async{
+                                                                if(int.parse(qty.text)<1)
+                                                                {
+                                                                  value.snackbarerror("Invalid Quantity", context);
+                                                                  return;
+                                                                }
                                                                 final progress=ProgressHUD.of(context);
                                                                 progress!.show();
                                                                 String code=snapshot.data!.docs[0][ItemReg.code];
@@ -268,13 +315,20 @@ class _SingleProductState extends State<SingleProduct> {
                                                                 String price=snapshot.data!.docs[0][ItemReg.sellingprice];
                                                                 String des=snapshot.data!.docs[0][ItemReg.description];
                                                                 String imageurl=snapshot.data!.docs[0][ItemReg.itemurl];
+                                                                String weight=snapshot.data!.docs[0][ItemReg.weight];
+                                                                String dimension=snapshot.data!.docs[0][ItemReg.dimensions];
                                                                 String quantity=qty.text;
                                                                 value.cartids();
-                                                                final savetocard=await value.addtocart("single",name, price, quantity, code,imageurl,des,context);
+
+                                                                final savetocard=await value.addtocart("single",name, price, quantity, code,imageurl,des,dimension,weight,context);
                                                                 //print(savetocard);
                                                                 if(savetocard[0]){
                                                                   SnackBar snackbar=const SnackBar(content: Text("Added to cart successfully",style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,);
                                                                   ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                                                  value.item_alreadexist(value.cartidnumber,code);
+                                                                  await value.cartidmethod();
+                                                                  final st=await value.alreadypaid(context);
+                                                                  Navigator.pushNamed(context, Routes.cart);
                                                                 }
                                                                 else
                                                                 {

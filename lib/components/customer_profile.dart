@@ -81,8 +81,8 @@ class CustomerProfilePage extends StatelessWidget {
                                           child: ElevatedButton(
                                             onPressed: () {},
                                             style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                                              elevation: MaterialStateProperty.all(0),
+                                              backgroundColor: WidgetStateProperty.all(Colors.transparent),
+                                              elevation: WidgetStateProperty.all(0),
                                             ),
                                             child: const Text('Edit Profile', style: TextStyle(color: Colors.white),),
                                           ),
@@ -215,9 +215,12 @@ class CustomerProfilePage extends StatelessWidget {
                                             ListTile(
                                               leading: const Icon(Icons.shopping_cart),
                                               title: Text('Cart ID: $cartid'),
-                                              subtitle: const Text('Placed on: Sep 20, 2024'),
+                                              subtitle:  Text('Placed on: ${data['date']}',style: const TextStyle(fontSize: 12),),
                                               trailing: Text('\$$total', style: const TextStyle(fontSize: 18)),
-                                              onTap: () {},
+                                              onTap: () {
+                                                value.setpurchaseid(data.id);
+                                                Navigator.pushNamed(context, Routes.orders);
+                                              },
                                             ),
                                             Divider(color: Colors.grey[200])
                                           ],
@@ -267,24 +270,29 @@ class CustomerProfilePage extends StatelessWidget {
                                       print(e);
                                   }
 
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text('Order History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                      const SizedBox(height: 10),
-                                      Column(
-                                        children: [
-                                          ListTile(
-                                            leading: const Icon(Icons.shopping_cart),
-                                            title: Text('Cart ID: $cartid'),
-                                            subtitle: const Text('Placed on: Sep 20, 2024'),
-                                            trailing: Text('\$$total', style: const TextStyle(fontSize: 18)),
-                                            onTap: () {},
-                                          ),
-                                          Divider(color: Colors.grey[200]),
-                                        ],
-                                      )
-                                    ],
+                                  return InkWell(
+                                    onTap: (){
+                                      Navigator.pushNamed(context, Routes.orders);
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Order History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                        const SizedBox(height: 10),
+                                        Column(
+                                          children: [
+                                            ListTile(
+                                              leading: const Icon(Icons.shopping_cart),
+                                              title: Text('Cart ID: $cartid'),
+                                              subtitle:  Text('Placed on: ${data['date']}',style: TextStyle(fontSize: 12),),
+                                              trailing: Text('\$$total', style: const TextStyle(fontSize: 18)),
+
+                                            ),
+                                            Divider(color: Colors.grey[200]),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   );
 
                                 },

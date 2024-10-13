@@ -35,19 +35,16 @@ class _ShopPageState extends State<ShopPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.sizeOf(context).width;
     double itemWidth = 400.0;
 
     bool isVisible () {
-      double screenWidth = MediaQuery.of(context).size.width;
       return screenWidth > 1200;
     }
     bool isNotVisible () {
-      double screenWidth = MediaQuery.of(context).size.width;
       return screenWidth < 1200;
     }
     bool isMobileVisible () {
-      double screenWidth = MediaQuery.of(context).size.width;
       return screenWidth < 500;
     }
 
@@ -93,44 +90,6 @@ class _ShopPageState extends State<ShopPage> {
                         ],
                       ),
                       const SizedBox(width: 120),
-                      // Row(
-                      //   children: [
-                      //     SizedBox(
-                      //       height: 50,
-                      //       width: 400,
-                      //       child: Column(
-                      //         children: [
-                      //           TextField(
-                      //             controller: searchController,
-                      //             onChanged: (txt){
-                      //               setState(() {
-                      //                 searchQuery=txt;
-                      //
-                      //               });
-                      //             },
-                      //             decoration: const InputDecoration(
-                      //                 hintText: 'Search by Item name,category or price?',
-                      //                 hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
-                      //                 fillColor: Colors.white54,
-                      //                 filled: true
-                      //             ),
-                      //           )
-                      //         ],
-                      //       ),
-                      //     ),
-                      //     Container(
-                      //       height: 50,
-                      //       width: 150,
-                      //       color: Global.mainColor,
-                      //       child: const Column(
-                      //         mainAxisAlignment: MainAxisAlignment.center,
-                      //         children: [
-                      //           Text("Search", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 18),),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
                       const SizedBox(width: 120),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -188,6 +147,7 @@ class _ShopPageState extends State<ShopPage> {
                                     InkWell(
                                         onTap: (){
                                           Navigator.pushNamed(context, Routes.singleProduct);
+
                                         },
                                         child: const Icon(Icons.favorite)
                                     ),
@@ -463,14 +423,12 @@ class _ShopPageState extends State<ShopPage> {
                                       String item = data['item']?.toString().toLowerCase() ?? '';
                                       String category = data['category']?.toString().toLowerCase() ?? '';
                                       String price = data['sellingprice']?.toString().toLowerCase() ?? '';
+                                      String itemurl = data['imageurl']?.toString().toLowerCase() ?? '';
                                       // Filter logic
-                                      if (value.selectedcategory.isNotEmpty) {
-                                        return category.contains(searchQuery.toLowerCase());
-                                      } else {
                                         return item.contains(searchQuery.toLowerCase()) ||
                                             category.contains(searchQuery.toLowerCase()) ||
                                             price.contains(searchQuery.toLowerCase());
-                                      }
+
                                     }).toList();
 
                                     return GridView.builder(
@@ -488,6 +446,8 @@ class _ShopPageState extends State<ShopPage> {
                                         String itemname = fetchedData['item'];
                                         String code = fetchedData['code'];
                                         String url = fetchedData['itemurl'];
+                                        String dimensions = fetchedData['dimensions'];
+                                        String weight = fetchedData['weight'];
                                         String sellingprice = fetchedData[ItemReg.sellingprice];
 
                                         return FittedBox(
@@ -497,22 +457,31 @@ class _ShopPageState extends State<ShopPage> {
                                                 onTap: () async {
                                                   await value.set_selecteditem(fetchedData[ItemReg.code]);
                                                   await value.get_current_item();
+                                                  value.item_alreadexist(value.cartidnumber,code);
+
                                                   Navigator.pushNamed(context, Routes.singleProduct);
                                                 },
                                                 child: Container(
                                                   width: 220,
                                                   child: FeaturedProduct(
+                                                    dimension: dimensions,
+                                                    weight: weight,
                                                     frompage: "shop",
                                                     featuredImage: url,
                                                     featuredName: itemname,
                                                     featuredPrice: sellingprice,
                                                     image: RepaintBoundary(
                                                       child: CachedNetworkImage(
+                                                        placeholder: (context, url) => const Center(
+                                                          child: SizedBox(
+                                                            height: 50,
+                                                            width: 50,
+                                                            child: CircularProgressIndicator(),
+                                                          ),
+                                                        ),
                                                         errorListener: (val){
                                                           Text("Error:${val}");
                                                         },
-                                                        cacheManager: CustomCacheManager(),
-                                                        cacheKey: 'image_$index', // Ensures unique cache for each image
                                                         imageUrl: url,
                                                         imageBuilder: (context, imageProvider) => FadeInImage(
                                                           image: imageProvider,
@@ -530,7 +499,7 @@ class _ShopPageState extends State<ShopPage> {
                                                     ),
                                                     progress: false,
                                                     consWidth: itemWidth,
-                                                    featuredcode: code,
+                                                    featuredCode: code, ecom: value,
                                                   ),
                                                 ),
                                               )

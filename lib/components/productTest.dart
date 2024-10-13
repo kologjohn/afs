@@ -77,25 +77,6 @@ class _ECommercePageState extends State<ECommercePage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double itemWidth = 300.0;
-
-    int crossAxisCount = (screenWidth / itemWidth).floor();
-    if (screenWidth <= 400) {
-      crossAxisCount = 2;
-    }
-    else if (screenWidth <= 600 && screenWidth<800) {
-      crossAxisCount = (screenWidth / 300).floor();
-    }
-    else if(screenWidth >=600 && screenWidth<1000)
-    {
-      crossAxisCount = (screenWidth / 300).floor();
-
-    }
-
-    if (crossAxisCount <= 1) {
-      crossAxisCount = 1;
-    }
     return Scaffold(
       appBar: AppBar(
         title: Text('E-Commerce Store'),
@@ -106,7 +87,7 @@ class _ECommercePageState extends State<ECommercePage> {
             child: GridView.builder(
               controller: _scrollController,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount.ceil(),
+                crossAxisCount: 2,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 childAspectRatio: 0.75,

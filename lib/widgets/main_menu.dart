@@ -41,7 +41,7 @@ class MainMenu extends StatelessWidget {
             onSelected: (value) {
               // Handle submenu item click
               if (value == 'aboutUs') {
-                Navigator.pushNamed(context, Routes.about);
+                Navigator.pushNamed(context, Routes.brand);
               } else if (value == 'shippingProcess') {
                 Navigator.pushNamed(context, Routes.shipping);
                 // Navigate to Shipping Process page
@@ -61,10 +61,10 @@ class MainMenu extends StatelessWidget {
                 value: 'aboutUs',
                 child: Text('About Us'),
               ),
-              const PopupMenuItem<String>(
-                  value: 'brand',
-                  child: Text('Brand Story')
-              ),
+              // const PopupMenuItem<String>(
+              //     value: 'brand',
+              //     child: Text('Brand Story')
+              // ),
               const PopupMenuItem<String>(
                 value: 'shippingProcess',
                 child: Text('Shipping Process'),

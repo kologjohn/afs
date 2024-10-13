@@ -12,15 +12,12 @@ import 'package:africanstraw/widgets/route.dart';
 import 'package:provider/provider.dart';
 import 'package:typewritertext/typewritertext.dart';
 import '../blog/blog_post.dart';
-import '../components/banner.dart';
 import '../components/categoriesdData.dart';
-import '../controller/cachedManager.dart';
 import '../controller/controller.dart';
 import '../footers/desktop_footer.dart';
 import '../footers/tablet_footer.dart';
 import '../widgets/featured_product.dart';
 import '../widgets/main_menu.dart';
-import '../widgets/menu_type.dart';
 import '../widgets/side_menu.dart';
 import '../widgets/social_media_icons.dart';
 
@@ -32,8 +29,26 @@ class DesktopScaffold extends StatefulWidget {
 }
 
 class _DesktopScaffoldState extends State<DesktopScaffold> {
-  String searchQuery="";
+  bool trackingcart=false;
+  String purchaseid="";
 
+  @override
+  void initState() {
+    Uri uri = Uri.parse(Uri.base.toString());
+    String? id = uri.queryParameters['cartid']??"null";
+    if(id!="null") {
+      setState(() {
+      setState(() {
+        trackingcart=true;
+        purchaseid=id;
+      });
+      });
+    }
+    print(id);
+    // TODO: implement initState
+    super.initState();
+  }
+  String searchQuery="";
   String shoenum="";
   bool show=false;
   bool editShow=true;
@@ -41,7 +56,10 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+
+    //double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.sizeOf(context).width;
+
     double itemWidth = 400.0;
 
     bool isVisible () {
@@ -80,14 +98,11 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
       crossAxisCount = 1;
     }
     return   Consumer<Ecom>(builder: (context,  value,  child) {
-     //value.setPhoneNumber("0557676787");
-      if(value.mycarttotal==0)
-      {
-        // value.carttotal();
-      }
-      // print(value.mycardid);
-      // if(value.companyemail.isEmpty){
-      //   value.companyinfo();
+      // if(trackingcart){
+      //   value.route(context);
+      //  // print(purchaseid);
+      //   // Navigator.pushNamed(context, Routes.cart);
+      //
       // }
       return Scaffold(
         appBar: AppBar(
@@ -249,7 +264,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                                       child: Icon(Icons.shopping_cart,color: Colors.white,)
                                                   )
                                               ),
-                                              Text("Total: USD ${value.mycarttotal}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),)
+                                              Text("Total: USD ${value.numformat.format(value.mycarttotal)}",style: const TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white),)
                                             ],
                                           ),
                                         ),
@@ -345,7 +360,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                           children: [
                                             InkWell(
                                                 onTap: (){
-                                                  Navigator.pushNamed(context, Routes.singleProduct);
+                                                 // Navigator.pushNamed(context, Routes.singleProduct);
                                                 },
                                                 child: const Icon(Icons.favorite)
                                             ),
@@ -828,6 +843,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                     String itemname = fetchedData['item'];
                                     String item_code = fetchedData['code'];
                                     String url = fetchedData['itemurl'];
+                                    String dimension = fetchedData['dimensions'];
+                                    String weght = fetchedData['weight'];
                                     String sellingprice = fetchedData[ItemReg.sellingprice];
 
                                     return FittedBox(
@@ -847,50 +864,30 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                             child: Container(
                                               width: 220,
                                               child: FeaturedProduct(
-
+                                                dimension: dimension,
+                                                weight: weght,
                                                 featuredImage: url,
                                                 featuredName: itemname,
                                                 featuredPrice: sellingprice,
                                                 image: CachedNetworkImage(
-                                                  cacheManager: CustomCacheManager(),
+                                                  placeholder: (context, url) => const Center(
+                                                    child: SizedBox(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child: CircularProgressIndicator(),
+                                                    ),
+                                                  ),
                                                   imageUrl: url,
-                                                  placeholder: (context, url) => Center(child: const CircularProgressIndicator()),
+                                                 // placeholder: (context, url) => Center(child: const CircularProgressIndicator()),
                                                   errorWidget: (context, url, error) => const Icon(Icons.error),
                                                   fit: BoxFit.cover,
                                                   width: 150,
                                                   height: 150,
-                                                  // progressIndicatorBuilder: (context, url, downloadProgress) =>
-                                                  //     Center(
-                                                  //       child: CircularProgressIndicator(
-                                                  //         value: downloadProgress.progress, // Displays loading progress
-                                                  //       ),
-                                                  //     ),
-                                                  //  maxHeightDiskCache: 100,
-                                                  // maxWidthDiskCache: 100,
-                                                  // errorListener: (rr) {
-                                                  // Text("Erro");
-                                                  //   // handle error
-                                                  // },
-                                                  // imageUrl: url,
-                                                  // height: 200,
-                                                  // width: 400,
-                                                  // fit: BoxFit.cover,
-                                                  // placeholder: (context, url) => const Center(
-                                                  //   child: SizedBox(
-                                                  //     height: 50,
-                                                  //     width: 50,
-                                                  //     child: CircularProgressIndicator(),
-                                                  //   ),
-                                                  // ),
-                                                  // errorWidget: (context, url, error) => const Icon(
-                                                  //   Icons.error,
-                                                  //   color: Colors.red,
-                                                  // ),
                                                 ),
                                                 progress: false,
                                                 consWidth: itemWidth,
                                                 frompage: 'shop',
-                                                featuredcode: item_code,
+                                                featuredCode: item_code, ecom: value,
                                               ),
                                             ),
                                           ),
@@ -902,121 +899,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                               },
                             )
 
-                          // StreamBuilder<QuerySnapshot>(
-                            //   stream: Dbfields.db.collection("items").orderBy('date').limit(8).snapshots(),
-                            //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                            //     if(!snapshot.hasData){
-                            //       return const Text("Loading...");
-                            //     }
-                            //     else if(snapshot.connectionState==ConnectionState.waiting)
-                            //     {
-                            //       const CircularProgressIndicator();
-                            //     }
-                            //     else if(snapshot.hasError)
-                            //     {
-                            //       return const Text("Error Loading Data");
-                            //     }
-                            //     //urls.clear();
-                            //     // myimage.clear();
-                            //     var filteredDocs = snapshot.data!.docs.where((doc) {
-                            //       var data = doc.data() as Map<String, dynamic>;
-                            //       String item = data['item']?.toString().toLowerCase() ?? '';
-                            //       String category = data['category']?.toString().toLowerCase() ?? '';
-                            //       String price = data['sellingprice']?.toString().toLowerCase() ?? '';
-                            //       return item.contains(searchQuery.toLowerCase()) || category.contains(searchQuery.toLowerCase() )||price.contains(searchQuery.toLowerCase());
-                            //
-                            //     }).toList();
-                            //     // for(int i=0;i<snapshot.data!.docs.length;i++){
-                            //     //   //print(i);
-                            //     //   String url= snapshot.data!.docs[i][ItemReg.itemurl];
-                            //     //   urls.add(url);
-                            //     //
-                            //     //   //print(url);
-                            //     //
-                            //     //
-                            //     // }
-                            //     return GridView.builder(
-                            //       itemCount: filteredDocs.length,
-                            //       gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-                            //         mainAxisSpacing: 0.6,
-                            //         childAspectRatio: 0.7,
-                            //         crossAxisCount: crossAxisCount.ceil(),
-                            //       ), itemBuilder: (BuildContext context, int index) {
-                            //       final fetchedData = filteredDocs[index];
-                            //       String itemname=fetchedData['item'];
-                            //       String item_code=fetchedData['code'];
-                            //       String url=fetchedData['itemurl'];
-                            //       String sellingprice=fetchedData[ItemReg.sellingprice];
-                            //       return FittedBox(
-                            //         child: Row(
-                            //           children: [
-                            //             InkWell(
-                            //               onTap: ()async{
-                            //                 print(item_code);
-                            //                 value.cartids();
-                            //                 value.cartidmethod();
-                            //                 await value.set_selecteditem(item_code);
-                            //                 value.setnextstate("cart");
-                            //                 await value.get_current_item();
-                            //                 value.item_alreadexist(value.cartidnumber,item_code );
-                            //                 Navigator.pushNamed(context, Routes.singleProduct);
-                            //               },
-                            //               child: Container(
-                            //                 // height: 300,
-                            //                 width: 220,
-                            //                 child: FeaturedProduct(
-                            //                   featuredImage:url,
-                            //                   featuredName: itemname,
-                            //                   featuredPrice: sellingprice,
-                            //                   image: CachedNetworkImage(
-                            //                     errorListener:(rr){
-                            //                       //print("${name_txt} image are not uploaded yet");
-                            //                     } ,
-                            //                     imageUrl: url,
-                            //                     height: 200,
-                            //                     width: 400,
-                            //                     fit: BoxFit.contain,
-                            //                     placeholder: (context, url) => const Center(
-                            //                       child: SizedBox(
-                            //                         height: 50,
-                            //                         width: 50,
-                            //                         child: CircularProgressIndicator(),
-                            //                       ),
-                            //                     ),
-                            //                     errorWidget: (context, url, error) =>const Icon(Icons.error,color: Colors.red,),
-                            //                   ),
-                            //                   progress: false,
-                            //                   consWidth: itemWidth, frompage: 'shop',
-                            //                   featuredcode: ItemReg.item,
-                            //                 ),
-                            //               ),
-                            //             )
-                            //             // items[index]
-                            //           ],
-                            //         ),
-                            //       );
-                            //     },);
-                            //     // Wrap(
-                            //     // runSpacing: 5,
-                            //     // spacing: 5,
-                            //     // children: items
-                            //     // );
-                            //   },
-                            // )
-                          //featuredGridview(shoenum: shoenum, widgth: 300, height: 200, name: 16, price: 16, favHeight: 30, favWidth: 100, favSize: 25, cartHeight: 30, cartWidth: 100, cartSize: 25, querySnapshot: querysnapshot,),
                         ),
-                        // StreamBuilder<QuerySnapshot>(
-                        //   stream: null,
-                        //   builder: (context, snapshot) {
-                        //     return Container(height:500,child: featuredGridview(shoenum: shoenum, widgth: 250, height: 150, name: 14, price: 14, favHeight: 30, favWidth: 80, favSize: 20, cartHeight: 30, cartWidth: 80, cartSize: 20, querySnapshot: Ecom.querysnapshot,));
-                        //   }
-                        // ),
-
-                        // Column(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //   ],
-                        // ),
                         const SizedBox(height: 20),
                         Divider(
                           thickness: 10,
@@ -1082,11 +965,11 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                   )
               ),
               Visibility(
-                visible: isVisible(),
+                visible: false,
                 child:  DesktopFooter(value: value,),
               ),
               Visibility(
-                visible: isNotVisible(),
+                visible: true,
                 child:  TabletFooter(value: value,),
               ),
             ],

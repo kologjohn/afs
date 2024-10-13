@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +20,8 @@ class Ecom extends ChangeNotifier{
   final auth=FirebaseAuth.instance;
   static final querysnapshot=FirebaseFirestore.instance.collection("items").orderBy(ItemReg.category).limit(10).snapshots();
   final numformat = NumberFormat("#,##0.00", "en_US");
+  //int now = DateTime.now().microsecondsSinceEpoch;
+  String date = DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now());
 
   //cart id with provider
   double currecyval=0.0;
@@ -29,6 +32,7 @@ class Ecom extends ChangeNotifier{
   String companyphone="";
   String companyaddress="";
   double mycarttotal=0;
+  double totalweight=0;
   String cardvalue="0.00";
   String user_email="";
   String user_firstname="";
@@ -51,6 +55,7 @@ class Ecom extends ChangeNotifier{
   String? selectedCountry;
   String? selectedCity;
   String phoneNumber="";
+  String purchaseid="";
 
   Ecom(){
     get_current_item();
@@ -59,8 +64,20 @@ class Ecom extends ChangeNotifier{
     currecy();
     companyinfo();
     getPhoneNumber();
+    getpurchaseid();
   }
+  void setpurchaseid(String purchaseid)async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('purchaseid', purchaseid);
 
+    //Navigator.pushNamed(context, Routes.cart);
+  }
+  void getpurchaseid()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    purchaseid=await prefs.get('purchaseid').toString();
+    notifyListeners();
+    //Navigator.pushNamed(context, Routes.cart);
+  }
   setPhoneNumber(String phoneNumber) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('phoneNumber', phoneNumber);
@@ -68,7 +85,7 @@ class Ecom extends ChangeNotifier{
 
   getPhoneNumber() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    phoneNumber=prefs.getString('phoneNumber')!;
+    phoneNumber=prefs.getString('phoneNumber')??"";
     notifyListeners();
 
   }
@@ -116,7 +133,7 @@ class Ecom extends ChangeNotifier{
     notifyListeners();
   }
   lockcart()async{
-    String? contact=Dbfields.auth.currentUser!.phoneNumber;
+    //String? contact=Dbfields.auth.currentUser!.phoneNumber;
     String? email=Dbfields.auth.currentUser!.email;
     try{
       final shards = await db.collection('cart').where(Dbfields.cartidnumber,isEqualTo:mycardid).get();
@@ -211,13 +228,15 @@ class Ecom extends ChangeNotifier{
           error="Please check shipping fee";
           return;
         }
-      double ghmyshipping=double.parse(shipping)*currecyval;
+      double ghmyshipping=(double.parse(shipping))*currecyval;
       double ghs=currecyval*(double.parse(cardvalue));
       final alreaypaid=await db.collection("checkout").doc(cart_id).get();
+      print(shipping);
       if(alreaypaid.exists) {
         openpaystack(alreaypaid['payurl']);
         payurl=alreaypaid[CheckoutFields.payurl];
         accesscode=alreaypaid[CheckoutFields.accesscode];
+        return;
       }
       final checkoutdata={
         CheckoutFields.firstname:fname_txt,
@@ -238,6 +257,8 @@ class Ecom extends ChangeNotifier{
         CheckoutFields.shipping:"$shipping",
         CheckoutFields.destination:destination,
         CheckoutFields.ghshipping:"$ghmyshipping",
+        ItemReg.totalweight:"$totalweight",
+        ItemReg.date:"$date",
       };
       double payable=(double.parse(shipping)+double.parse(cardvalue))*100;
       await db.collection("checkout").doc(cart_id).set(checkoutdata);
@@ -254,8 +275,10 @@ class Ecom extends ChangeNotifier{
     try{
       final shards = await db.collection('cart').where(Dbfields.cartidnumber,isEqualTo:mycardid ).get();
       mycarttotal=0;
+      totalweight=0;
       for (var doc in shards.docs) {
           mycarttotal += double.parse(doc.data()['total']);
+          totalweight += double.parse(doc.data()[ItemReg.totalweight]);
           cardvalue=numformat.format(mycarttotal);
         }
       //print(mycarttotal);
@@ -436,7 +459,6 @@ class Ecom extends ChangeNotifier{
         final userdata=await db.collection("users").doc(email).get();
         String phone=userdata['contact'];
         setPhoneNumber(phone);
-
       }
       String? myemail=Dbfields.auth.currentUser!.email;
       //cartid("id", "date", false, "method", myemail!);
@@ -451,11 +473,9 @@ class Ecom extends ChangeNotifier{
   cartids()async{
     final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     mycardid= sharedPreferences.getString("cartid").toString();
-    print(mycardid);
     notifyListeners();
   }
   item_alreadexist(String cartid,String itemcode)async{
-    print("Cart ID: $cartid");
     final itemsdata=await db.collection("cart").where('cartidnumber', isEqualTo: cartid).where('code',isEqualTo: itemcode).get();
     bool existstatus=itemsdata.docs.isNotEmpty;
     if(existstatus)
@@ -463,17 +483,20 @@ class Ecom extends ChangeNotifier{
         existingqty=itemsdata.docs[0]['quantity'];
         existingid=itemsdata.docs[0].id;
       }
+    else
+      {
+        existingqty="0";
+      }
    // print(itemsdata.docs[0]['quantity']);
     itemwithcardexist= existstatus;
     notifyListeners();
   }
-  Future<List>addtocart(String frompage,String itemname,String price,String quantity,String code,String imageurl,String description,BuildContext context)async{
+  Future<List>addtocart(String frompage,String itemname,String price,String quantity,String code,String imageurl,String description,String dimension,String weight,BuildContext context)async{
     bool success=false;
     final SharedPreferences  sprefs=await SharedPreferences.getInstance();
     final cartId=sprefs.getString("cartid");
     bool? lock=sprefs.getBool("lockstatus");
     final alreaypaid=await db.collection("checkout").doc(cartId).get();
-
     if(alreaypaid.exists){
       error="Please you attempted making payment, go to cart and complete payment before you can add to cart";
       await carttotal();
@@ -483,7 +506,6 @@ class Ecom extends ChangeNotifier{
         String url=alreaypaid[CheckoutFields.payurl];
         if(url.isNotEmpty)
         {
-
           error="You have a pending cart to complete, you can not add to pending cart";
           Navigator.pushNamed(context, Routes.dashboard);
           print("pending");
@@ -497,6 +519,8 @@ class Ecom extends ChangeNotifier{
     }
     else {
       double total=double.parse(price)*double.parse(quantity);
+      double totalweight=double.parse(weight)*double.parse(quantity);
+
       final date=DateTime.now();
       final SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
       String? mycartids=sharedPreferences.getString("cartid")??"null";
@@ -508,11 +532,11 @@ class Ecom extends ChangeNotifier{
           if(frompage=="shop")
           {
             int updateqty=int.parse(existingqty)+int.parse(quantity);
+             totalweight=double.parse(weight)*double.parse(updateqty.toString());
             quantity=updateqty.toString();
+
             total=double.parse(quantity)*double.parse(price);
-            print("exist");
           }
-          print("1");
           final data={
             Dbfields.email:"",
             Dbfields.contact:"",
@@ -523,8 +547,12 @@ class Ecom extends ChangeNotifier{
             Dbfields.cartidnumber:mycartids,
             ItemReg.itemurl:imageurl,
             ItemReg.total:total.toString(),
+            ItemReg.dimensions:dimension,
+            ItemReg.weight:weight,
+            ItemReg.totalweight:totalweight.toString(),
             ItemReg.description:description,
-            ItemReg.status:"pending"
+            ItemReg.status:"pending",
+            ItemReg.date:"$date"
           };
           await Dbfields.db.collection(Dbfields.cart).doc(existingid).update(data);
           cartidnumber=mycartids!;
@@ -533,7 +561,6 @@ class Ecom extends ChangeNotifier{
         }
       else
         {
-          print("2");
           final data={
             Dbfields.email:"",
             Dbfields.contact:"",
@@ -545,6 +572,10 @@ class Ecom extends ChangeNotifier{
             ItemReg.itemurl:imageurl,
             ItemReg.total:total.toString(),
             ItemReg.description:description,
+            ItemReg.dimensions:dimension,
+            ItemReg.weight:weight,
+            ItemReg.totalweight:totalweight.toString(),
+            ItemReg.date:"$date",
             ItemReg.status:"pending"
           };
           await Dbfields.db.collection(Dbfields.cart).add(data);
@@ -818,6 +849,20 @@ class Ecom extends ChangeNotifier{
       throw Exception('Failed to load items');
     }
   }
+
+  // Function to open a URL
+  Future<void> openSocialMedia(String url) async {
+    final Uri _url = Uri.parse(url);
+    if (await canLaunchUrl(_url)) {
+      await launchUrl(_url, mode: LaunchMode.externalApplication); // Opens the link in the web browser or app
+    } else {
+      throw 'Could not launch $_url';
+    }
+  }
+
+
+
+
 
 
 }

@@ -34,6 +34,7 @@ class Assets {
   static const String imagesDSC6148 = 'assets/images/DSC_6148.jpg';
   static const String imagesEu = 'assets/images/eu.png';
   static const String imagesGhana = 'assets/images/ghana.png';
+  static const String imagesHandwovenFan = 'assets/images/Handwoven Fan.jpg';
   static const String imagesHandwovenFanRemovebgPreview = 'assets/images/Handwoven_Fan-removebg-preview.png';
   static const String imagesHats = 'assets/images/hats.png';
   static const String imagesHeadphone = 'assets/images/headphone.png';
@@ -49,8 +50,10 @@ class Assets {
   static const String imagesHeritage7 = 'assets/images/heritage7.png';
   static const String imagesHeritage8 = 'assets/images/heritage8.png';
   static const String imagesImage0 = 'assets/images/image_0.png';
+  static const String imagesLaceBasket  = 'assets/images/Lace Basket .jpg';
   static const String imagesMasterCard = 'assets/images/MasterCard.png';
   static const String imagesMasterCard1 = 'assets/images/MasterCard1.png';
+  static const String imagesNaturalPlanter = 'assets/images/Natural Planter(1).jpg';
   static const String imagesPayPal = 'assets/images/PayPal.png';
   static const String imagesPayout = 'assets/images/payout.png';
   static const String imagesReshape1 = 'assets/images/reshape1.png';
@@ -73,16 +76,19 @@ class Assets {
   static const String imagesWhatsapp = 'assets/images/whatsapp.png';
   static const String svgFLogo = 'assets/svg/f_logo.svg';
   static const String svgFacebook = 'assets/svg/facebook.svg';
+  static const String svgFairtrade = 'assets/svg/fairtrade.svg';
   static const String svgGh = 'assets/svg/gh.svg';
   static const String svgGlogo = 'assets/svg/glogo.svg';
   static const String svgIcons8Facebook = 'assets/svg/icons8-facebook.svg';
   static const String svgIcons8Linkedin = 'assets/svg/icons8-linkedin.svg';
   static const String svgIcons8Pinterest = 'assets/svg/icons8-pinterest.svg';
   static const String svgIcons8Twitter = 'assets/svg/icons8-twitter.svg';
+  static const String svgInstagram = 'assets/svg/instagram.svg';
   static const String svgLinkedin = 'assets/svg/linkedin.svg';
   static const String svgPinterest = 'assets/svg/pinterest.svg';
   static const String svgTerms = 'assets/svg/terms.svg';
   static const String svgTwitter = 'assets/svg/twitter.svg';
   static const String svgTwitterbird = 'assets/svg/twitterbird.svg';
+  static const String svgWhatsapp = 'assets/svg/whatsapp.svg';
 
 }

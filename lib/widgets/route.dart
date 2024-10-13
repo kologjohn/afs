@@ -1,5 +1,4 @@
 import 'package:africanstraw/components/customer_profile.dart';
-import 'package:africanstraw/components/mobile_shop.dart';
 import 'package:africanstraw/components/shop.dart';
 import 'package:africanstraw/components/single_product.dart';
 import 'package:africanstraw/forms/check_out.dart';
@@ -20,6 +19,7 @@ import 'package:africanstraw/pages/wholesale.dart';
 import 'package:africanstraw/responsive/desktop_scaffold.dart';
 import 'package:africanstraw/tables/checkout_table.dart';
 import 'package:africanstraw/widgets/cart.dart';
+import 'package:africanstraw/widgets/orders.dart';
 
 import '../components/productTest.dart';
 
@@ -46,6 +46,7 @@ class Routes{
   static String test="test";
   static String brand="brand";
   static String blog="blog";
+  static String orders="orders";
 }
 
 final pages={
@@ -70,6 +71,7 @@ final pages={
   Routes.mainShop:(context)=> const ShopPage(),
   Routes.test:(context)=> ECommercePage(),
   Routes.brand:(context)=> const BrandStory(),
-  Routes.blog:(context)=> BlogPage()
+  Routes.blog:(context)=> BlogPage(),
+  Routes.orders:(context)=> Orders()
 
 };
