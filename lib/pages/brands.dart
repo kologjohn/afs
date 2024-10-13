@@ -92,7 +92,7 @@ class BrandStory extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("At African Straw Enterprise Ltd (ASE), we believe that every product tells a story—a story of tradition, craftsmanship, and community impact. Based in the heart of Northern Ghana, we specialize in producing a variety of handcrafted Bolga baskets, each woven with care and dedication by our talented artisans. Beyond the beauty and functionality of our baskets lies a deeper purpose that drives us: empowering women and transforming communities.", style: TextStyle(fontSize: 18),),
+                                    Text("At African Straw Enterprise Ltd (ASE), we believe that every product tells a story—a story of tradition, craftsmanship, and community impact. Based in Bolgatanga, in Northern Ghana, we specialize in producing handcrafted Bolga baskets each woven with care and dedication by our talented artisans. However, beyond the beauty and functionality of our products, lies a deeper purpose that drives everything we do: empowering women and transforming communities", style: TextStyle(fontSize: 18),),
                                     SizedBox(height: 30),
                                     Row(
                                       children: [
@@ -100,11 +100,11 @@ class BrandStory extends StatelessWidget {
                                       ],
                                     ),
                                     SizedBox(height: 8),
-                                    Text("ASE’s mission is to alleviate poverty in rural communities in West Africa by creating sustainable economic opportunities, particularly for women who are often excluded from formal employment. We collaborate with over 5,000 skilled artisans, most of whom are women, providing them with the platform, training, and resources to transform their traditional weaving skills into a reliable source of income. These women, who skillfully balance their craft with family duties and farming, are the backbone of their local economies. Each basket they create embodies resilience and creativity, reflecting the strength of their communities.", style: TextStyle(fontSize: 18),),
+                                    Text("ASE’s mission is to alleviate poverty in rural communities by creating sustainable economic opportunities, especially for women who are often excluded from formal employment. We partner with over 5,000 skilled artisans—primarily women—providing them with the platform, training, and resources to develop their traditional weaving skills into a source of steady income. These women, who balance their craft with family duties and farming, are the backbone of our business. Through their hands, each basket becomes a symbol of resilience and creativity.", style: TextStyle(fontSize: 18),),
                                     SizedBox(height: 30),
                                     Text("COMMUNITY IMPACT: BUILDING FUTURES BEYOND BASKETS", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                                     SizedBox(height: 8),
-                                    Text("At ASE, we believe in giving back to the communities that support us. Our commitment goes beyond employment—it’s about improving the quality of life. Along with providing fair wages, we implement social interventions in rural areas that lack essential amenities. A key initiative is the construction of boreholes to provide clean, safe water, a necessity in these communities. This effort has significantly improved health and well-being while freeing up time for women and children who once spent hours fetching water from distant sources. By reducing the time spent on these tasks, communities can focus on more productive activities, leading to a positive ripple effect on their development.", style: TextStyle(fontSize: 18),),
+                                    Text("At ASE, we believe in giving back to the communities that give so much to us. Our commitment extends beyond just providing employment; it is about improving the quality of life. In addition to fair wages, we are dedicated to building infrastructure in these rural areas. By constructing boreholes, we provide access to clean, safe water—a fundamental need for these communities. This initiative has drastically improved health and well-being, freeing up time for women and children that was once spent on fetching water from far distances.", style: TextStyle(fontSize: 18),),
                                     SizedBox(height: 30),
                                     Row(
                                       children: [
@@ -112,7 +112,15 @@ class BrandStory extends StatelessWidget {
                                       ],
                                     ),
                                     SizedBox(height: 8),
-                                    Text("Each ASE product is more than just a basket or decor item—it’s a testament to sustainable and ethical practices. Our products are crafted from locally sourced elephant grass, harvested responsibly by over 250 members of our cooperatives of grass collectors. We prioritize sustainability at every step, from sourcing materials to production processes. In recognition of our efforts, we are proud to be the only Bolga basket company in West Africa accredited by both Fair for Life and For Life certifications. These certifications ensure that every purchase contributes to fair trade practices and social good, supporting the artisans and their communities.", style: TextStyle(fontSize: 18),),
+                                    Text("Each ASE product is more than just a basket or piece of decor; it is a testament to sustainable and ethical practices. Our products are made from locally sourced elephant grass, grown and harvested in an environmentally responsible manner. From the materials we use to the way we operate, we prioritize sustainability every step of the way. In recognition of this, we are proud to be the only Bolga basket company in West Africa accredited by Fair for Life and For Life, ensuring that every purchase from ASE contributes to fair trade practices and social good.", style: TextStyle(fontSize: 18),),
+                                    SizedBox(height: 30),
+                                    Row(
+                                      children: [
+                                        Text("TRACEABILITY", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                                      ],
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text("At African Straw Enterprise (ASE), we take pride in knowing the full journey of each basket we create. Every basket comes with a leather tag that includes the weaver's name, their village, and the date of production. This tag honours the artisan behind the work and allows us to trace each basket back to its origin. Our commitment to transparency ensures that every product carries a story of artisanship and community.", style: TextStyle(fontSize: 18),),
                                     SizedBox(height: 30),
                                     Row(
                                       children: [
@@ -120,13 +128,15 @@ class BrandStory extends StatelessWidget {
                                       ],
                                     ),
                                     SizedBox(height: 8),
-                                    Text("When you choose ASE products, you’re not just selecting high-quality, handcrafted items—you’re supporting a mission. You are joining us in our commitment to empower women, uplift communities, and preserve cultural heritage. Our baskets do more than just decorate homes or serve practical purposes—they create measurable change in the lives of our artisans and their families.For retailers, selling ASE baskets means offering more than just beautiful handicrafts. It is about giving your customers the chance to make a meaningful impact. Each purchase enhances the lives of artisans, promotes environmental sustainability, and supports a purpose-driven future. Together, we can weave a brighter and more impactful future for people and the planet.", style: TextStyle(fontSize: 18)),
+                                    Text("When you choose ASE products, you are not just choosing high-quality, handcrafted items; you are supporting a movement. You are joining us in our mission to empower women, uplift communities, and preserve cultural heritage. Our baskets do not just decorate homes or serve practical purposes—they create real, measurable change in the lives of our artisans and their families.", style: TextStyle(fontSize: 18)),
+                                    SizedBox(height: 4),
+                                    Text("For retailers, this means that selling ASE products is more than just stocking beautiful items. It is about giving your customers a chance to make a difference, knowing that with each purchase, they are supporting a business that values people, planet, and purpose. Together, we can weave a brighter future.", style: TextStyle(fontSize: 18)),
                                     SizedBox(height: 30),
                                     Padding(
                                       padding: EdgeInsets.all(20.0),
                                       child: Divider(),
                                     ),
-                                    Text("Join us in advancing our shared mission to fight global poverty.", style: TextStyle(fontSize: 18),),
+                                    Text("Join us in creating a world where tradition meets art, and where every purchase helps communities thrive.", style: TextStyle(fontSize: 18),),
                                   ],
                                 ),
                               )
