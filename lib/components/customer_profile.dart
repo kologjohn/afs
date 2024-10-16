@@ -271,8 +271,10 @@ class CustomerProfilePage extends StatelessWidget {
                                   }
 
                                   return InkWell(
-                                    onTap: (){
-                                      Navigator.pushNamed(context, Routes.orders);
+                                    onTap: ()async{
+                                       await value.setpurchaseid(cartid);
+                                        value.getpurchaseid();
+                                      Navigator.pushNamed(context, Routes.paid);
                                     },
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
