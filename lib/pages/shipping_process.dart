@@ -703,13 +703,13 @@ class ShippingProcess extends StatelessWidget {
                                       padding: EdgeInsets.all(20.0),
                                       child: Divider(),
                                     ),
-
                                   ],
                                 ),
                               ),
                               const SizedBox(
                                 width: 1105,
-                                  child: Text("By outlining this process, ASE aims to provide transparency and peace of mind, ensuring a smooth and reliable shipping experience for our valued customers. If you have any questions or need further assistance, please feel free to contact us!"))
+                                  child: Text("By outlining this process, ASE aims to provide transparency and peace of mind, ensuring a smooth and reliable shipping experience for our valued customers. If you have any questions or need further assistance, please feel free to contact us!", style: TextStyle(fontSize: 16),)
+                              ),
                             ],
                           ),
                         ),
